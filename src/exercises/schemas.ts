@@ -5,6 +5,9 @@
  * Todo es por TOQUE (tap) — nada de arrastrar obligatorio — y funciona a 360px.
  * Convenciones del curso (CONTEXTO.md): Java, medio = (inicio + fin) / 2 entero,
  * "comparación" = cada elemento revisado.
+ * TEXTO DESTACADO: en prompt, hint, explanation, notas y explicaciones de pasos se puede
+ * marcar información clave con **así** (se renderiza con <RichText>, src/ui/RichText.tsx).
+ * SIN EMOJIS en ningún texto ni ícono: usar PixelIcon.
  */
 
 export type Val = number | string
@@ -61,7 +64,7 @@ export interface OrderData {
 // Tocar ficha → tocar casillero. Tocar ficha ya colocada la regresa.
 // Con todas colocadas → COMPROBAR → correcto si todas están en su bin; marca las incorrectas.
 export interface ClassifyData {
-  bins: { id: string; label: string; icon?: string }[]   // 2..4 casilleros (icon = emoji opcional)
+  bins: { id: string; label: string; icon?: string }[]   // 2..4 casilleros (icon = nombre de PixelIcon, src/ui/PixelIcon.tsx — NUNCA emojis)
   items: { text: string; bin: string }[]                 // 4..10 fichas
 }
 

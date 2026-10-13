@@ -67,3 +67,19 @@ body {
 button, input, select { font: inherit; color: inherit; }
 button { touch-action: manipulation; }
 :focus-visible { outline: var(--px) dashed var(--focus); outline-offset: 3px; }
+
+/* INFORMACIÓN DESTACADA: **texto** en el contenido → <strong class="hl"> (ver src/ui/RichText.tsx) */
+:root[data-theme='dark'] { --hl-fg: #ffe600; --hl-bg: transparent; --hl-line: #ffe600; }
+:root[data-theme='light'] { --hl-fg: #14143a; --hl-bg: #ffe27a; --hl-line: #1c3fd1; }
+.hl {
+  color: var(--hl-fg);
+  background: var(--hl-bg);
+  font-weight: normal;
+  text-decoration: underline;
+  text-decoration-color: var(--hl-line);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
