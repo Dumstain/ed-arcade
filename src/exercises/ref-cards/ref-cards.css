@@ -1,0 +1,218 @@
+/* Tarjetas con dirección — prefijo .rc- (no tocar clases globales) */
+.rc-root {
+  display: flex; flex-direction: column; gap: 12px;
+  min-width: 0;
+  font-family: var(--font-body); font-size: 22px; line-height: 1.2; color: var(--fg);
+}
+.rc-root.is-shaking { animation: rc-shake .5s steps(5); }
+
+/* ───── Programa (línea actual con el comecocos) ───── */
+.rc-prog { border: var(--px) solid var(--wall); background: var(--bg-sunken); padding: 8px 8px 10px; }
+.rc-proghead {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--font-arcade); font-size: 10px; color: var(--fg);
+}
+.rc-step { color: var(--fg-muted); }
+.rc-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.rc-line { display: flex; align-items: stretch; gap: 6px; min-height: 36px; }
+.rc-gut { flex: none; width: 28px; display: grid; place-items: center; overflow: hidden; }
+.rc-gut > * { animation: rc-pac-in .3s steps(4) both; }
+.rc-dot { display: block; width: 8px; height: 8px; background: var(--pellet); font-style: normal; animation: none !important; }
+.rc-lineno { flex: none; width: 14px; align-self: center; font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.rc-code {
+  flex: 1; min-width: 0;
+  padding: 4px 8px;
+  font-family: var(--font-body); font-size: 24px; line-height: 1.1;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  display: flex; align-items: center;
+}
+.rc-line.is-done .rc-code { opacity: .4; }
+.rc-line.is-now .rc-code { background: var(--pac); color: var(--pac-ink); }
+.rc-line.is-ok .rc-code { opacity: 1; background: var(--ok); color: var(--bg); }
+.rc-line.is-ok .rc-gut > * { animation: none; }
+
+.rc-hint { margin: 0; min-height: 26px; color: var(--fg-muted); font-size: 22px; }
+
+/* ───── Tablero: tarjetas | flechas | casas ───── */
+.rc-board {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(84px, 112px) minmax(0, 1fr);
+  column-gap: clamp(48px, 15vw, 72px);
+  align-items: start;
+  padding: 10px;
+  min-height: 150px;
+  background: var(--bg-sunken);
+  border: var(--px) solid var(--wall);
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+/* OJO: las columnas NO son position:relative (las flechas miden contra .rc-board) */
+.rc-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.rc-colhead { margin: 0; font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+
+/* tarjeta (variable) */
+.rc-card {
+  --vc: var(--ghost-cyan);
+  position: relative;
+  display: flex; flex-direction: column; align-items: stretch;
+  min-height: 66px; padding: 0; margin: 0;
+  border: 3px solid var(--vc); background: var(--bg-elev);
+  color: var(--fg); font: inherit; text-align: center;
+  cursor: pointer;
+  animation: rc-pop .3s steps(4) both;
+}
+.rc-card:disabled { cursor: default; color: var(--fg); }
+.rc-c1 { --vc: var(--ghost-pink); }
+.rc-c2 { --vc: var(--ghost-orange); }
+.rc-c3 { --vc: var(--ghost-red); }
+.rc-card-name {
+  display: block; padding: 6px 4px;
+  font-family: var(--font-arcade); font-size: 14px; line-height: 1.2;
+  background: var(--vc); color: var(--bg);
+}
+.rc-card-addr { display: block; padding: 6px 4px; font-size: 24px; line-height: 1.1; }
+.rc-card.is-unset { border-style: dashed; }
+.rc-card.is-unset .rc-card-name { background: transparent; color: var(--vc); }
+.rc-card.is-blank .rc-card-addr {
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1.8; color: var(--fg-muted);
+  background: repeating-linear-gradient(135deg, var(--bg-sunken) 0 6px, var(--bg-elev) 6px 12px);
+}
+.rc-card.is-sel { box-shadow: 0 0 0 4px var(--pac); }
+.rc-card.is-sel .rc-card-name { animation: rc-blink 1s steps(1) infinite; }
+.rc-card.is-wrong { border-color: var(--bad); animation: rc-flash .36s steps(2) 3; }
+.rc-card.is-wrong .rc-card-name { background: var(--bad); }
+.rc-ghost { position: absolute; top: -16px; right: -12px; z-index: 3; pointer-events: none; }
+button.rc-card:not(:disabled):hover { box-shadow: 0 0 0 3px var(--fg-muted); }
+button.rc-card.is-sel:hover { box-shadow: 0 0 0 4px var(--pac); }
+
+/* casa (objeto) */
+.rc-house {
+  --c: var(--wall);
+  position: relative;
+  display: flex; flex-direction: column; align-items: stretch;
+  min-width: 0; margin: 0; padding: 0;
+  border: 0; background: transparent;
+  color: var(--fg); font: inherit; text-align: center;
+  cursor: pointer;
+  animation: rc-pop .3s steps(4) both;
+}
+.rc-house:disabled { cursor: default; color: var(--fg); }
+.rc-house, .rc-blank { max-width: 300px; }
+.rc-roof {
+  display: block; height: 16px; background: var(--c);
+  clip-path: polygon(0 100%, 0 70%, 14% 70%, 14% 40%, 28% 40%, 28% 12%, 40% 12%, 40% 0, 60% 0, 60% 12%, 72% 12%, 72% 40%, 86% 40%, 86% 70%, 100% 70%, 100% 100%);
+}
+.rc-hbody {
+  display: grid; place-items: center;
+  min-height: 54px; padding: 8px 6px;
+  border: 3px solid var(--c); background: var(--bg-elev);
+}
+.rc-hlabel { display: block; font-size: 26px; line-height: 1.05; overflow-wrap: anywhere; }
+.rc-hlabel.is-changed { animation: rc-label .5s steps(2) 3; }
+.rc-hsign {
+  display: block; margin-top: 4px; padding: 5px 2px;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1;
+  background: var(--fg); color: var(--bg); border: 2px solid var(--fg);
+}
+.rc-house.is-target { --c: var(--pac); }
+.rc-house.is-target .rc-hbody { animation: rc-pulse 1s steps(1) infinite; }
+.rc-house.is-sel .rc-hbody { box-shadow: 0 0 0 4px var(--pac); }
+button.rc-house:not(:disabled):hover .rc-hbody { box-shadow: 0 0 0 3px var(--fg-muted); }
+
+/* tarjeta en blanco = null */
+.rc-blank {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-height: 52px; margin: 0; padding: 8px 6px;
+  border: 3px dashed var(--fg-muted);
+  background: repeating-linear-gradient(135deg, var(--bg-sunken) 0 6px, var(--bg-elev) 6px 12px);
+  color: var(--fg); font: inherit; cursor: pointer;
+}
+.rc-blank:disabled { cursor: default; color: var(--fg); }
+.rc-blank b { font-family: var(--font-arcade); font-size: 10px; font-weight: normal; }
+.rc-blank span { font-size: 22px; line-height: 1; color: var(--fg-muted); }
+.rc-blank.is-target { border-color: var(--pac); animation: rc-pulse 1s steps(1) infinite; }
+.rc-blank.is-sel { box-shadow: 0 0 0 4px var(--pac); }
+button.rc-blank:not(:disabled):hover { border-color: var(--fg); }
+
+/* flechas de tarjeta a casa */
+.rc-arrows { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 1; }
+.rc-a0 { --vc: var(--ghost-cyan); }
+.rc-a1 { --vc: var(--ghost-pink); }
+.rc-a2 { --vc: var(--ghost-orange); }
+.rc-a3 { --vc: var(--ghost-red); }
+.rc-arrow {
+  fill: none; stroke: var(--vc); stroke-width: 4; stroke-linejoin: miter; stroke-linecap: butt;
+  shape-rendering: crispEdges;
+  stroke-dasharray: 1; stroke-dashoffset: 0;
+  animation: rc-draw .45s steps(8) both;
+}
+.rc-ahead { fill: var(--vc); stroke: none; shape-rendering: crispEdges; animation: rc-appear .1s steps(1) .4s both; }
+
+/* ───── Explicación / solución ───── */
+.rc-explain {
+  padding: 8px 12px; background: var(--bg-elev);
+  border-left: var(--px) solid var(--ok);
+  font-size: 22px; line-height: 1.2;
+}
+.rc-explain b { font-family: var(--font-arcade); font-size: 12px; color: var(--ok); font-weight: normal; }
+.rc-solution {
+  margin: 0; padding: 6px 10px;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1.6;
+  background: var(--pac); color: var(--pac-ink);
+}
+
+/* ───── Pregunta final ───── */
+.rc-final { display: flex; flex-direction: column; gap: 10px; }
+.rc-qtext { margin: 0; font-size: 26px; line-height: 1.2; }
+.rc-choices { display: flex; flex-direction: column; gap: 8px; }
+.rc-choice {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; min-height: 48px; padding: 8px 12px; margin: 0;
+  border: 3px solid var(--wall); background: var(--bg-sunken);
+  color: var(--fg); font-family: var(--font-body); font-size: 24px; line-height: 1.1; text-align: left;
+  cursor: pointer;
+}
+.rc-choice:disabled { cursor: default; color: var(--fg); }
+.rc-radio { flex: none; width: 16px; height: 16px; border: 3px solid var(--fg-muted); background: transparent; }
+.rc-ctext { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rc-choice.is-sel { border-color: var(--pac); box-shadow: 0 0 0 3px var(--pac); }
+.rc-choice.is-sel .rc-radio { background: var(--pac); border-color: var(--pac); }
+.rc-choice.is-wrong { border-color: var(--bad); color: var(--bad); }
+.rc-choice.is-wrong:disabled { color: var(--bad); }
+.rc-choice.is-wrong .rc-ctext { text-decoration: line-through; }
+.rc-choice.is-correct { border-color: var(--ok); color: var(--ok); }
+.rc-choice.is-correct:disabled { color: var(--ok); }
+.rc-choice.is-correct .rc-radio { background: var(--ok); border-color: var(--ok); }
+.rc-ghost-inline { flex: none; }
+button.rc-choice:not(:disabled):hover { border-color: var(--fg-muted); }
+button.rc-choice.is-sel:not(:disabled):hover { border-color: var(--pac); }
+
+/* ───── Aviso de datos inválidos ───── */
+.rc-warn { border-color: var(--bad); }
+.rc-warn-title { margin: 0 0 6px; font-family: var(--font-arcade); font-size: 12px; color: var(--bad); }
+.rc-warn p { margin: 0 0 6px; font-size: 22px; }
+.rc-warn ul { margin: 0; padding-left: 22px; font-size: 22px; }
+
+/* ───── Animaciones (todas con steps) ───── */
+@keyframes rc-shake { 0%, 100% { transform: translateX(0) } 20% { transform: translateX(-8px) } 60% { transform: translateX(8px) } 80% { transform: translateX(-4px) } }
+@keyframes rc-pop { from { transform: scale(.6); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+@keyframes rc-blink { 50% { opacity: .2 } }
+@keyframes rc-flash { 50% { background: var(--bad) } }
+@keyframes rc-pulse { 50% { box-shadow: 0 0 0 4px var(--pac) } }
+@keyframes rc-label { 50% { background: var(--pac); color: var(--pac-ink) } }
+@keyframes rc-draw { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
+@keyframes rc-appear { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rc-pac-in { from { transform: translateY(-120%) } to { transform: translateY(0) } }
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-root.is-shaking,
+  .rc-card, .rc-house,
+  .rc-card.is-sel .rc-card-name,
+  .rc-card.is-wrong,
+  .rc-house.is-target .rc-hbody,
+  .rc-blank.is-target,
+  .rc-hlabel.is-changed,
+  .rc-gut > *,
+  .rc-arrow, .rc-ahead { animation: none; }
+}

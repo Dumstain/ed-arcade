@@ -1,0 +1,32 @@
+/* BadData (sm-bad) y EatStrip (sm-eat) */
+.sm-bad { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; border-color: var(--bad); }
+.sm-bad-head { display: flex; align-items: center; gap: 12px; }
+.sm-bad-title { font-family: var(--font-arcade); font-size: 11px; line-height: 1.5; color: var(--bad); }
+.sm-bad-text { margin: 0; font-family: var(--font-body); font-size: 22px; }
+
+.sm-eat { width: 100%; padding-right: 30px; }
+.sm-eat-track { position: relative; height: 32px; }
+.sm-eat-dots {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  animation: sm-eat-clip 1.1s steps(10) forwards;
+}
+.sm-eat-dot { display: block; width: 8px; height: 8px; background: var(--pellet); }
+.sm-eat-pac {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  margin-left: -14px;
+  animation: sm-eat-move 1.1s steps(10) forwards;
+}
+
+@keyframes sm-eat-clip { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 0 0 100%); } }
+@keyframes sm-eat-move { from { left: 0; } to { left: 100%; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-eat-dots { animation: none; clip-path: inset(0 0 0 100%); }
+  .sm-eat-pac { animation: none; left: 100%; }
+}

@@ -1,0 +1,646 @@
+/* ED ARCADE — estilos del núcleo del juego (prefijo .eda-). Solo tokens de tokens.css. */
+
+:root,
+:root[data-theme='dark'] {
+  --eda-title: var(--pac);
+  --eda-title-shadow: var(--wall);
+  --eda-dot: color-mix(in srgb, var(--pellet) 26%, transparent);
+  --eda-line: color-mix(in srgb, var(--wall) 14%, transparent);
+  --eda-hud-bg: color-mix(in srgb, var(--bg) 94%, transparent);
+}
+:root[data-theme='light'] {
+  --eda-title: var(--wall);
+  --eda-title-shadow: var(--pac);
+  --eda-dot: color-mix(in srgb, var(--pellet) 30%, transparent);
+  --eda-line: color-mix(in srgb, var(--wall) 10%, transparent);
+  --eda-hud-bg: color-mix(in srgb, var(--bg) 94%, transparent);
+}
+
+/* ───────────── Raíz + fondo de laberinto ───────────── */
+.eda-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at center, var(--eda-dot) 0 2px, transparent 2.6px),
+    linear-gradient(90deg, var(--eda-line) 0 4px, transparent 4px),
+    linear-gradient(var(--eda-line) 0 4px, transparent 4px);
+  background-size: 32px 32px, 192px 96px, 96px 192px;
+  background-position: 0 0, 14px 14px, 62px 14px;
+}
+
+.eda-main {
+  flex: 1;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+  min-width: 0;
+}
+
+.eda-muted { color: var(--fg-muted); }
+.eda-empty {
+  font-family: var(--font-arcade);
+  font-size: 14px;
+  text-align: center;
+  color: var(--fg-muted);
+  padding: 48px 0;
+}
+
+/* ───────────── Etiquetas ───────────── */
+.eda-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1.3;
+  text-transform: uppercase;
+  padding: 5px 8px;
+  border: 2px solid var(--wall);
+  background: var(--bg-sunken);
+  color: var(--fg);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.eda-tag--tier { color: var(--eda-title); }
+.eda-tag--ok { color: var(--ok); border-color: var(--ok); }
+.eda-tag--info { color: var(--info); border-color: var(--info); }
+.eda-tag--pac { background: var(--pac); color: var(--pac-ink); border-color: var(--pac); }
+.eda-tag--mode { color: var(--fg-muted); border-style: dashed; }
+
+/* ───────────── Cabecera ───────────── */
+.eda-header {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px max(16px, calc((100% - 880px) / 2 + 16px));
+  background: var(--bg);
+  border-bottom: var(--px) solid var(--wall);
+  box-shadow: 0 var(--px) 0 0 var(--shadow);
+}
+.eda-header__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  color: var(--eda-title);
+  font-family: var(--font-arcade);
+  font-size: 12px;
+  cursor: pointer;
+}
+.eda-header__right { display: flex; align-items: center; gap: 8px; }
+.eda-header__player {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  color: var(--fg-muted);
+  border: 2px solid var(--wall);
+  padding: 6px 8px;
+  background: var(--bg-sunken);
+}
+@media (max-width: 480px) {
+  .eda-header__player { display: none; }
+}
+@media (max-width: 400px) {
+  .eda-header__name { display: none; }
+}
+
+/* ───────────── Pie ───────────── */
+.eda-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 16px 18px;
+  font-size: 20px;
+  color: var(--fg-muted);
+  border-top: 3px dashed color-mix(in srgb, var(--wall) 55%, transparent);
+  background: var(--bg);
+}
+
+/* ───────────── INICIO ───────────── */
+.eda-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding-top: 4px;
+}
+.eda-chase {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  overflow: hidden;
+  border-top: var(--px) solid var(--wall);
+  border-bottom: var(--px) solid var(--wall);
+  background: var(--bg);
+  box-shadow: inset 0 3px 0 0 var(--bg), inset 0 6px 0 0 var(--wall), inset 0 -3px 0 0 var(--bg), inset 0 -6px 0 0 var(--wall);
+}
+.eda-chase__dots {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--pellet) 0 3px, transparent 3.6px) 12px 50% / 26px 26px repeat-x;
+}
+.eda-chase__actors {
+  position: absolute;
+  top: 50%;
+  left: -360px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transform: translateY(-50%);
+  animation: eda-chase 7s steps(70, end) infinite;
+  background: var(--bg);
+  padding: 0 4px;
+}
+.eda-chase__gap { width: 28px; }
+@keyframes eda-chase {
+  from { left: -360px; }
+  to { left: 100%; }
+}
+
+.eda-logo {
+  margin: 10px 0 0;
+  font-family: var(--font-arcade);
+  font-weight: normal;
+  font-size: clamp(34px, 11vw, 68px);
+  line-height: 1.15;
+  letter-spacing: 2px;
+  color: var(--eda-title);
+  text-shadow: 4px 4px 0 var(--eda-title-shadow), 8px 8px 0 var(--shadow);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.4em;
+}
+.eda-start__sub { margin: 0; font-size: 26px; color: var(--fg); }
+.eda-coin {
+  margin: 4px 0 6px;
+  font-family: var(--font-arcade);
+  font-size: 14px;
+  color: var(--ghost-red);
+  letter-spacing: 2px;
+}
+
+.eda-login {
+  width: min(100%, 440px);
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+.eda-login__label { font-family: var(--font-arcade); font-size: 12px; color: var(--eda-title); }
+.eda-login__input {
+  width: 100%;
+  font-size: 16px;
+  letter-spacing: 3px;
+  text-align: center;
+  min-height: 52px;
+}
+.eda-login__error { margin: 0; font-size: 22px; color: var(--bad); }
+.eda-login__play { font-size: 14px; min-height: 56px; }
+.eda-login__who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 20px;
+  color: var(--fg-muted);
+}
+.eda-howto {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  font-size: 22px;
+  color: var(--fg-muted);
+}
+.eda-howto li { display: inline-flex; align-items: center; gap: 6px; }
+
+/* ───────────── MAPA DE DÍAS ───────────── */
+.eda-days { display: flex; flex-direction: column; gap: 8px; }
+.eda-player { display: grid; gap: 10px; }
+.eda-player__row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+.eda-player__who,
+.eda-player__score { display: flex; flex-direction: column; gap: 6px; }
+.eda-player__score { text-align: right; }
+.eda-player__label { font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.eda-player__control { font-family: var(--font-arcade); font-size: 14px; }
+.eda-player__num { font-family: var(--font-arcade); font-size: 16px; color: var(--eda-title); }
+.eda-rank { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+.eda-rank__name {
+  font-family: var(--font-arcade);
+  font-size: 14px;
+  color: var(--eda-title);
+  text-shadow: 2px 2px 0 var(--eda-title-shadow);
+}
+.eda-rankbar {
+  position: relative;
+  height: 22px;
+  border: 3px solid var(--wall);
+  background: var(--bg-sunken);
+}
+.eda-rankbar__fill {
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--pac) 0 8px, transparent 8px 12px);
+}
+.eda-rankbar__pac {
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  line-height: 0;
+}
+.eda-rank__next { margin: 0; font-size: 22px; color: var(--fg-muted); }
+.eda-rank__next b { color: var(--fg); font-weight: normal; }
+.eda-badges {
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.eda-badge {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-family: var(--font-arcade);
+  color: var(--fg-muted);
+  background: var(--bg-sunken);
+  border: 3px dashed var(--fg-muted);
+  cursor: pointer;
+  opacity: 0.7;
+}
+.eda-badge.is-on {
+  opacity: 1;
+  border: 3px solid var(--pac);
+  background: color-mix(in srgb, var(--pac) 18%, var(--bg-sunken));
+  box-shadow: 3px 3px 0 0 var(--shadow);
+}
+
+.eda-section-title { margin: 22px 0 6px; font-size: 14px; }
+.eda-daygrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+}
+.eda-daycard {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  text-align: left;
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg-elev);
+  border: var(--px) solid var(--wall);
+  box-shadow: 6px 6px 0 0 var(--shadow);
+  min-height: 128px;
+}
+button.eda-daycard { cursor: pointer; transition: transform 60ms steps(1, end), box-shadow 60ms steps(1, end); }
+button.eda-daycard:hover { border-color: var(--pac); transform: translate(-2px, -2px); box-shadow: 8px 8px 0 0 var(--shadow); }
+button.eda-daycard:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 0 var(--shadow); }
+.eda-daycard.is-locked { background: var(--bg-sunken); border-style: dashed; box-shadow: none; color: var(--fg-muted); }
+.eda-daycard.is-today { border-color: var(--pac); }
+.eda-daycard.is-done { border-color: var(--ok); }
+.eda-daycard__top { display: flex; align-items: center; gap: 12px; }
+.eda-daycard__icon { flex: none; display: grid; place-items: center; width: 44px; }
+.eda-daycard__names { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.eda-daycard__day { font-family: var(--font-arcade); font-size: 12px; color: var(--eda-title); }
+.eda-daycard.is-locked .eda-daycard__day { color: var(--fg-muted); }
+.eda-daycard__title { font-size: 24px; line-height: 1.05; }
+.eda-daycard__stats { display: flex; flex-direction: column; gap: 6px; }
+.eda-daycard__nums { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 22px; color: var(--fg-muted); }
+.eda-daycard__lock { font-family: var(--font-arcade); font-size: 10px; letter-spacing: 1px; color: var(--fg-muted); }
+
+/* ───────────── MAPA DEL DÍA ───────────── */
+.eda-day { display: flex; flex-direction: column; }
+.eda-day__head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.eda-day__title { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.eda-day__num { font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.eda-day__name {
+  margin: 6px 0 0;
+  font-family: var(--font-arcade);
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--eda-title);
+  text-shadow: 2px 2px 0 var(--eda-title-shadow);
+}
+.eda-day__stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 16px 0;
+  font-size: 22px;
+}
+.eda-day__stats > :first-child { flex: 1 1 140px; }
+.eda-continue { font-size: 14px; min-height: 58px; margin-bottom: 12px; }
+.eda-day__done { text-align: center; margin-bottom: 8px; }
+.eda-day__doneText { margin: 0 0 6px; }
+.eda-day__done p { font-size: 22px; margin: 0; }
+.eda-scores-btn { align-self: flex-start; margin-bottom: 22px; }
+
+.eda-maze { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.eda-tier {
+  position: relative;
+  padding: 14px;
+  border: 6px double var(--wall);
+  background: color-mix(in srgb, var(--bg-elev) 94%, transparent);
+  box-shadow: 5px 5px 0 0 var(--shadow);
+}
+.eda-tier + .eda-tier { margin-top: 40px; }
+.eda-tier + .eda-tier::before {
+  content: '';
+  position: absolute;
+  top: -46px;
+  left: 50%;
+  width: 10px;
+  height: 40px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at center, var(--pellet) 0 3px, transparent 3.6px) center top / 10px 13px repeat-y;
+}
+.eda-tier.is-locked { border-style: dashed; border-width: 4px; background: var(--bg-sunken); box-shadow: none; }
+.eda-tier.is-complete { border-color: var(--ok); }
+.eda-tier__head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.eda-tier__name { font-family: var(--font-arcade); font-size: 12px; color: var(--eda-title); line-height: 1.5; }
+.eda-tier--4 .eda-tier__name { color: var(--ghost-red); }
+.eda-tier.is-locked .eda-tier__name { color: var(--fg-muted); }
+.eda-tier__stars { margin-left: auto; font-size: 22px; color: var(--fg-muted); }
+.eda-tier__boss { display: grid; place-items: center; }
+.eda-tier__lock { margin: 8px 0 0; font-size: 20px; color: var(--fg-muted); }
+
+.eda-nodes {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+  gap: 10px;
+}
+.eda-node {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 26px 8px 10px;
+  font: inherit;
+  color: var(--fg);
+  text-align: center;
+  background: var(--bg-sunken);
+  border: 3px solid var(--wall);
+  box-shadow: 4px 4px 0 0 var(--shadow);
+  cursor: pointer;
+  transition: transform 60ms steps(1, end), box-shadow 60ms steps(1, end);
+}
+.eda-node:hover:not(.is-locked) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 0 var(--shadow); border-color: var(--wall-glow); }
+.eda-node:active:not(.is-locked) { transform: translate(3px, 3px); box-shadow: 1px 1px 0 0 var(--shadow); }
+.eda-node__num { position: absolute; top: 6px; left: 8px; font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.eda-node__icon { height: 32px; display: grid; place-items: center; }
+.eda-node__title { font-size: 20px; line-height: 1.05; overflow-wrap: anywhere; }
+.eda-node__pts { margin-top: auto; font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.eda-node.is-next { border-color: var(--pac); animation: eda-pulse 1s steps(2, end) infinite; }
+.eda-node.is-solved { border-color: var(--ok); }
+.eda-node.is-solved .eda-node__pts { color: var(--ok); }
+.eda-node.is-failed { border-color: var(--bad); }
+.eda-node.is-locked { opacity: 0.45; cursor: not-allowed; border-style: dashed; box-shadow: none; }
+@keyframes eda-pulse {
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--pac) 45%, transparent), 4px 4px 0 0 var(--shadow); }
+}
+.eda-pellet {
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: var(--pellet);
+}
+.eda-pellet.is-power {
+  width: 22px;
+  height: 22px;
+  clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+  animation: eda-blink 0.8s steps(1, end) infinite;
+}
+@keyframes eda-blink { 50% { opacity: 0.25; } }
+
+/* ───────────── RUNNER ───────────── */
+.eda-runner { display: flex; flex-direction: column; gap: 16px; }
+.eda-hud {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 8px 10px;
+  background: var(--eda-hud-bg);
+  border: var(--px) solid var(--wall);
+  box-shadow: 0 var(--px) 0 0 var(--shadow);
+}
+.eda-hud__back { padding: 6px 10px; }
+.eda-hud__fruit { display: grid; place-items: center; }
+.eda-hud__score,
+.eda-hud__combo { display: flex; flex-direction: column; gap: 4px; }
+.eda-hud__label { font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.eda-hud__num { font-family: var(--font-arcade); font-size: 14px; color: var(--eda-title); white-space: nowrap; }
+.eda-hud__lives { display: flex; align-items: center; min-height: 24px; }
+.eda-hud__combo.is-hot .eda-hud__num { color: var(--ghost-pink); animation: eda-blink 0.6s steps(1, end) infinite; }
+.eda-hud__pellets { flex: 1 1 110px; min-width: 100px; display: flex; justify-content: flex-end; }
+
+.eda-card { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.eda-card--boss { border-color: var(--ghost-red); }
+.eda-card__head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.eda-card__boss { margin-left: auto; display: grid; place-items: center; }
+.eda-card__title { margin: 0; font-size: 16px; }
+.eda-card__prompt { margin: 0; font-size: 24px; line-height: 1.2; }
+.eda-hint-btn { align-self: flex-start; }
+.eda-hint {
+  font-size: 22px;
+  padding: 8px 12px;
+  border: 3px dashed var(--info);
+  background: color-mix(in srgb, var(--info) 10%, var(--bg-elev));
+}
+.eda-hint__label { font-family: var(--font-arcade); font-size: 10px; color: var(--info); margin-right: 6px; }
+.eda-play { min-width: 0; margin-top: 4px; }
+.eda-modal-text { font-size: 22px; margin: 0 0 14px; }
+
+.eda-crash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 16px;
+  font-size: 22px;
+}
+.eda-crash p { margin: 0; }
+
+.eda-result { display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 110px; }
+.eda-result.is-dead { border-color: var(--bad); }
+.eda-result__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.eda-result__title { margin: 0; font-size: 16px; }
+.eda-result__title.is-bad { color: var(--bad); }
+.eda-result__score { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.eda-result__points { font-family: var(--font-arcade); font-size: 16px; color: var(--eda-title); text-shadow: 2px 2px 0 var(--eda-title-shadow); }
+.eda-result__note { margin: 0; font-size: 22px; }
+.eda-breakdown { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.eda-breakdown li {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  padding: 5px 7px;
+  border: 2px solid var(--wall);
+  color: var(--fg-muted);
+}
+.eda-breakdown li.is-bad { color: var(--bad); border-color: var(--bad); }
+.eda-breakdown li.is-ok { color: var(--ok); border-color: var(--ok); }
+.eda-explain {
+  padding: 12px 14px;
+  border: var(--px) solid var(--pac);
+  background: color-mix(in srgb, var(--pac) 10%, var(--bg-elev));
+  box-shadow: 4px 4px 0 0 var(--wall);
+}
+.eda-explain__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-family: var(--font-arcade);
+  font-weight: normal;
+  font-size: 12px;
+  color: var(--eda-title);
+}
+.eda-explain__text { margin: 0; font-size: 24px; line-height: 1.25; white-space: pre-line; }
+.eda-result__actions { display: flex; flex-direction: column; gap: 10px; }
+.eda-next { font-size: 14px; min-height: 58px; }
+.eda-result__secondary { justify-content: space-between; }
+
+/* Efectos de pantalla (fantasma que cruza, power pellet) */
+.eda-fx-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 6000;
+}
+.eda-ghostrun {
+  position: absolute;
+  top: 40%;
+  left: -64px;
+  animation: eda-cross 1.1s steps(22, end) forwards;
+}
+@keyframes eda-cross { to { left: calc(100% + 64px); } }
+.eda-powerrun {
+  position: absolute;
+  top: 24%;
+  left: -340px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: eda-cross-wide 1.8s steps(36, end) forwards;
+}
+.eda-powerrun__gap { width: 24px; }
+@keyframes eda-cross-wide { to { left: calc(100% + 40px); } }
+
+/* ───────────── NIVEL / DÍA COMPLETADO ───────────── */
+.eda-celebrate { display: grid; place-items: center; min-height: 60vh; }
+.eda-celebrate__box {
+  width: min(100%, 540px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+.eda-celebrate__sprites { display: flex; align-items: center; gap: 18px; }
+.eda-celebrate__title { margin: 0; font-size: 16px; }
+.eda-celebrate__sub { margin: 0; font-family: var(--font-arcade); font-size: 12px; color: var(--fg-muted); }
+.eda-celebrate__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+}
+.eda-celebrate__stats > div { border: 3px solid var(--wall); background: var(--bg-sunken); padding: 8px 4px; }
+.eda-celebrate__stats dt { font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.eda-celebrate__stats dd { margin: 6px 0 0; font-size: 26px; }
+.eda-celebrate__unlock { margin: 0; font-family: var(--font-arcade); font-size: 12px; color: var(--ok); line-height: 1.5; }
+
+.eda-dayend { display: flex; flex-direction: column; gap: 18px; }
+.eda-dayend__head { display: flex; align-items: center; gap: 14px; }
+.eda-dayend__head p { margin: 4px 0 0; font-size: 22px; }
+.eda-dayend__title { margin: 0; font-size: 16px; }
+.eda-summary { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.eda-hiscore {
+  padding: 16px 12px;
+  border: var(--px) solid var(--wall);
+  background: var(--bg-sunken);
+  box-shadow: 6px 6px 0 0 var(--shadow);
+}
+.eda-hiscore__title {
+  margin: 0 0 12px;
+  text-align: center;
+  font-family: var(--font-arcade);
+  font-weight: normal;
+  font-size: 16px;
+  color: var(--ghost-red);
+  letter-spacing: 2px;
+}
+.eda-hiscore__loading { text-align: center; font-family: var(--font-arcade); font-size: 12px; }
+.eda-hiscore__table { width: 100%; border-collapse: collapse; font-family: var(--font-arcade); font-size: 12px; }
+.eda-hiscore__table th {
+  font-size: 10px;
+  font-weight: normal;
+  text-align: left;
+  color: var(--info);
+  padding: 6px 4px 10px;
+}
+.eda-hiscore__table td { padding: 8px 4px; white-space: nowrap; }
+.eda-hiscore__table tbody tr:nth-child(4n + 1) td { color: var(--ghost-red); }
+.eda-hiscore__table tbody tr:nth-child(4n + 2) td { color: var(--ghost-pink); }
+.eda-hiscore__table tbody tr:nth-child(4n + 3) td { color: var(--ghost-cyan); }
+.eda-hiscore__table tbody tr:nth-child(4n + 4) td { color: var(--ghost-orange); }
+.eda-hiscore__table tbody tr.is-me td { background: var(--pac); color: var(--pac-ink); }
+.eda-hiscore__note { text-align: center; font-size: 20px; margin: 10px 0 0; }
+.eda-dayend__actions { display: flex; flex-direction: column; gap: 10px; }
+
+@media (max-width: 400px) {
+  .eda-hiscore__table { font-size: 10px; }
+  .eda-tier { padding: 12px 10px; }
+}
+
+/* ───────────── Movimiento reducido ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  .eda-chase__actors { animation: none; left: 16px; }
+  .eda-node.is-next,
+  .eda-pellet.is-power,
+  .eda-hud__combo.is-hot .eda-hud__num { animation: none; }
+  .eda-fx-layer { display: none; }
+  button.eda-daycard,
+  .eda-node { transition: none; }
+}

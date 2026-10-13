@@ -1,0 +1,57 @@
+/* number — prefijo nm- */
+.nm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+}
+.nm-play {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+.nm-cap {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  color: var(--ok);
+  letter-spacing: 0.05em;
+}
+.nm-also {
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--fg-muted);
+}
+.nm-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--info);
+}
+.nm-tried {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 14px;
+  max-width: 100%;
+}
+.nm-tried-label {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  color: var(--fg-muted);
+}
+.nm-try {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 24px;
+  color: var(--bad);
+}

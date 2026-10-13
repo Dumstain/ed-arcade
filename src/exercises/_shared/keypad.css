@@ -1,0 +1,88 @@
+/* Teclado numérico arcade — prefijo kp- */
+.kp {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 300px;
+  margin-inline: auto;
+}
+
+/* Marcador tipo score de arcade: siempre oscuro con dígitos amarillos (contraste en ambos temas) */
+.kp-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-height: 64px;
+  padding: 12px 14px;
+  background: var(--pac-ink);
+  color: var(--pac);
+  border: var(--px) solid var(--wall);
+  box-shadow: inset 0 0 0 3px var(--bg-sunken), 0 4px 0 var(--wall);
+  font-family: var(--font-arcade);
+  font-size: 24px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.kp-digits { text-align: right; }
+.kp-cursor { animation: kp-blink 1s steps(1) infinite; }
+.kp-unit {
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--fg-muted);
+  background: var(--bg-sunken);
+  padding: 0 8px;
+  align-self: center;
+}
+.kp-display--ok { color: var(--ok); border-color: var(--ok); }
+.kp-display--bad { color: var(--bad); border-color: var(--bad); animation: kp-shake 0.3s steps(4) 2; }
+.kp-display.is-bump { border-color: var(--focus); }
+
+.kp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.kp-key {
+  min-height: 56px;
+  padding: 0;
+  font-family: var(--font-arcade);
+  font-size: 18px;
+  line-height: 1;
+  background: var(--bg-elev);
+  color: var(--fg);
+  border: var(--px) solid var(--wall);
+  box-shadow: 0 4px 0 var(--wall);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.kp-key--aux { font-size: 12px; color: var(--info); }
+.kp-key:hover:not(:disabled) { border-color: var(--focus); }
+.kp-key:active:not(:disabled),
+.kp-key.is-down {
+  transform: translateY(4px);
+  box-shadow: none;
+  background: var(--pac);
+  color: var(--pac-ink);
+  border-color: var(--pac);
+}
+.kp-key:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.kp-submit { margin-top: 4px; }
+
+@keyframes kp-blink { 50% { opacity: 0; } }
+@keyframes kp-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kp-cursor { animation: none; }
+  .kp-display--bad { animation: none; }
+}

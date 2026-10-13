@@ -1,0 +1,34 @@
+/* Solo para la vitrina de QA (prefijo .ui-sc-) */
+.ui-sc {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 16px 16px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.ui-sc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ui-sc-brand { display: flex; align-items: center; gap: 12px; }
+.ui-sc-h1 { margin: 0; font-size: 16px; }
+.ui-sc-h { margin: 0 0 14px; font-size: 13px; }
+.ui-sc-note { margin: 0; color: var(--fg-muted); font-size: 22px; }
+.ui-sc-p { margin: 0; font-size: 22px; }
+.ui-sc-gap { height: 14px; }
+.ui-sc-legend { display: block; margin-top: 6px; color: var(--fg-muted); font-size: 20px; }
+.ui-sc-sprites { gap: 14px; margin-bottom: 12px; }
+.ui-sc-lbl {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 52px;
+}
+.ui-sc-lbl small { font-family: var(--font-arcade); font-size: 8px; color: var(--fg-muted); }
+.ui-sc-ctrl { margin-top: 14px; }
+.ui-sc-num { font-family: var(--font-arcade); font-size: 12px; min-width: 56px; text-align: center; }

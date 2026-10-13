@@ -1,0 +1,430 @@
+/* Torres de Hanói — prefijo hn- (no chocar con otras clases).
+   Colores solo con var(--...) de tokens.css; los reflejos/sombras de los discos son "pixeles de sprite". */
+
+.hn-root {
+  --hn-label: 44px;
+  --hn-floor: 24px;
+  --hn-base: calc(var(--hn-label) + var(--hn-floor));
+  --hn-accent: var(--pac); /* texto resaltado */
+  --hn-hi: var(--pac); /* selección / contorno */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  font-family: var(--font-body);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hn-mission {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+}
+.hn-mission b {
+  color: var(--hn-accent);
+  font-weight: normal;
+}
+.hn-rules {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--fg-muted);
+}
+
+/* En tema claro el amarillo casi no se ve sobre crema: usamos azul laberinto / naranja de foco */
+:root[data-theme='light'] .hn-root {
+  --hn-accent: var(--wall);
+  --hn-hi: var(--focus);
+}
+
+/* ───── HUD ───── */
+.hn-hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+.hn-counter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-arcade);
+  line-height: 1;
+  color: var(--fg);
+}
+.hn-counter-label {
+  font-size: 10px;
+}
+.hn-counter-val {
+  font-size: 14px;
+  white-space: nowrap;
+}
+.hn-num {
+  display: inline-block;
+  min-width: 2ch;
+  text-align: center;
+  font-weight: normal;
+  font-size: 18px;
+  color: var(--hn-accent);
+  animation: hn-numpop 0.2s steps(2) both;
+}
+.hn-counter.is-last .hn-num {
+  color: var(--bad);
+}
+.hn-counter.is-last {
+  animation: hn-blink 0.6s steps(1) infinite;
+}
+@keyframes hn-numpop {
+  0% { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+@keyframes hn-blink {
+  50% { opacity: 0.35; }
+}
+
+/* Medidor de movimientos: pellets que se van comiendo */
+.hn-meter {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+}
+.hn-seg {
+  flex: 1 1 0;
+  min-width: 3px;
+  position: relative;
+}
+.hn-seg::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: var(--pellet);
+}
+.hn-seg.is-used::after {
+  background: var(--bg-sunken);
+  box-shadow: inset 0 0 0 1px var(--wall);
+}
+
+/* ───── Escenario ───── */
+.hn-stage {
+  position: relative;
+  width: 100%;
+  height: calc(var(--hn-base) + var(--hn-h) * (var(--hn-n) + 2) + 6px + var(--px) * 2);
+  background: var(--bg-sunken);
+  border: var(--px) solid var(--wall);
+  box-shadow: 4px 4px 0 var(--shadow);
+  overflow: hidden;
+}
+.hn-stage.is-flash {
+  border-color: var(--bad);
+}
+
+.hn-pegs {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  z-index: 1;
+}
+.hn-peg {
+  position: relative;
+  min-width: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+.hn-peg + .hn-peg {
+  border-left: 2px dashed var(--wall);
+}
+.hn-peg:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--wall) 16%, transparent);
+}
+.hn-peg.is-sel {
+  background: color-mix(in srgb, var(--hn-hi) 16%, transparent);
+}
+.hn-peg:disabled {
+  cursor: default;
+}
+.hn-peg:focus-visible {
+  outline-offset: -6px;
+}
+
+.hn-pole {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  margin-left: -6px;
+  bottom: var(--hn-base);
+  height: calc(var(--hn-h) * (var(--hn-n) + 1));
+  background: var(--wall);
+  box-shadow: inset 4px 0 0 var(--wall-glow);
+}
+.hn-pole.is-nudge {
+  animation: hn-nudge 0.35s steps(1) both;
+}
+@keyframes hn-nudge {
+  0% { transform: translateX(-5px); }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+  100% { transform: none; }
+}
+.hn-plate {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: calc(var(--hn-base) - 6px);
+  height: 6px;
+  background: var(--wall);
+  box-shadow: 0 3px 0 var(--shadow);
+}
+
+.hn-plabel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--hn-label);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.hn-letter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-arcade);
+  font-size: 14px;
+  line-height: 1;
+}
+.hn-tag {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--fg-muted);
+}
+.hn-peg.is-goal .hn-tag {
+  color: var(--ok);
+}
+
+/* Suelo de pellets */
+.hn-floor {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: calc(var(--hn-label) + 6px);
+  height: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+.hn-pellet {
+  width: 6px;
+  height: 6px;
+  background: var(--pellet);
+}
+.hn-floor.is-run .hn-pellet {
+  animation: hn-eat 1ms steps(1) var(--t) forwards;
+}
+@keyframes hn-eat {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ───── Discos ───── */
+.hn-disks {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.hn-disk {
+  position: absolute;
+  left: calc(var(--cx) - var(--w) / 2);
+  width: var(--w);
+  height: var(--hn-h);
+  bottom: calc(var(--hn-base) + var(--lvl) * var(--hn-h));
+  transition: left 0.16s steps(4), bottom 0.14s steps(3);
+}
+.hn-face {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: calc(100% - 3px);
+  background: var(--dk);
+  border: 3px solid var(--pac-ink);
+  /* reflejo y sombra de sprite (pixeles) */
+  box-shadow: inset 0 5px 0 rgba(255, 255, 255, 0.35), inset 0 -5px 0 rgba(0, 0, 0, 0.25), 3px 3px 0 var(--shadow);
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--pac-ink);
+}
+.hn-face.is-sel {
+  outline: 3px solid var(--hn-hi);
+  outline-offset: 2px;
+  animation: hn-sel 0.4s steps(1) infinite;
+}
+@keyframes hn-sel {
+  0% { outline-color: var(--hn-hi); filter: brightness(1.3); }
+  50% { outline-color: var(--fg); filter: none; }
+}
+.hn-face.is-land {
+  animation: hn-land 0.24s steps(1) both;
+}
+@keyframes hn-land {
+  0% { transform: translateY(3px) scale(1.1, 0.78); }
+  45% { transform: translateY(-3px) scale(0.94, 1.12); }
+  75% { transform: translateY(1px) scale(1.03, 0.96); }
+  100% { transform: none; }
+}
+.hn-face.is-bounce {
+  border-color: var(--bad);
+  outline: 3px solid var(--bad);
+  outline-offset: 2px;
+  animation: hn-bounce 0.5s steps(1) both;
+}
+@keyframes hn-bounce {
+  0% { transform: translateX(0); }
+  15% { transform: translateX(calc(var(--hn-dir) * 14px)); }
+  30% { transform: translateX(calc(var(--hn-dir) * 24px)) rotate(calc(var(--hn-dir) * 6deg)); }
+  45% { transform: translateX(calc(var(--hn-dir) * 10px)); }
+  60% { transform: translateX(calc(var(--hn-dir) * 3px)); }
+  75% { transform: translateX(calc(var(--hn-dir) * -5px)); }
+  90% { transform: translateX(calc(var(--hn-dir) * 2px)); }
+  100% { transform: none; }
+}
+
+/* Celebración: los discos saltan en ola mientras el comecocos cruza */
+.hn-stage.is-won .hn-face {
+  animation: hn-hop 0.5s steps(1) infinite;
+  animation-delay: calc(var(--i) * 90ms);
+}
+@keyframes hn-hop {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.hn-run {
+  position: absolute;
+  z-index: 6;
+  bottom: calc(var(--hn-label) - 1px);
+  left: -12%;
+  pointer-events: none;
+  animation: hn-run 1.8s steps(30) forwards;
+}
+@keyframes hn-run {
+  from { left: -12%; }
+  to { left: 108%; }
+}
+
+/* Derrota: fantasmas cruzan y los discos se asustan */
+.hn-chase {
+  position: absolute;
+  z-index: 6;
+  bottom: calc(var(--hn-label) - 1px);
+  left: -34%;
+  display: flex;
+  gap: 6px;
+  pointer-events: none;
+  animation: hn-chase 1.3s steps(22) forwards;
+}
+@keyframes hn-chase {
+  from { left: -34%; }
+  to { left: 106%; }
+}
+.hn-stage.is-lost .hn-face {
+  background: var(--ghost-scared);
+  color: #fff; /* pixel de sprite: legible en ambos temas */
+  animation: hn-scared 0.3s steps(1) infinite;
+}
+@keyframes hn-scared {
+  50% { opacity: 0.55; }
+}
+
+.hn-banner {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  font-family: var(--font-arcade);
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  background: var(--bg);
+  border: var(--px) solid currentColor;
+  pointer-events: none;
+  animation: hn-banner 0.5s steps(1) infinite;
+}
+.hn-banner.is-ok { color: var(--ok); }
+.hn-banner.is-bad { color: var(--bad); }
+@keyframes hn-banner {
+  50% { background: var(--bg-elev); }
+}
+
+/* ───── Mensajes ───── */
+.hn-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 64px;
+  padding: 6px 10px;
+  font-size: 22px;
+  line-height: 1.1;
+  background: var(--bg-elev);
+  border-left: var(--px) solid var(--wall);
+}
+.hn-msg.is-warn { border-left-color: var(--hn-hi); }
+.hn-msg.is-bad { border-left-color: var(--bad); color: var(--bad); }
+.hn-msg.is-ok { border-left-color: var(--ok); color: var(--ok); }
+.hn-msg-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+}
+
+.hn-aviso {
+  margin: 0;
+  padding: 6px 10px;
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--fg-muted);
+  border: 2px dashed var(--wall);
+}
+
+@media (max-width: 400px) {
+  .hn-mission { font-size: 22px; }
+  .hn-msg { font-size: 21px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hn-run,
+  .hn-chase { display: none; }
+  .hn-disk { transition: none; }
+  .hn-face,
+  .hn-face.is-sel,
+  .hn-face.is-land,
+  .hn-face.is-bounce,
+  .hn-stage.is-won .hn-face,
+  .hn-stage.is-lost .hn-face,
+  .hn-banner,
+  .hn-num,
+  .hn-pole.is-nudge,
+  .hn-counter.is-last { animation: none; }
+}

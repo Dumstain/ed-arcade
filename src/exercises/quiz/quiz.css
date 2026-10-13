@@ -1,0 +1,136 @@
+/* quiz — prefijo qz- */
+.qz {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+}
+.qz.is-flash::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: var(--px) solid var(--bad);
+  pointer-events: none;
+  animation: qz-flash 0.7s steps(2) 1 both;
+}
+@keyframes qz-flash {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.qz-choices { display: flex; flex-direction: column; gap: 14px; }
+
+.qz-choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 12px;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 24px;
+  line-height: 1.1;
+  background: var(--bg-elev);
+  color: var(--fg);
+  border: var(--px) solid var(--wall);
+  box-shadow: 0 4px 0 var(--wall);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.qz-choice:hover:not(:disabled) { border-color: var(--focus); }
+.qz-choice:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+.qz-choice:disabled { cursor: default; }
+
+.qz-slot {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+}
+.qz-pellet { display: block; width: 8px; height: 8px; background: var(--pellet); }
+
+.qz-letter {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-family: var(--font-arcade);
+  font-size: 14px;
+  line-height: 1;
+  background: var(--wall);
+  color: var(--pac);
+}
+.qz-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.qz-mark {
+  flex: none;
+  font-family: var(--font-arcade);
+  font-size: 12px;
+  padding: 4px 6px;
+  border: 3px solid currentColor;
+}
+
+/* Seleccionada: amarillo arcade con contorno fuerte */
+.qz-choice.is-selected {
+  background: var(--pac);
+  color: var(--pac-ink);
+  border-color: var(--fg);
+  box-shadow: 0 4px 0 var(--fg);
+}
+.qz-choice.is-selected .qz-letter { background: var(--pac-ink); color: var(--pac); }
+/* el comecocos es amarillo: sobre el fondo amarillo de la opción elegida se pinta oscuro */
+.qz-choice.is-selected .qz-pac { color: var(--pac-ink); }
+
+/* Incorrecta: tachada, con fantasma */
+.qz-choice.is-wrong {
+  border-color: var(--bad);
+  box-shadow: 0 4px 0 var(--bad);
+  color: var(--fg-muted);
+  animation: qz-hit 0.3s steps(4) 2;
+}
+.qz-choice.is-wrong .qz-text { text-decoration: line-through; }
+.qz-choice.is-wrong .qz-letter { background: var(--bad); color: var(--bg); }
+.qz-choice.is-wrong .qz-mark { color: var(--bad); }
+
+/* Correcta: verde, con fruta */
+.qz-choice.is-correct {
+  border-color: var(--ok);
+  box-shadow: 0 4px 0 var(--ok);
+}
+.qz-choice.is-correct .qz-letter { background: var(--ok); color: var(--bg); }
+.qz-choice.is-correct .qz-mark { color: var(--ok); }
+
+.qz-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--bad);
+}
+
+.qz-go { margin-top: 2px; }
+
+@keyframes qz-hit {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@media (max-width: 420px) {
+  .qz-choice { gap: 8px; padding: 8px; font-size: 23px; }
+  .qz-letter { width: 32px; height: 32px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qz-choice.is-wrong { animation: none; }
+  .qz.is-flash::after { animation: none; opacity: 1; }
+}

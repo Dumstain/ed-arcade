@@ -1,0 +1,389 @@
+/* ORDER — fila de respuesta con comecocos. Prefijo de clases: ord- */
+
+.ord {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+.ord-context { min-width: 0; }
+
+.ord-lane,
+.ord-tray,
+.ord-solution {
+  position: relative;
+  min-width: 0;
+  padding: 12px;
+}
+.ord-lane { overflow: hidden; }
+
+/* flash rojo de error (capa superpuesta para no pelear con la sacudida) */
+.ord-lane::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: var(--px) solid var(--bad);
+  opacity: 0;
+  pointer-events: none;
+}
+.ord-lane.is-hit::after { animation: ord-flash 0.6s steps(1) 1; }
+@keyframes ord-flash {
+  0% { opacity: 1; }
+  20% { opacity: 0; }
+  40% { opacity: 1; }
+  60% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* ───────── encabezados ───────── */
+.ord-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.ord-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+.ord-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--pac);
+  flex: none;
+}
+.ord-label--ok { color: var(--ok); }
+.ord-label--ok::before { background: var(--ok); }
+.ord-count {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* ───────── fila de huecos ───────── */
+.ord-slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px 8px;
+}
+.ord-slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.ord-badge {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--fg-muted);
+  text-align: center;
+}
+.ord-slot.is-filled .ord-badge { color: var(--fg); }
+
+.ord-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 60px;
+  min-height: 56px;
+  border: 3px dashed var(--wall);
+  background: var(--bg-sunken);
+}
+.ord-slot.is-cursor .ord-cell {
+  border-style: solid;
+  border-color: var(--pac);
+  animation: ord-cursor 0.8s steps(1) infinite;
+}
+@keyframes ord-cursor {
+  50% { border-color: var(--wall); }
+}
+.ord-slot.is-filled .ord-cell {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  background: none;
+  animation: none;
+}
+.ord-slot--goal .ord-cell { border-style: solid; }
+
+.ord-pellet {
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: var(--pellet);
+}
+.ord-pac { animation: ord-pac-in 0.3s steps(5) both; }
+@keyframes ord-pac-in {
+  from { transform: translateX(-30px); }
+  to { transform: translateX(0); }
+}
+@keyframes ord-pac-in-y {
+  from { transform: translateY(-22px); }
+  to { transform: translateY(0); }
+}
+
+/* ───────── fichas ───────── */
+.ord-token {
+  position: relative;
+  min-width: 60px;
+  min-height: 52px;
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 24px;
+  line-height: 1.1;
+  color: var(--fg);
+  background: var(--bg-sunken);
+  border: 3px solid var(--wall);
+  box-shadow: 4px 4px 0 var(--shadow);
+  cursor: pointer;
+  text-align: center;
+  overflow-wrap: anywhere;
+  touch-action: manipulation;
+}
+.ord-token:hover:not(:disabled) { border-color: var(--pac); }
+.ord-token:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--shadow);
+}
+.ord-token:disabled { cursor: default; }
+.ord-token--tray {
+  animation: ord-token-in 0.25s steps(4) backwards;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+.ord-token--tray:disabled { opacity: 0.5; }
+@keyframes ord-token-in {
+  from { transform: translateY(8px) scale(0.8); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ficha colocada = resaltado amarillo arcade */
+.ord-token--placed {
+  min-width: 60px;
+  min-height: 56px;
+  color: var(--pac-ink);
+  background: var(--pac);
+  border-color: var(--pac);
+}
+.ord-token--placed:hover:not(:disabled) { border-color: var(--fg); }
+
+/* error */
+.ord-slot.is-wrong .ord-token--placed {
+  color: var(--bad);
+  background: var(--bg-sunken);
+  border-color: var(--bad);
+  animation: ord-wiggle 0.3s steps(3) 2;
+}
+.ord-slot.is-wrong .ord-badge { color: var(--bad); }
+@keyframes ord-wiggle {
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.ord-ghost-mark {
+  position: absolute;
+  top: -14px;
+  right: -8px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* acierto: barrido de izquierda a derecha, ficha por ficha */
+.ord-lane.is-won .ord-token--placed {
+  color: var(--ok);
+  background: var(--bg-elev);
+  border-color: var(--ok);
+  box-shadow: 4px 4px 0 var(--ok);
+  animation: ord-won 0.45s steps(5) backwards;
+  animation-delay: calc(var(--i, 0) * 140ms);
+}
+.ord-lane.is-won .ord-slot--goal .ord-cell { border-color: var(--ok); }
+@keyframes ord-won {
+  0% { color: var(--pac-ink); background: var(--pac); border-color: var(--pac); transform: translateY(0); }
+  50% { color: var(--pac-ink); background: var(--pac); border-color: var(--pac); transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* fantasma que cruza la fila al fallar */
+.ord-ghost {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -20px;
+  z-index: 5;
+  pointer-events: none;
+  animation: ord-ghost-run 1s steps(16) forwards;
+}
+@keyframes ord-ghost-run {
+  to { left: -56px; }
+}
+
+/* ───────── bandeja ───────── */
+.ord-tray__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 4px 4px 0;
+}
+.ord-empty {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--fg-muted);
+}
+
+/* ───────── mensajes y acciones ───────── */
+.ord-msg {
+  margin: 0;
+  min-height: 1.25em;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--fg-muted);
+}
+.ord-msg.is-bad { color: var(--bad); }
+.ord-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ord-actions .px-btn { flex: 1 1 140px; }
+.ord-actions .ord-check { flex: 2 1 200px; }
+.ord-check.is-ready { animation: ord-ready 0.8s steps(1) infinite; }
+@keyframes ord-ready {
+  50% { box-shadow: 0 0 0 var(--px) var(--focus); }
+}
+
+/* ───────── solución ───────── */
+.ord-solution { border-color: var(--ok); }
+.ord-sol-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ord-sol {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.ord-sol__n {
+  flex: 0 0 24px;
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  text-align: center;
+  color: var(--ok);
+}
+.ord-sol__t {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 24px;
+  line-height: 1.1;
+  color: var(--ok);
+  background: var(--bg-elev);
+  border: 3px solid var(--ok);
+  overflow-wrap: anywhere;
+}
+
+/* ───────── aviso de datos raros ───────── */
+.ord-warn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ord-warn p { margin: 0; font-size: 22px; }
+
+/* ═════════ layout LISTA (textos largos, una ficha por renglón) ═════════ */
+.ord--list .ord-slots {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 8px;
+}
+.ord--list .ord-slot {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+}
+.ord--list .ord-badge {
+  flex: 0 0 44px;
+  width: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: var(--fg);
+  background: var(--bg-sunken);
+  border: 3px solid var(--wall);
+}
+.ord--list .ord-slot--goal .ord-badge { font-size: 9px; }
+.ord--list .ord-slot.is-filled .ord-badge {
+  color: var(--pac-ink);
+  background: var(--pac);
+  border-color: var(--pac);
+}
+.ord--list .ord-slot.is-wrong .ord-badge {
+  color: var(--bad);
+  background: var(--bg-sunken);
+  border-color: var(--bad);
+}
+.ord--list .ord-lane.is-won .ord-slot.is-filled .ord-badge {
+  color: var(--ok);
+  background: var(--bg-elev);
+  border-color: var(--ok);
+}
+.ord--list .ord-cell {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 52px;
+  place-items: center start;
+  padding-inline: 14px;
+}
+.ord--list .ord-slot.is-filled .ord-cell {
+  display: flex;
+  padding: 0;
+}
+.ord--list .ord-token--placed {
+  flex: 1 1 auto;
+  width: 100%;
+  text-align: left;
+}
+.ord--list .ord-token--tray {
+  width: 100%;
+  text-align: left;
+}
+.ord--list .ord-tray__list { flex-direction: column; flex-wrap: nowrap; }
+.ord--list .ord-pac { animation-name: ord-pac-in-y; }
+.ord--list .ord-sol-list { flex-direction: column; flex-wrap: nowrap; }
+.ord--list .ord-sol__t { flex: 1 1 auto; }
+.ord--list .ord-ghost-mark { right: 4px; top: -12px; }
+
+/* ───────── movimiento reducido ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .ord-ghost { display: none; }
+  .ord,
+  .ord *,
+  .ord *::before,
+  .ord *::after {
+    animation: none !important;
+  }
+}

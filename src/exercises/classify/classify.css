@@ -1,0 +1,359 @@
+/* CLASSIFY — casilleros / puertas del laberinto. Prefijo de clases: cls- */
+
+.cls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ───────── encabezados ───────── */
+.cls-tray { padding: 12px; min-width: 0; }
+.cls-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.cls-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+.cls-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--pac);
+  flex: none;
+}
+.cls-count {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* ───────── fichas ───────── */
+.cls-tray__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 4px 4px 0;
+}
+.cls-empty {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--fg-muted);
+}
+.cls-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 4px 12px;
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1.1;
+  text-align: left;
+  color: var(--fg);
+  background: var(--bg-sunken);
+  border: 3px solid var(--wall);
+  box-shadow: 3px 3px 0 var(--shadow);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  touch-action: manipulation;
+}
+.cls-token:hover:not(:disabled) { border-color: var(--pac); }
+.cls-token:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--shadow);
+}
+.cls-token:disabled { cursor: default; }
+.cls-token--tray {
+  animation: cls-token-in 0.25s steps(4) backwards;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+.cls-token--tray:disabled { opacity: 0.5; }
+@keyframes cls-token-in {
+  from { transform: translateY(8px) scale(0.8); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ficha seleccionada: parpadea amarillo <-> neutro (estático amarillo si hay movimiento reducido) */
+.cls-token.is-selected {
+  color: var(--pac-ink);
+  background: var(--pac);
+  border-color: var(--pac);
+  animation: cls-sel 0.6s steps(1) infinite;
+}
+@keyframes cls-sel {
+  50% {
+    color: var(--fg);
+    background: var(--bg-sunken);
+    border-color: var(--wall);
+  }
+}
+
+/* ficha colocada en un casillero */
+.cls-token--placed {
+  color: var(--pac-ink);
+  background: var(--pac);
+  border-color: var(--pac);
+  min-height: 44px;
+}
+.cls-token--placed:hover:not(:disabled) { border-color: var(--fg); }
+
+/* ficha incorrecta tras COMPROBAR */
+.cls-token--placed.is-wrong {
+  color: var(--bad);
+  background: var(--bg-sunken);
+  border-color: var(--bad);
+  animation: cls-wiggle 0.3s steps(3) 2;
+}
+@keyframes cls-wiggle {
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ficha en la solución (sin vidas) */
+.cls-token--solution {
+  cursor: default;
+  color: var(--ok);
+  background: var(--bg-elev);
+  border-color: var(--ok);
+  box-shadow: none;
+}
+
+/* ───────── casilleros ───────── */
+.cls-board {
+  position: relative;
+  overflow: hidden;
+  padding: 0 6px 6px 0; /* deja ver las sombras duras */
+}
+.cls-board.is-hit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: var(--px) solid var(--bad);
+  pointer-events: none;
+  animation: cls-flash 0.6s steps(1) 1 both;
+}
+@keyframes cls-flash {
+  0% { opacity: 1; }
+  20% { opacity: 0; }
+  40% { opacity: 1; }
+  60% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.cls-bins {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.cls-bins[data-n='2'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 520px) {
+  .cls-bins[data-n='3'] .cls-bin:last-child { grid-column: 1 / -1; }
+}
+
+.cls-bin {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 132px;
+  overflow: hidden;
+  background: var(--bg-elev);
+  border: var(--px) solid var(--wall);
+  box-shadow: 4px 4px 0 var(--shadow);
+  cursor: pointer;
+}
+.cls-bin:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shadow); }
+
+/* con una ficha seleccionada, todos los casilleros "se abren" */
+.cls-bin.is-armed {
+  border-color: var(--pac);
+  animation: cls-armed 0.8s steps(1) infinite;
+}
+@keyframes cls-armed {
+  50% { border-color: var(--wall); }
+}
+.cls-bin.is-hit { border-color: var(--bad); }
+.cls-bin.is-solution { cursor: default; border-color: var(--ok); }
+.cls-bin.is-solution:active { transform: none; box-shadow: 4px 4px 0 var(--shadow); }
+
+/* puerta (cabecera del casillero) */
+.cls-door {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 72px;
+  padding: 10px 8px 8px;
+  text-align: center;
+  color: var(--fg);
+  background: var(--bg-sunken);
+  border: 0;
+  border-bottom: var(--px) solid var(--wall);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.cls-door:disabled { cursor: default; }
+.cls-bin.is-hit .cls-door { border-bottom-color: var(--bad); }
+.cls-bin.is-solution .cls-door { border-bottom-color: var(--ok); }
+/* rejillas de ventilación tipo casillero */
+.cls-door::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 18px;
+  height: 12px;
+  background: repeating-linear-gradient(0deg, var(--wall) 0 3px, transparent 3px 6px);
+}
+.cls-door__icon {
+  font-size: 30px;
+  line-height: 1;
+}
+.cls-bin.is-armed .cls-door__icon { animation: cls-bob 0.8s steps(2) infinite; }
+@keyframes cls-bob {
+  50% { transform: translateY(-4px); }
+}
+.cls-door__label {
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.cls-door__count {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--fg-muted);
+}
+
+/* interior del casillero */
+.cls-bin__items {
+  flex: 1 1 auto;
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 8px;
+  min-height: 56px;
+}
+.cls-bin__items li { max-width: 100%; display: flex; }
+.cls-bin__items:empty::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  margin: auto;
+  background: var(--pellet);
+}
+
+/* el comecocos que "se come" la ficha al entrar */
+.cls-eater {
+  position: absolute;
+  top: 8px;
+  left: -30px;
+  z-index: 3;
+  pointer-events: none;
+  animation: cls-eat 0.6s steps(10) forwards;
+}
+@keyframes cls-eat {
+  to { left: 100%; }
+}
+
+/* acierto: los casilleros brillan en verde */
+.cls-board.is-won .cls-bin { border-color: var(--ok); }
+.cls-board.is-won .cls-door { border-bottom-color: var(--ok); }
+.cls-board.is-won .cls-token--placed {
+  color: var(--ok);
+  background: var(--bg-elev);
+  border-color: var(--ok);
+  animation: cls-won 0.45s steps(5) backwards;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+@keyframes cls-won {
+  0% { color: var(--pac-ink); background: var(--pac); border-color: var(--pac); transform: translateY(0); }
+  50% { color: var(--pac-ink); background: var(--pac); border-color: var(--pac); transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+/* fantasma que cruza los casilleros al fallar */
+.cls-ghost {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -20px;
+  z-index: 5;
+  pointer-events: none;
+  animation: cls-ghost-run 1s steps(16) forwards;
+}
+@keyframes cls-ghost-run {
+  to { left: -56px; }
+}
+
+/* ───────── mensajes y acciones ───────── */
+.cls-msg {
+  margin: 0;
+  min-height: 2.5em; /* reserva 2 líneas para que los casilleros no "salten" al tocar */
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--fg-muted);
+}
+.cls-msg.is-bad { color: var(--bad); }
+.cls-skip {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 20px;
+  color: var(--bad);
+}
+.cls-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.cls-actions .px-btn { flex: 1 1 140px; }
+.cls-actions .cls-check { flex: 2 1 200px; }
+.cls-check.is-ready { animation: cls-ready 0.8s steps(1) infinite; }
+@keyframes cls-ready {
+  50% { box-shadow: 0 0 0 var(--px) var(--focus); }
+}
+
+/* ───────── aviso de datos raros ───────── */
+.cls-warn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cls-warn p { margin: 0; font-size: 22px; }
+
+/* ───────── movimiento reducido ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .cls-ghost { display: none; }
+  .cls,
+  .cls *,
+  .cls *::before,
+  .cls *::after {
+    animation: none !important;
+  }
+}
