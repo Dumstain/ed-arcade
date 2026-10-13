@@ -97,6 +97,9 @@
 .cv-tone-1 { color: var(--ok); }
 .cv-tone-2 { color: var(--pellet); }
 .cv-tone-3 { color: var(--focus); }
+/* Tema claro: --pellet da ~2.9:1 sobre --bg-sunken; los números del código son datos del ejercicio */
+:root[data-theme='light'] .cv-tk-num,
+:root[data-theme='light'] .cv-tone-2 { color: #a8402c; }
 
 /* Flechas de pixel (box-shadow en cuadritos de 4px) */
 .cv-arrow { display: block; flex: none; width: 4px; height: 4px; background: currentColor; }
@@ -309,6 +312,9 @@
   .cv-nnext { width: 20px; }
   .cv-link { width: 28px; }
   .cv-head, .cv-null { min-height: 34px; padding: 0 6px; }
+  .cv .cv-code { font-size: 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cv-table { font-size: 18px; }
+  .cv-table th, .cv-table td { padding: 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cv { animation: none; }

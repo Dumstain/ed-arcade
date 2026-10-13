@@ -247,11 +247,15 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
   // ───────── modo TRACE ─────────
   const tokens = cfg.tokens
   const done = mode === 'trace' && idx >= tokens.length
+  // Doble clic: el mismo error seguido no cobra otra vida, y tras avanzar se ignora el clic "rebote"
+  const lastTraceWrong = useRef<string | null>(null)
+  const traceAdvancedAt = useRef(0)
   const onChoose = (chosen: Action, e: BtnEvent) => {
     if (locked || done) return
     sfx.click()
     const tok = tokens[idx]
     if (!tok) return
+    if (performance.now() - traceAdvancedAt.current < 300) return
     if (chosen !== tok.action) {
       setLastWrong(chosen)
       later(() => setLastWrong(null), 700)
@@ -268,10 +272,15 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
         say('bad', '¡UY!', sub[chosen])
       }
       if (chosen === 'push' && view === 'array' && model.size >= limit) flashOverflow()
+      const wrongKey = `${idx}:${chosen}`
+      if (lastTraceWrong.current === wrongKey) return
+      lastTraceWrong.current = wrongKey
       onCheck(false, chosen)
       return
     }
     // acierto
+    traceAdvancedAt.current = performance.now()
+    lastTraceWrong.current = null
     setLastWrong(null)
     clearNote()
     if (tok.action === 'push') {
@@ -348,7 +357,9 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
           <div className="stk-head">
             <span className="stk-ttl">{VIEW_TITLE[view]}</span>
             <span className="stk-badge">
-              {view === 'array' ? `tope = ${model.size - 1}` : `${model.size} ${view === 'nodes' ? 'NODOS' : 'PLATOS'}`}
+              {view === 'array'
+                ? `tope = ${model.size - 1}`
+                : `${model.size} ${view === 'nodes' ? (model.size === 1 ? 'NODO' : 'NODOS') : model.size === 1 ? 'PLATO' : 'PLATOS'}`}
             </span>
           </div>
           {mode === 'popped' && cfg.initial.length > 0 && <p className="stk-sub">Así empieza la pila, antes del programa.</p>}

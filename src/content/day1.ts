@@ -236,7 +236,7 @@ const day1: Exercise[] = [
       'Como en Tarea1.java: cada ficha son los pasos medidos con n = 8, 16, 32 y 64. Fíjate cómo crecen cada vez que n se duplica y mándala a su complejidad.',
     hint: 'Compara cada número con el anterior: ¿se queda igual, suma poquito, se duplica o se multiplica por 4?',
     explanation:
-      'Importa cómo crecen, no el número exacto: 16 → 32 → 64 → 128 se duplica igual que 8 → 16 → 32 → 64, así que también es O(n) (las constantes se quitan). Con el doble de alumnos, pasar lista cuesta el doble; que todos se saluden cuesta 4 veces más.',
+      'Importa cómo crecen, no el número exacto: 16 → 32 → 64 → 128 se duplica igual que 8 → 16 → 32 → 64, así que también es O(n) (las constantes se quitan). Con el doble de alumnos, pasar lista cuesta el doble; que todos se saluden cuesta 4 veces más. Y si al duplicar n solo se suma un poquito (3 → 4 → 5 → 6, o 6 → 8 → 10 → 12), es O(log n): como partir el diccionario a la mitad, el doble de datos solo agrega uno o dos pasos.',
     data: {
       bins: [
         { id: 'o1', label: 'O(1)' },
@@ -363,7 +363,7 @@ const day1: Exercise[] = [
         { text: 'Meter un dato en medio (ya estás parado ahí)', bin: 'nod' },
         { text: 'Buscar un dato en datos desordenados', bin: 'emp' },
         { text: 'Búsqueda binaria: saltar al medio', bin: 'arr' },
-        { text: 'Hacerle lugar a un séptimo si solo había 6', bin: 'nod' },
+        { text: 'Hacerle lugar a un séptimo cuando el arreglo de 6 ya está lleno', bin: 'nod' },
         { text: 'Imprimir todos los datos', bin: 'emp' },
         { text: 'Cambiar el dato de la posición 3', bin: 'arr' },
         { text: 'Meter un dato al inicio', bin: 'nod' },

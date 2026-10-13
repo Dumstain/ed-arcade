@@ -205,7 +205,7 @@ const day2: Exercise[] = [
     prompt: 'Pila con arreglo de tamaño fijo. Corre el programa de la nota: al final, ¿qué número queda guardado en datos[2]?',
     hint: 'Lleva la cuenta de tope (empieza en -1). Fíjate qué hace pop() con el arreglo… ¿lo modifica?',
     explanation:
-      'Queda 6: pop() solo baja tope y el valor viejo se queda ahí como fantasma que ya no cuenta; el siguiente push lo pisa. Por eso pop() con arreglo es O(1): no borra nada, solo mueve el índice.',
+      'Queda 6: pop() solo baja tope, y el 6 se queda en datos[2] como un fantasma que ya no cuenta; el siguiente push lo pisaría. pop() es O(1) porque solo toca el tope: no recorre ni mueve a los demás datos.',
     data: {
       context: {
         code: [
@@ -286,10 +286,10 @@ const day2: Exercise[] = [
     type: 'quiz',
     topic: 'Recursividad y Big-O',
     title: 'HANÓI VS BIG-O',
-    prompt: 'Así crecen los movimientos mínimos de Hanói. Como el lunes, cuenta pasos: ¿qué complejidad tiene?',
-    hint: 'Compara cada fila con la anterior: ¿suma 1, se duplica o se eleva al cuadrado?',
+    prompt: 'Así crecen los movimientos mínimos de Hanói (ojo: aquí n sube de 1 en 1). Como el lunes, cuenta pasos: ¿qué complejidad tiene?',
+    hint: 'Ojo: aquí n crece de 1 en 1, no se duplica como en Tarea1. Si con solo UN disco más los movimientos se duplican, ¿qué tan rápido crece eso?',
     explanation:
-      'Cada disco extra duplica los movimientos (2ⁿ − 1): es O(2ⁿ), exponencial. Con 64 discos, a un movimiento por segundo, tardarías unos 585 mil millones de años.',
+      'Con solo UN disco más, los movimientos se duplican (2ⁿ − 1): es O(2ⁿ), exponencial. En O(n) hay que DUPLICAR n para duplicar los pasos; aquí basta sumar 1 disco. Con 64 discos, a un movimiento por segundo, tardarías unos 585 mil millones de años.',
     data: {
       context: {
         table: {
@@ -303,7 +303,7 @@ const day2: Exercise[] = [
             [10, '1,023'],
           ],
         },
-        note: 'Big-O cuenta pasos, no segundos: receta para 4, 40 y 400 invitados.',
+        note: 'Big-O cuenta pasos, no segundos.',
       },
       choices: ['O(n)', 'O(n²)', 'O(log n)', 'O(2ⁿ)'],
       answer: 3,
@@ -337,7 +337,7 @@ const day2: Exercise[] = [
     topic: 'Pilas y nodos',
     title: 'PILA CON NODOS',
     prompt:
-      '¿Te suena? Es la cadena 3 → 7 → 5 del lunes, pero ahora inicio se llama tope. push crea un nodo cuyo sig es el viejo tope y pop() hace tope = tope.sig: arma la pila final.',
+      '¿Te suena? Es la cadena del lunes, pero ahora inicio se llama tope: tope → 3 → 7 → 5 → null (en PROGRAMA se lista al revés, del fondo al tope: 5 7 3). push crea un nodo cuyo sig es el viejo tope y pop() hace tope = tope.sig: arma la pila final.',
     hint: 'Todo pasa al inicio de la cadena: pop() suelta el primer vagón y push engancha uno nuevo adelante.',
     explanation:
       'Queda tope → 4 → 9 → 7 → 5 → null. push y pop solo cambian enganches al inicio del tren, sin recorrer nada: por eso son O(1). Y como cada nodo se crea con new, la pila no tiene tamaño fijo como el arreglo.',
@@ -359,7 +359,7 @@ const day2: Exercise[] = [
     type: 'order',
     topic: 'Recursividad y pila de llamadas',
     title: 'IDA Y VUELTA',
-    prompt: '¿Qué imprime f(3)? Toca los números en el orden en que aparecen en pantalla.',
+    prompt: '¿Qué imprime f(3) en la consola? Toca los números en el orden en que se imprimen.',
     hint: 'Lo que está ANTES de la llamada se imprime de ida; lo que está DESPUÉS espera en la pila y sale de regreso.',
     explanation:
       'Imprime 3 2 1 10 20 30. De ida, cada muñeca imprime n antes de abrir la siguiente; el segundo print queda pendiente en la pila de llamadas y se ejecuta al cerrar, de la última a la primera (LIFO).',

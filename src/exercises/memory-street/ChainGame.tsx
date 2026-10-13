@@ -24,6 +24,8 @@ export function ChainGame({ exercise, onCheck, onStep, locked, showSolution, att
   const shaking = useShake(attempt)
   const stepRef = useRef(0)
   const doneRef = useRef(false)
+  /** errores ya cobrados en este paso ("paso:casa"): repetir el mismo no cuesta otra vida */
+  const triedRef = useRef<Set<string>>(new Set())
 
   const stageRef = useRef<HTMLDivElement>(null)
   const { lanes, ref: laneRef } = useLanes()
@@ -35,6 +37,13 @@ export function ChainGame({ exercise, onCheck, onStep, locked, showSolution, att
   const disabled = locked || done
 
   const wrong = (key: FlashKey, text: string) => {
+    const sig = `${stepRef.current}:${key}`
+    if (triedRef.current.has(sig)) {
+      triggerFlash(key)
+      setMsg(key === 'null' ? 'Todavía hay pistas que seguir.' : 'Esa ya la probaste: no cuesta otra vida. Busca otra casa.')
+      return
+    }
+    triedRef.current.add(sig)
     triggerFlash(key)
     setMsg(text)
     onCheck(false, key)

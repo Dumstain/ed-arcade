@@ -223,6 +223,9 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
 
   const afterManualLand = () => {
     const cur = gRef.current
+    const over = cur.pegs[cfg.to].length === n || cur.moves >= cfg.maxMoves
+    // Un origen elegido durante el vuelo no debe quedar levantado si el juego ya terminó
+    if (over && cur.selected !== null) patch({ selected: null })
     if (cur.pegs[cfg.to].length === n) return win()
     if (cur.moves >= cfg.maxMoves) return lose()
     const left = cfg.maxMoves - cur.moves
@@ -230,7 +233,9 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
       msg:
         left <= 2
           ? { text: `¡Cuidado! Solo te ${left === 1 ? 'queda 1 movimiento' : `quedan ${left} movimientos`}.`, kind: 'warn' }
-          : hintMsg(cfg),
+          : cur.selected !== null
+            ? { text: 'Ahora toca la torre a donde lo quieres llevar.', kind: 'info' }
+            : hintMsg(cfg),
     })
     live.current.onStep?.()
   }
@@ -238,7 +243,9 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
   // ───────── toques ─────────
   const tap = (p: PegIdx) => {
     const cur = gRef.current
-    if (locked || cur.status !== 'play' || cur.fly || cur.bounce) return
+    if (locked || cur.status !== 'play' || cur.bounce) return
+    // Durante el vuelo se puede elegir el ORIGEN del siguiente movimiento; el destino espera al aterrizaje
+    if (cur.fly && cur.selected !== null) return
     sfx.click()
 
     if (cur.selected === null) {

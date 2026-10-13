@@ -49,6 +49,9 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
   const topRef = useRef<HTMLLIElement | null>(null)
   const latest = useRef({ onCheck, onStep })
   const popRef = useRef<(auto: boolean) => void>(() => {})
+  // Doble clic: el mismo error seguido no cobra otra vida, y tras avanzar se ignora el clic "rebote"
+  const lastFail = useRef<string | null>(null)
+  const advancedAt = useRef(0)
   useEffect(() => {
     latest.current = { onCheck, onStep }
   })
@@ -113,19 +116,35 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
 
   function choose(kind: 'call' | 'base' | 'boom') {
     if (!interactive || phase !== 'down') return
+    if (performance.now() - advancedAt.current < 350) return
     sfx.click()
+    const failOnce = (text: string) => {
+      const key = `${depth}:${kind}`
+      if (lastFail.current === key) {
+        setMsg({ text, tone: 'bad' })
+        return
+      }
+      lastFail.current = key
+      fail(text)
+    }
+    const advanced = () => {
+      advancedAt.current = performance.now()
+      lastFail.current = null
+    }
     if (overflow) {
       if (kind === 'boom') {
         if (full) {
+          advanced()
           fxAt(topRef.current, '¡BOOM!', '--bad')
           setMsg(null)
           setPhase('done')
           onCheck(true)
         } else {
-          fail('Todavía cabe otra muñeca en la pila. ¡Sigue llamando!')
+          failOnce('Todavía cabe otra muñeca en la pila. ¡Sigue llamando!')
         }
       } else if (kind === 'call') {
         if (!full) {
+          advanced()
           setDepth((d) => d + 1)
           setMsg(
             depth + 1 >= n
@@ -134,26 +153,28 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
           )
           onStep?.()
         } else {
-          fail('¡La pila ya no aguanta más! Eso es un desbordamiento.')
+          failOnce('¡La pila ya no aguanta más! Eso es un desbordamiento.')
         }
       }
       return
     }
     if (kind === 'base') {
       if (isBaseTop) {
+        advanced()
         onStep?.()
         setMsg({ text: '¡La muñeca más chiquita! Ya no se abre. Ahora a regresar.', tone: 'ok' })
         setPhase(askReturns ? 'up' : 'auto')
       } else {
-        fail('Esa todavía llama a otra función. ¡Sigue abriendo muñecas!')
+        failOnce('Esa todavía llama a otra función. ¡Sigue abriendo muñecas!')
       }
     } else if (kind === 'call') {
       if (!isBaseTop) {
+        advanced()
         setDepth((d) => d + 1)
         setMsg({ text: '¡Se abre otra muñeca más chica!', tone: 'ok' })
         onStep?.()
       } else {
-        fail('Esa muñeca ya no se abre: ¡es el caso base!')
+        failOnce('Esa muñeca ya no se abre: ¡es el caso base!')
       }
     }
   }

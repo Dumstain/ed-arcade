@@ -114,7 +114,7 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
     if (slot === -1) return
     sfx.click()
     burstAt(ev.currentTarget)
-    setWrong([])
+    setWrong((w) => w.filter((i) => i !== slot))
     setLastIn(slot)
     setSlots(slots.map((v, i) => (i === slot ? id : v)))
   }
@@ -122,7 +122,7 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
   function remove(slot: number) {
     if (!interactive) return
     sfx.click()
-    setWrong([])
+    setWrong((w) => w.filter((i) => i !== slot))
     setLastIn(null)
     setSlots(slots.map((v, i) => (i === slot ? null : v)))
   }
@@ -172,7 +172,11 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
   else if (wrongNow.length) {
     msg =
       (wrongNow.length === 1 ? 'Hay 1 ficha fuera de lugar (en rojo).' : `Hay ${wrongNow.length} fichas fuera de lugar (en rojo).`) +
-      (showSolution ? '' : ' Tócala para regresarla y acomódala.')
+      (showSolution
+        ? ''
+        : wrongNow.length === 1
+          ? ' Tócala para regresarla y acomódala.'
+          : ' Tócalas para regresarlas y acomódalas.')
     msgBad = true
   } else if (full) msg = 'Fila completa. ¡Presiona COMPROBAR!'
 

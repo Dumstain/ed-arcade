@@ -45,7 +45,7 @@
   --ok: #128a3a;
   --bad: #c81e1e;
   --info: #0077a8;
-  --focus: #d97a00;
+  --focus: #9a5200;
   --shadow: rgba(28, 63, 209, 0.35);
   --ghost-red: #e01e1e;
   --ghost-pink: #e05cc8;
@@ -65,4 +65,5 @@ body {
   min-height: 100dvh;
 }
 button, input, select { font: inherit; color: inherit; }
+button { touch-action: manipulation; }
 :focus-visible { outline: var(--px) dashed var(--focus); outline-offset: 3px; }

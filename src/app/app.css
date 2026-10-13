@@ -470,6 +470,7 @@ button.eda-daycard:active { transform: translate(3px, 3px); box-shadow: 2px 2px 
 .eda-hud__num { font-family: var(--font-arcade); font-size: 14px; color: var(--eda-title); white-space: nowrap; }
 .eda-hud__lives { display: flex; align-items: center; min-height: 24px; }
 .eda-hud__combo.is-hot .eda-hud__num { color: var(--ghost-pink); animation: eda-blink 0.6s steps(1, end) infinite; }
+:root[data-theme='light'] .eda-hud__combo.is-hot .eda-hud__num { color: var(--bad); }
 .eda-hud__pellets { flex: 1 1 110px; min-width: 100px; display: flex; justify-content: flex-end; }
 
 .eda-card { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
@@ -589,6 +590,9 @@ button.eda-daycard:active { transform: translate(3px, 3px); box-shadow: 2px 2px 
 .eda-celebrate__stats > div { border: 3px solid var(--wall); background: var(--bg-sunken); padding: 8px 4px; }
 .eda-celebrate__stats dt { font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
 .eda-celebrate__stats dd { margin: 6px 0 0; font-size: 26px; }
+@media (max-width: 400px) {
+  .eda-celebrate__stats dt { font-size: 8px; letter-spacing: 0; }
+}
 .eda-celebrate__unlock { margin: 0; font-family: var(--font-arcade); font-size: 12px; color: var(--ok); line-height: 1.5; }
 
 .eda-dayend { display: flex; flex-direction: column; gap: 18px; }
@@ -626,6 +630,7 @@ button.eda-daycard:active { transform: translate(3px, 3px); box-shadow: 2px 2px 
 .eda-hiscore__table tbody tr:nth-child(4n + 3) td { color: var(--ghost-cyan); }
 .eda-hiscore__table tbody tr:nth-child(4n + 4) td { color: var(--ghost-orange); }
 .eda-hiscore__table tbody tr.is-me td { background: var(--pac); color: var(--pac-ink); }
+:root[data-theme='light'] .eda-hiscore__table tbody tr:not(.is-me) td { color: var(--fg); }
 .eda-hiscore__note { text-align: center; font-size: 20px; margin: 10px 0 0; }
 .eda-dayend__actions { display: flex; flex-direction: column; gap: 10px; }
 

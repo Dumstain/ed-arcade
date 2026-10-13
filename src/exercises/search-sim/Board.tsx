@@ -81,6 +81,8 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
   const flashTimer = useRef<number | null>(null)
   const timers = useRef<Set<number>>(new Set())
   const seq = useRef<number[]>([])
+  /** errores ya cobrados ("k:celda" o "k:no-esta"): repetir el mismo no cuesta otra vida */
+  const triedRef = useRef<Set<string>>(new Set())
   const latest = useRef({ onCheck, onStep })
   useLayoutEffect(() => {
     latest.current = { onCheck, onStep }
@@ -239,11 +241,15 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
 
   // ───────── juego: tocar celdas ─────────
   const wrong = (i: number | null, text: string, answer: unknown) => {
+    const sig = `${k}:${i === null ? 'no-esta' : i}`
+    const repeated = triedRef.current.has(sig)
+    triedRef.current.add(sig)
     if (i !== null) {
       setWrongIdx(i)
       later(() => setWrongIdx((w) => (w === i ? null : w)), 700)
     }
     setMsg({ tone: 'bad', text })
+    if (repeated) return
     latest.current.onCheck(false, answer)
   }
 

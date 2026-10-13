@@ -220,7 +220,9 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
             ? 'Hay fantasmas mal puestos (rojos) y todavía faltan otros.'
             : wrongMarks.length > 0
               ? 'Hay fantasmas mal puestos (rojos). Quítalos.'
-              : 'Vas bien, pero todavía faltan fantasmas por atrapar.',
+              : needsScroll
+                ? 'Vas bien, pero faltan fantasmas. Desliza el árbol: hay llamadas fuera de la vista.'
+                : 'Vas bien, pero todavía faltan fantasmas por atrapar.',
         tone: 'bad',
       })
       onCheck(false)
@@ -315,7 +317,13 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
         style={style}
         aria-label={aria}
         aria-pressed={pressed}
-        onClick={() => (mode === 'fill' ? selectNode(n.id) : toggleMark(n.id))}
+        onClick={(e) => {
+          if (mode === 'fill') {
+            // Sin foco en el nodo: así el Enter del teclado físico va a PONER y no re-clica el nodo
+            e.currentTarget.blur()
+            selectNode(n.id)
+          } else toggleMark(n.id)
+        }}
       >
         {inner}
       </button>
@@ -342,7 +350,7 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
           : 'Las hojas ya saben su valor. Sube por el árbol.'
         : 'Cada fantasma es una llamada repetida.'
   const canCheckFill = remaining === 0 && badSet.size === 0
-  const canCheckCount = badSet.size === 0 && marksSig !== failedSig
+  const canCheckCount = marks.size > 0 && badSet.size === 0 && marksSig !== failedSig
   const checkHint =
     mode === 'fill'
       ? badSet.size > 0
@@ -352,7 +360,9 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
           : ''
       : badSet.size > 0
         ? 'Quita los fantasmas rojos para comprobar.'
-        : marksSig === failedSig
+        : marks.size === 0
+          ? 'Toca las llamadas repetidas para ponerles un fantasma.'
+          : marksSig === failedSig
           ? 'Cambia algo antes de comprobar otra vez.'
           : ''
   const winText =

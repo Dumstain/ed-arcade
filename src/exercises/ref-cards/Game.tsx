@@ -40,6 +40,8 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
   const shaking = useShake(attempt)
   const boardRef = useRef<HTMLDivElement>(null)
   const finishing = useRef(false)
+  /** cuándo se cambió de paso: un doble clic en SIGUIENTE no debe caer en COMPROBAR del paso nuevo */
+  const advancedAt = useRef(0)
 
   const colorOf = useCallback((v: string) => Math.max(0, vars.indexOf(v)), [vars])
 
@@ -96,6 +98,7 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
     if (isLast && !fq) return
     if (steps[stepIdx]?.explain) return
     const t = setTimeout(() => {
+      advancedAt.current = performance.now()
       if (isLast) {
         setView('final')
         setSolved(false)
@@ -133,6 +136,7 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
   }
 
   const checkStep = () => {
+    if (performance.now() - advancedAt.current < 500) return
     // wrongVars > 0 = la misma respuesta que ya se marcó mal: no cobrar otra vida por lo mismo
     if (!canCheck || !exp || finishing.current || wrongVars.length > 0) return
     const bad = curKeys.filter((k) => assign[k] !== exp[k])
@@ -157,6 +161,7 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
 
   const next = () => {
     if (!solved) return
+    advancedAt.current = performance.now()
     sfx.click()
     setSel(null)
     setWrongVars([])

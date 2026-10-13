@@ -65,6 +65,10 @@ export function StartScreen({ remembered, onPlay, onForget }: Props) {
           id={inputId}
           className="px-input eda-login__input"
           value={value}
+          onFocus={(e) => {
+            const el = e.currentTarget
+            window.setTimeout(() => el.select(), 0)
+          }}
           onChange={(e) => {
             setValue(e.target.value.toUpperCase())
             if (error) setError(null)

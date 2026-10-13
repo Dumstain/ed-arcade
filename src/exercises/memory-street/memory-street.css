@@ -131,6 +131,8 @@ button.ms-house:disabled { cursor: default; color: var(--fg); }
   background: var(--c); color: var(--ci);
   white-space: nowrap;
 }
+/* tema claro: crema sobre rosa casi no se lee (a[0]); tinta oscura sí */
+:root[data-theme='light'] .ms-house.is-array:not(.is-wrong):not(.is-correct):not(.is-visited) .ms-tag { color: var(--pac-ink); }
 .ms-ghost { position: absolute; left: 50%; top: -14px; margin-left: -15px; z-index: 3; animation: ms-ghost-in .3s steps(3) both; pointer-events: none; }
 
 /* estados con animación */

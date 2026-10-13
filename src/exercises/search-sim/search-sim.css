@@ -125,6 +125,7 @@ div.ssg-cell { cursor: default; }
 .ssg-mark--ini { color: var(--info); }
 .ssg-mark--med { color: var(--focus); }
 .ssg-mark--fin { color: var(--ghost-orange); }
+:root[data-theme='light'] .ssg-mark--fin { color: #a03c00; } /* naranja oscuro: legible sobre crema */
 .ssg-legend .ssg-mark { margin-left: 4px; }
 
 /* comecocos que se desliza sobre los pellets */
