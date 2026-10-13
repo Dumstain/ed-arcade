@@ -1,0 +1,44 @@
+/* CONTRATO DE CLASES (mínimo provisional — el agente de UI lo reescribe conservando los nombres)
+   .px-btn [--primary|--danger|--ghost|--sm|--block]   botón arcade
+   .px-panel                                            panel con borde de laberinto
+   .px-title                                            título Press Start 2P
+   .px-chip                                             ficha/etiqueta tocable
+   .px-cell [.is-selected|.is-correct|.is-wrong|.is-hl|.is-dim|.is-empty]  celda cuadrada (arreglo, plato, nodo)
+   .px-row / .px-col                                    flex fila/columna con gap
+   .px-code                                             bloque de código solo lectura
+   .px-input                                            input arcade
+   .anim-shake / .anim-pop / .anim-blink / .anim-float  animaciones utilitarias
+*/
+.px-btn {
+  font-family: var(--font-arcade); font-size: 12px; text-transform: uppercase;
+  background: var(--bg-elev); color: var(--fg); border: var(--px) solid var(--wall);
+  padding: 12px 16px; min-height: 44px; cursor: pointer;
+}
+.px-btn--primary { background: var(--pac); color: var(--pac-ink); border-color: var(--pac); }
+.px-btn--danger { border-color: var(--bad); color: var(--bad); }
+.px-btn--ghost { background: transparent; }
+.px-btn--sm { font-size: 10px; padding: 8px 10px; min-height: 36px; }
+.px-btn--block { width: 100%; }
+.px-btn:disabled { opacity: .45; cursor: not-allowed; }
+.px-panel { background: var(--bg-elev); border: var(--px) double var(--wall); padding: 16px; }
+.px-title { font-family: var(--font-arcade); color: var(--pac); line-height: 1.5; }
+.px-chip { font-family: var(--font-body); font-size: 22px; border: 3px solid var(--wall); background: var(--bg-sunken); padding: 4px 12px; cursor: pointer; min-height: 44px; }
+.px-cell { display: inline-grid; place-items: center; min-width: 48px; height: 48px; border: 3px solid var(--wall); background: var(--bg-sunken); font-size: 24px; }
+.px-cell.is-selected { border-color: var(--pac); box-shadow: 0 0 0 3px var(--pac); }
+.px-cell.is-correct { border-color: var(--ok); color: var(--ok); }
+.px-cell.is-wrong { border-color: var(--bad); color: var(--bad); }
+.px-cell.is-hl { background: var(--pac); color: var(--pac-ink); }
+.px-cell.is-dim { opacity: .3; }
+.px-cell.is-empty { border-style: dashed; }
+.px-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.px-col { display: flex; flex-direction: column; gap: 8px; }
+.px-code { font-family: var(--font-body); font-size: 22px; background: var(--bg-sunken); border-left: var(--px) solid var(--wall); padding: 8px 12px; white-space: pre; overflow-x: auto; }
+.px-input { font-family: var(--font-arcade); font-size: 14px; background: var(--bg-sunken); border: var(--px) solid var(--wall); padding: 12px; color: var(--fg); }
+@keyframes px-shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
+.anim-shake { animation: px-shake .3s steps(4) 2; }
+@keyframes px-pop { from { transform: scale(.6); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+.anim-pop { animation: px-pop .25s steps(5) both; }
+@keyframes px-blink { 50% { opacity: 0 } }
+.anim-blink { animation: px-blink 1s steps(1) infinite; }
+@keyframes px-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+.anim-float { animation: px-float 1.2s steps(4) infinite; }

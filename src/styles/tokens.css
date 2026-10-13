@@ -1,0 +1,68 @@
+/* TOKENS DE TEMA — fuente de verdad de colores/fuentes. Oscuro = arcade clásico, Claro = gabinete de día. */
+:root {
+  --font-arcade: 'Press Start 2P', ui-monospace, monospace; /* títulos, HUD, botones */
+  --font-body: 'VT323', ui-monospace, monospace;            /* texto largo (usar >= 20px) */
+  --px: 4px;            /* unidad "pixel" para bordes/sombras */
+  --radius: 0px;        /* 8-bit = esquinas rectas */
+  --ghost-red: #ff2a2a;   /* Blinky */
+  --ghost-pink: #ffb8ff;  /* Pinky */
+  --ghost-cyan: #00e5ff;  /* Inky */
+  --ghost-orange: #ffb852;/* Clyde */
+  --ghost-scared: #2121de;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-elev: #0b0b24;
+  --bg-sunken: #05050f;
+  --fg: #ffffff;
+  --fg-muted: #a9a9d6;
+  --wall: #2121de;        /* azul laberinto */
+  --wall-glow: #4d4dff;
+  --pac: #ffe600;         /* amarillo */
+  --pac-ink: #000000;     /* texto sobre amarillo */
+  --pellet: #ffb8ae;
+  --ok: #3cff6e;
+  --bad: #ff3b3b;
+  --info: #00e5ff;
+  --focus: #ffe600;
+  --shadow: rgba(33, 33, 222, 0.55);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #fdf3d8;          /* crema */
+  --bg-elev: #fffaf0;
+  --bg-sunken: #f3e6c2;
+  --fg: #14143a;
+  --fg-muted: #4b4b78;
+  --wall: #1c3fd1;
+  --wall-glow: #3a5cf0;
+  --pac: #ffcc00;
+  --pac-ink: #14143a;
+  --pellet: #d9644f;
+  --ok: #128a3a;
+  --bad: #c81e1e;
+  --info: #0077a8;
+  --focus: #d97a00;
+  --shadow: rgba(28, 63, 209, 0.35);
+  --ghost-red: #e01e1e;
+  --ghost-pink: #e05cc8;
+  --ghost-cyan: #0098b8;
+  --ghost-orange: #e07b00;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1.25;
+  -webkit-font-smoothing: none;
+  min-height: 100dvh;
+}
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: var(--px) dashed var(--focus); outline-offset: 3px; }
