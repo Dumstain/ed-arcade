@@ -251,7 +251,7 @@ export async function fetchUnlockedDay(): Promise<number | null> {
   }
 }
 
-/** Alias enmascarado igual que ed_leaderboard: '****' || right(control, 4) */
+/** Alias igual que ed_leaderboard: el número de control completo (decisión del profesor) */
 export function aliasFor(control: string): string {
-  return '****' + control.slice(-4)
+  return control.toUpperCase()
 }

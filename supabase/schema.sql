@@ -43,7 +43,7 @@ language sql stable security definer set search_path = public as $$
   group by exercise_id;
 $$;
 
--- Ranking del día: suma de mejores puntajes por alumno; número de control enmascarado.
+-- Ranking del día: suma de mejores puntajes por alumno, con número de control completo.
 create or replace function public.ed_leaderboard(p_day int, p_limit int default 10)
 returns table (alias text, total bigint, solved bigint)
 language sql stable security definer set search_path = public as $$
@@ -51,7 +51,7 @@ language sql stable security definer set search_path = public as $$
     select control, exercise_id, max(score) as s, bool_or(correct) as ok
     from ed_attempts where day = p_day group by control, exercise_id
   )
-  select '****' || right(control, 4) as alias, sum(s) as total, count(*) filter (where ok) as solved
+  select control as alias, sum(s) as total, count(*) filter (where ok) as solved
   from best group by control order by total desc limit least(greatest(p_limit, 1), 50);
 $$;
 
