@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import type { ExerciseProps } from '../../engine/types'
 import type { HanoiData } from '../schemas'
-import { Fruit, Ghost, PacMan, burst, floatText, sfx } from '../../ui'
+import { Fruit, Ghost, PacMan, RichText, burst, floatText, sfx } from '../../ui'
 import { initialPegs, normalizeConfig, solveMoves } from './logic'
 import type { HanoiConfig, PegIdx } from './logic'
 import './hanoi.css'
@@ -65,7 +65,7 @@ function cssColor(name: string, fallback: string) {
 }
 
 function hintMsg(cfg: HanoiConfig): Game['msg'] {
-  return { text: `Toca la torre ${LETTERS[cfg.from]} para levantar su disco de arriba.`, kind: 'info' }
+  return { text: `Toca la torre **${LETTERS[cfg.from]}** para levantar su **disco de arriba**.`, kind: 'info' }
 }
 
 function fresh(cfg: HanoiConfig, msg: Game['msg'], status: Status = 'play'): Game {
@@ -171,7 +171,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
     patch({
       status: 'won',
       msg: {
-        text: perfect ? `¡Perfecto! ${moves} movimientos: el mínimo posible.` : `¡Torre completa en ${moves} movimientos!`,
+        text: perfect ? `¡Perfecto! **${moves} movimientos**: el mínimo posible.` : `¡Torre completa en **${moves} movimientos**!`,
         kind: 'ok',
       },
     })
@@ -188,7 +188,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
     clearTimers()
     const seq = solveMoves(n, cfg.from, cfg.to)
     replace(
-      fresh(cfg, { text: `Mira cómo se resuelve en ${seq.length} movimientos.`, kind: 'info' }, 'solution'),
+      fresh(cfg, { text: `Mira cómo se resuelve en **${seq.length} movimientos**.`, kind: 'info' }, 'solution'),
     )
     const fast = seq.length > 15
     const liftMs = fast ? 130 : 260
@@ -198,7 +198,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
       if (i >= seq.length) {
         patch({
           solved: true,
-          msg: { text: '¡Así! Chicos a un lado, el grande al fondo y chicos encima.', kind: 'ok' },
+          msg: { text: '¡Así! **Chicos a un lado**, **el grande al fondo** y chicos encima.', kind: 'ok' },
         })
         return
       }
@@ -212,7 +212,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
   const lose = () => {
     patch({
       status: 'lost',
-      msg: { text: '¡Te pasaste de movimientos! Los fantasmas se comieron la torre.', kind: 'bad' },
+      msg: { text: '¡Te pasaste de **movimientos**! Los fantasmas se comieron la torre.', kind: 'bad' },
     })
     live.current.onCheck(false, { moves: gRef.current.moves })
     later(() => {
@@ -232,7 +232,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
     patch({
       msg:
         left <= 2
-          ? { text: `¡Cuidado! Solo te ${left === 1 ? 'queda 1 movimiento' : `quedan ${left} movimientos`}.`, kind: 'warn' }
+          ? { text: `¡Cuidado! Solo te **${left === 1 ? 'queda 1 movimiento' : `quedan ${left} movimientos`}**.`, kind: 'warn' }
           : cur.selected !== null
             ? { text: 'Ahora toca la torre a donde lo quieres llevar.', kind: 'info' }
             : hintMsg(cfg),
@@ -253,7 +253,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
         kNudge.current += 1
         patch({
           nudge: { peg: p, k: kNudge.current },
-          msg: { text: `La torre ${LETTERS[p]} está vacía. Elige una con discos.`, kind: 'info' },
+          msg: { text: `La torre **${LETTERS[p]}** está **vacía**. Elige una con discos.`, kind: 'info' },
         })
         return
       }
@@ -273,7 +273,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
       kBounce.current += 1
       patch({
         bounce: { disk, dir: p > src ? 1 : -1, k: kBounce.current },
-        msg: { text: '¡No puedes poner uno grande sobre uno chico!', kind: 'warn' },
+        msg: { text: '¡No puedes poner uno **grande sobre uno chico**!', kind: 'warn' },
       })
       later(() => patch({ bounce: null, selected: null }), T_BOUNCE)
       return
@@ -384,9 +384,11 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
       style={vars({ '--hn-n': n, '--hn-h': `${H}px`, '--hn-label': `${LABEL_PX}px`, '--hn-floor': `${FLOOR_PX}px` })}
     >
       <p className="hn-mission">
-        Lleva los <b>{n}</b> discos de la torre <b>{LETTERS[cfg.from]}</b> a la torre <b>{LETTERS[cfg.to]}</b>.
+        <RichText text={`Lleva los **${n}** discos de la torre **${LETTERS[cfg.from]}** a la torre **${LETTERS[cfg.to]}**.`} />
       </p>
-      <p className="hn-rules">De uno en uno. Nunca uno grande sobre uno chico.</p>
+      <p className="hn-rules">
+        <RichText text="De uno en uno. **Nunca uno grande sobre uno chico.**" />
+      </p>
 
       <div className="hn-hud">
         <div className={'hn-counter' + (lastCall ? ' is-last' : '')}>
@@ -490,7 +492,7 @@ function HanoiBoard({ cfg, onCheck, onStep, locked, showSolution, attempt }: Exe
       <div className={'hn-msg is-' + g.msg.kind} role="status" aria-live="polite">
         <span className="hn-msg-icon" aria-hidden="true">{msgIcon}</span>
         <span key={g.msg.text} className={g.msg.kind === 'warn' || g.msg.kind === 'bad' ? 'anim-shake' : undefined}>
-          {g.msg.text}
+          <RichText text={g.msg.text} />
         </span>
       </div>
 

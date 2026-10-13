@@ -3,6 +3,8 @@
  * Todo vive en overlays position:fixed con pointer-events:none y se limpia solo.
  */
 import { prefersReducedMotion } from './pixel'
+import { pixelIconSvg, type PixelIconName } from './PixelIcon'
+import { plainText } from './RichText'
 
 const DEFAULT_COLORS = ['var(--pac)', 'var(--ghost-pink)', 'var(--ghost-cyan)', 'var(--ok)', 'var(--ghost-orange)', 'var(--pellet)']
 
@@ -121,21 +123,28 @@ function toastContainer(): HTMLDivElement | null {
   return toastBox
 }
 
-/** Toast de logro: "🏆 ¡LOGRO!" (imperativo) */
-export function toast(text: string, opts?: { icon?: string }) {
+/**
+ * Toast de logro con ícono pixel (imperativo). `icon` es un PixelIconName (por defecto 'trophy');
+ * si recibe algo que no es un ícono pixel (p.ej. un emoji) no pinta ícono.
+ */
+export function toast(text: string, opts?: { icon?: PixelIconName | string }) {
   const box = toastContainer()
   if (!box) return
   // máximo 3 a la vez: quita el más viejo
   while (box.children.length >= 3) box.firstElementChild?.remove()
   const t = document.createElement('div')
   t.className = 'ui-toast'
-  const ic = document.createElement('span')
-  ic.className = 'ui-toast__icon'
-  ic.textContent = opts?.icon ?? '★'
+  const svg = pixelIconSvg(opts?.icon ?? 'trophy', 24)
   const tx = document.createElement('span')
   tx.className = 'ui-toast__text'
-  tx.textContent = text
-  t.append(ic, tx)
+  tx.textContent = plainText(text)
+  if (svg) {
+    const ic = document.createElement('span')
+    ic.className = 'ui-toast__icon'
+    ic.innerHTML = svg
+    t.append(ic)
+  }
+  t.append(tx)
   box.appendChild(t)
   const life = 2600
   setTimeout(() => {

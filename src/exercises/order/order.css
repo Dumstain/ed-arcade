@@ -312,6 +312,18 @@
   gap: 12px;
 }
 .ord-warn p { margin: 0; font-size: 22px; }
+.ord-warn-icon { vertical-align: -3px; margin-right: 4px; color: var(--ghost-orange); }
+
+/* texto destacado (.hl) sobre fondos amarillos / de estado: hereda el color de la ficha y queda subrayado */
+.ord-token--placed .hl,
+.ord-slot.is-wrong .ord-token--placed .hl,
+.ord-lane.is-won .ord-token--placed .hl,
+.ord-sol__t .hl {
+  color: inherit;
+  background: transparent;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 3px;
+}
 
 /* ═════════ layout LISTA (textos largos, una ficha por renglón) ═════════ */
 .ord--list .ord-slots {

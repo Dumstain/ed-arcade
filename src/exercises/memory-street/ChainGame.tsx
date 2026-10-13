@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import type { ExerciseProps } from '../../engine/types'
 import type { MemoryStreetData } from '../schemas'
-import { Ghost, sfx } from '../../ui'
+import { Ghost, PixelIcon, sfx } from '../../ui'
 import { House, Walker, fxAt, useFlash, useLanes, useShake, useWalker } from './parts'
 import { computePath, houseCount, houseSizeOf } from './validate'
 
@@ -144,7 +144,9 @@ export function ChainGame({ exercise, onCheck, onStep, locked, showSolution, att
           <span className="ms-clue-home" ref={laneRef('start')} aria-hidden="true" />
           <div className="ms-clue-text" role="status" aria-live="polite">
             <span className="ms-clue-label">{clueLabel}</span>
-            <span className="ms-clue-val">→ {clueValue}</span>
+            <span className="ms-clue-val">
+              <PixelIcon name="arrow-right" size={14} className="ms-clue-arrow" /> {clueValue}
+            </span>
             <span className="ms-clue-help">{clueHelp}</span>
           </div>
         </div>

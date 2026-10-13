@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { ExerciseProps } from '../../engine/types'
 import type { SearchSimData } from '../schemas'
-import { Fruit, Ghost, PacMan, burst, floatText, sfx } from '../../ui'
+import { Fruit, Ghost, PacMan, PixelIcon, RichText, burst, floatText, sfx } from '../../ui'
 import type { FruitKind } from '../../ui'
 import { Keypad } from '../_shared/Keypad'
 import { CallStack } from './CallStack'
@@ -258,7 +258,7 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
     sfx.click()
     if (k >= total) {
       // binaria sin rango: ya solo falta declarar "NO ESTÁ"
-      wrong(i, `Ya no queda rango (inicio > fin). Toca NO ESTÁ (-1).`, { tapped: i })
+      wrong(i, `Ya no queda rango (**inicio > fin**). Toca **NO ESTÁ (-1)**.`, { tapped: i })
       return
     }
     const s = steps[k]
@@ -273,13 +273,13 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
         fxAt(i, '¡LO TENGO!', okColor(), 18)
         later(() => latest.current.onCheck(true, { comparisons: nk, index: s.idx }), 700)
       } else if (seqEnd) {
-        text = `Llegaste al final: el ${target} no está → devuelve -1 (${plural(nk, 'comparación', 'comparaciones')}).`
+        text = `Llegaste al final: el ${target} **no está** → devuelve **-1** (${plural(nk, 'comparación', 'comparaciones')}).`
         fxAt(i, '+1', pacColor())
         later(() => latest.current.onCheck(true, { comparisons: nk, index: -1 }), 900)
       } else {
         if (isBinary) {
           text +=
-            s.nlo > s.nhi ? ` Ahora inicio (${s.nlo}) > fin (${s.nhi}): ya no queda nada. Toca NO ESTÁ (-1).` : ' Toca el nuevo MEDIO.'
+            s.nlo > s.nhi ? ` Ahora **inicio (${s.nlo}) > fin (${s.nhi})**: ya no queda nada. Toca **NO ESTÁ (-1)**.` : ' Toca el nuevo **MEDIO**.'
         }
         fxAt(i, '+1', pacColor())
         latest.current.onStep?.()
@@ -292,15 +292,15 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
       return
     }
     if (isBinary) {
-      if (i < lo || i > hi) wrong(i, 'Esa parte ya se descartó. Busca entre INI y FIN.', { tapped: i })
+      if (i < lo || i > hi) wrong(i, 'Esa parte ya se descartó. Busca entre **INI** y **FIN**.', { tapped: i })
       else
         wrong(
           i,
-          `Pista: inicio = ${lo}, fin = ${hi} → medio = (${lo} + ${hi}) / 2. ¡División entera, sin decimales!`,
+          `Pista: inicio = ${lo}, fin = ${hi} → **medio = (${lo} + ${hi}) / 2**. ¡**División entera**, sin decimales!`,
           { tapped: i },
         )
     } else {
-      wrong(i, `¡En orden! Toca primero la celda ${k}.`, { tapped: i })
+      wrong(i, `¡En orden! Toca primero la celda **${k}**.`, { tapped: i })
     }
   }
 
@@ -309,11 +309,11 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
     sfx.click()
     if (k >= total && !found) {
       setDeclared(true)
-      setMsg({ tone: 'ok', text: `Caso base: inicio (${lo}) > fin (${hi}). Devuelve -1. ¡Bien!` })
+      setMsg({ tone: 'ok', text: `**Caso base**: **inicio (${lo}) > fin (${hi})**. Devuelve **-1**. ¡Bien!` })
       burst(window.innerWidth / 2, window.innerHeight / 2, { color: okColor(), count: 14 })
       later(() => latest.current.onCheck(true, { comparisons: total, index: -1 }), 700)
     } else {
-      wrong(null, `Todavía no: inicio (${lo}) ≤ fin (${hi}), aún hay celdas por revisar. Sigue con el medio.`, 'no-esta')
+      wrong(null, `Todavía no: **inicio (${lo}) ≤ fin (${hi})**, aún hay celdas por revisar. Sigue con el **medio**.`, 'no-esta')
     }
   }
 
@@ -324,10 +324,10 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
     const ok = g === total
     setMsg(
       ok
-        ? { tone: 'ok', text: `¡EXACTO! Fueron ${plural(total, 'comparación', 'comparaciones')}.` }
+        ? { tone: 'ok', text: `¡**EXACTO**! Fueron **${plural(total, 'comparación', 'comparaciones')}**.` }
         : {
             tone: 'bad',
-            text: `Fueron ${plural(total, 'comparación', 'comparaciones')}, no ${g}. Mira cómo se come una celda por cada comparación.`,
+            text: `Fueron **${plural(total, 'comparación', 'comparaciones')}**, no ${g}. Mira cómo se come una celda por cada comparación.`,
           },
     )
     latest.current.onCheck(ok, g)
@@ -381,19 +381,19 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
 
   // ───────── textos ─────────
   const list = steps.map((s) => values[s.idx]).join(', ')
-  const solText = `Así era: revisa ${list} → ${plural(total, 'comparación', 'comparaciones')}${
-    found ? ` y lo encuentra en la posición ${trace.foundIdx}.` : ' y no está: devuelve -1.'
+  const solText = `Así era: revisa ${list} → **${plural(total, 'comparación', 'comparaciones')}**${
+    found ? ` y lo encuentra en la posición **${trace.foundIdx}**.` : ' y **no está**: devuelve **-1**.'
   }`
   const idleText =
     mode === 'predict'
-      ? '¿Cuántas comparaciones hará? Escribe tu predicción y mira cómo el comecocos lo revisa.'
+      ? '¿Cuántas **comparaciones** hará? Escribe tu predicción y mira cómo el comecocos lo revisa.'
       : isBinary
-        ? 'Toca la celda del MEDIO: medio = (inicio + fin) / 2, sin decimales.'
-        : `Toca las celdas EN ORDEN, desde la 0, hasta encontrar el ${target}.`
+        ? 'Toca la celda del **MEDIO**: **medio = (inicio + fin) / 2**, sin decimales.'
+        : `Toca las celdas **EN ORDEN**, desde la 0, hasta encontrar el ${target}.`
   const status: Msg = showSolution ? { tone: 'info', text: solText } : (msg ?? { tone: 'info', text: idleText })
   const analogy = isBinary
-    ? 'Como adivinar un número del 1 al 100: "¿más alto o más bajo?". Cada intento descarta la mitad.'
-    : 'Como buscar tus llaves: bolsillo por bolsillo, uno por uno.'
+    ? 'Como adivinar un número del 1 al 100: "¿más alto o más bajo?". Cada intento **descarta la mitad**.'
+    : 'Como buscar tus llaves: bolsillo por bolsillo, **uno por uno**.'
   const needsDeclare = interactive && isBinary && allEaten && !found && !declared
   const countLabel = mode === 'predict' && phase === 'idle' && !showSolution ? '?' : String(effK)
 
@@ -494,7 +494,9 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
           </span>
         </div>
       </div>
-      <p className="ssg-analogy">{analogy}</p>
+      <p className="ssg-analogy">
+        <RichText text={analogy} />
+      </p>
 
       <div className={`ssg-layout${stackOn ? ' ssg-layout--stack' : ''}`}>
         <div className="ssg-main">
@@ -542,7 +544,7 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
           </div>
 
           <p className={`ssg-status is-${status.tone}`} role="status" aria-live="polite">
-            {status.text}
+            <RichText text={status.text} />
           </p>
 
           {mode === 'play' && isBinary && (
@@ -576,7 +578,8 @@ export function Board({ exercise, onCheck, onStep, locked, showSolution, attempt
                   />
                   {phase === 'running' && (
                     <button type="button" className="px-btn px-btn--ghost ssg-skip" onClick={skip}>
-                      SALTAR ▶▶
+                      SALTAR <PixelIcon name="arrow-right" size={14} />
+                      <PixelIcon name="arrow-right" size={14} />
                     </button>
                   )}
                   {phase === 'done' && !locked && status.tone === 'bad' && (

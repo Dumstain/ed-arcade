@@ -10,10 +10,10 @@ export const examples: Exercise<CallStackData>[] = [
     type: 'call-stack',
     topic: 'Recursividad',
     title: 'MUÑECAS RUSAS',
-    prompt: 'Baja por la pila: abre muñecas hasta llegar a la más chiquita (el caso base). Las demás se resuelven solas.',
-    hint: 'La muñeca que ya no llama a nadie más es el caso base.',
+    prompt: 'Baja por la pila: abre muñecas hasta llegar a la más chiquita (el **caso base**). Las demás se resuelven solas.',
+    hint: 'La muñeca que ya no llama a nadie más es el **caso base**.',
     explanation:
-      'Cada llamada abre una muñeca más pequeña. El caso base es la muñeca que ya no se abre: ahí empiezan a regresar los valores.',
+      'Cada llamada abre una muñeca más pequeña. El **caso base** es la muñeca que ya no se abre: ahí empiezan a **regresar los valores**.',
     data: {
       askReturns: false,
       frames: [
@@ -30,10 +30,10 @@ export const examples: Exercise<CallStackData>[] = [
     type: 'call-stack',
     topic: 'Recursividad',
     title: 'BAJAR Y SUBIR',
-    prompt: 'Baja hasta el caso base y luego sube: escribe el valor que regresa cada llamada.',
-    hint: 'Al subir, cambia la llamada de la expresión por el valor que regresó la muñeca de arriba.',
+    prompt: 'Baja hasta el **caso base** y luego sube: escribe el valor que regresa cada llamada.',
+    hint: 'Al subir, **cambia la llamada** de la expresión **por el valor** que regresó la muñeca de arriba.',
     explanation:
-      'Primero se apilan las llamadas (platos) hasta el caso base. Después se desapilan una por una y cada valor sube a la llamada de abajo: 1, 3, 6 y 10.',
+      'Primero se **apilan** las llamadas (platos) hasta el **caso base**. Después se **desapilan** una por una y cada valor sube a la llamada de abajo: 1, 3, 6 y 10.',
     data: {
       frames: [
         { call: 'suma(4)', expr: '4 + suma(3)', returns: 10 },
@@ -50,10 +50,10 @@ export const examples: Exercise<CallStackData>[] = [
     type: 'call-stack',
     topic: 'Recursividad',
     title: 'SIN CASO BASE',
-    prompt: 'Esta función no tiene caso base. Sigue llamando hasta que la pila toque el techo y entonces avisa.',
-    hint: 'Cuando la barra de PILA se llena y toca el techo, ya no cabe otra llamada.',
+    prompt: 'Esta función **no tiene caso base**. Sigue llamando hasta que la pila toque el techo y entonces avisa.',
+    hint: 'Cuando la barra de **PILA** se llena y toca el techo, ya no cabe otra llamada.',
     explanation:
-      'Sin caso base nadie detiene la recursión: las muñecas se siguen abriendo hasta llenar la pila y el programa truena con un StackOverflowError.',
+      '**Sin caso base** nadie detiene la recursión: las muñecas se siguen abriendo hasta llenar la pila y el programa truena con un **StackOverflowError**.',
     data: {
       overflow: true,
       frames: [

@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import type { ExerciseModule, ExerciseProps } from '../../engine/types'
 import type { StackSimData, Val } from '../schemas'
-import { Ghost, PacMan, burst, floatText, sfx } from '../../ui'
+import { Ghost, PacMan, RichText, burst, floatText, sfx } from '../../ui'
 import { StackVisual } from './StackViews'
 import type { Leaving } from './StackViews'
 import {
@@ -42,9 +42,9 @@ const ACTION_HELP: Record<Action, string> = {
 }
 const VIEW_TITLE = { plates: 'PILA DE PLATOS', array: 'PILA CON ARREGLO', nodes: 'PILA CON NODOS' } as const
 const LEGEND = {
-  plates: 'Solo tocas el plato de arriba (LIFO: el último en entrar es el primero en salir). ¡Como Ctrl+Z!',
-  array: 'pop() no borra el dato: solo baja el tope. Lo atenuado sigue en el arreglo pero ya no cuenta.',
-  nodes: 'Cada nodo es { dato | sig }: sig apunta al nodo de abajo. El tope es el primero de la cadena.',
+  plates: 'Solo tocas el plato de arriba (**LIFO**: el **último en entrar** es el **primero en salir**). ¡Como Ctrl+Z!',
+  array: '**pop()** no borra el dato: solo **baja el tope**. Lo atenuado sigue en el arreglo pero ya no cuenta.',
+  nodes: 'Cada nodo es { dato | sig }: **sig** apunta al nodo de abajo. El **tope** es el primero de la cadena.',
 } as const
 
 function cssVar(name: string): string {
@@ -151,12 +151,12 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
   const overflow = () => {
     sfx.wrong()
     flashOverflow()
-    if (view === 'array') say('bad', '¡DESBORDAMIENTO!', `La pila está llena (capacidad ${cfg.capacity}). No cabe otro dato.`)
-    else say('bad', '¡MUY ALTA!', `Máximo ${limit} elementos en esta pila.`)
+    if (view === 'array') say('bad', '¡DESBORDAMIENTO!', `La pila está **llena** (capacidad ${cfg.capacity}). No cabe otro dato.`)
+    else say('bad', '¡MUY ALTA!', `Máximo **${limit}** elementos en esta pila.`)
   }
   const underflow = () => {
     sfx.wrong()
-    say('warn', '¡PILA VACÍA!', 'No hay nada que sacar con pop().')
+    say('warn', '¡PILA VACÍA!', 'No hay nada que sacar con **pop()**.')
   }
   const doPush = (v: Val): boolean => {
     if (model.size >= limit) return false
@@ -239,7 +239,7 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
       say('warn', '¡ES EL MISMO ORDEN!', 'Ese ya lo probaste. Toca una ficha de la bandeja para quitarla y cambia el orden.')
     } else {
       lastWrongSig.current = sigOf(vals)
-      say('bad', '¡ESE ORDEN NO!', 'Recuerda: sale primero lo último que entró.')
+      say('bad', '¡ESE ORDEN NO!', 'Recuerda: sale primero **lo último que entró**.')
       onCheck(false, vals)
     }
   }
@@ -259,9 +259,9 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
     if (chosen !== tok.action) {
       setLastWrong(chosen)
       later(() => setLastWrong(null), 700)
-      if (chosen === 'pop' && model.size === 0) say('bad', '¡PILA VACÍA!', 'No hay nada que sacar con pop().')
+      if (chosen === 'pop' && model.size === 0) say('bad', '¡PILA VACÍA!', 'No hay nada que sacar con **pop()**.')
       else if (chosen === 'push' && view === 'array' && model.size >= limit)
-        say('bad', '¡DESBORDAMIENTO!', `La pila ya está llena (capacidad ${cfg.capacity}).`)
+        say('bad', '¡DESBORDAMIENTO!', `La pila ya está **llena** (capacidad ${cfg.capacity}).`)
       else {
         const sub: Record<Action, string> = {
           push: 'Ese token no se apila ahora.',
@@ -288,9 +288,9 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
     } else if (tok.action === 'pop') {
       doPop()
     } else if (tok.action === 'error') {
-      if (model.size === 0) say('ok', '¡BIEN VISTO!', 'La pila está vacía: no hay con qué emparejar.')
-      else if (view === 'array' && model.size >= limit) say('ok', '¡BIEN VISTO!', 'Desbordamiento: la pila está llena.')
-      else say('ok', '¡BIEN VISTO!', 'No coincide con el tope de la pila: es un error.')
+      if (model.size === 0) say('ok', '¡BIEN VISTO!', 'La pila está **vacía**: no hay con qué emparejar.')
+      else if (view === 'array' && model.size >= limit) say('ok', '¡BIEN VISTO!', '**Desbordamiento**: la pila está llena.')
+      else say('ok', '¡BIEN VISTO!', 'No coincide con el **tope** de la pila: es un error.')
     }
     fx(e.currentTarget, ACTION_LABEL[chosen], ACTION_COLOR[chosen])
     const next = idx + 1
@@ -312,9 +312,9 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
 
   const idle =
     mode === 'build'
-      ? 'Toca una ficha para apilarla (PUSH). POP quita la de arriba.'
+      ? 'Toca una ficha para apilarla (**PUSH**). **POP** quita la de arriba.'
       : mode === 'popped'
-        ? 'Toca las fichas en el orden en que salen con pop().'
+        ? 'Toca las fichas en el orden en que salen con **pop()**.'
         : 'El comecocos revisa cada token. ¿Qué hace la pila con él?'
 
   const rootCls = 'stk-root' + (bad ? ' is-bad anim-shake' : '') + (solved ? ' is-solved' : '')
@@ -372,7 +372,9 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
             flash={visualFlash}
             compact={mode === 'popped'}
           />
-          <p className="stk-legend">{LEGEND[view]}</p>
+          <p className="stk-legend">
+            <RichText text={LEGEND[view]} />
+          </p>
         </section>
       </div>
 
@@ -384,11 +386,17 @@ function StackSimInner({ cfg, onCheck, onStep, locked, showSolution, attempt }: 
             </span>
             <span className="stk-note-txt">
               <span className="stk-note-t">{note.title}</span>
-              {note.sub && <span className="stk-note-s">{note.sub}</span>}
+              {note.sub && (
+                <span className="stk-note-s">
+                  <RichText text={note.sub} />
+                </span>
+              )}
             </span>
           </>
         ) : (
-          <span className="stk-note-s is-idle">{idle}</span>
+          <span className="stk-note-s is-idle">
+            <RichText text={idle} />
+          </span>
         )}
       </div>
 

@@ -135,7 +135,9 @@ export function AddressGame({ exercise, onCheck, locked, showSolution, attempt }
         </div>
         {mode === 'type' && (
           <p className="ms-formula">
-            dir({name}[i]) = dir({name}[0]) + i × {size}
+            <strong className="hl">
+              dir({name}[i]) = dir({name}[0]) + i × {size}
+            </strong>
           </p>
         )}
       </div>
@@ -152,7 +154,7 @@ export function AddressGame({ exercise, onCheck, locked, showSolution, attempt }
 
       {revealed && (
         <p className="ms-formula anim-pop" role="status">
-          {name}[{arr.ask}] → casa {targetHouse} → {a0} + {arr.ask} × {size} = <b>{targetAddr}</b>
+          {name}[{arr.ask}] → casa {targetHouse} → {a0} + {arr.ask} × {size} = <strong className="hl">{targetAddr}</strong>
         </p>
       )}
 

@@ -1,4 +1,5 @@
 /** Columna de marcos "binaria(a, x, inicio, fin)" apilados (la versión recursiva). */
+import { RichText } from '../../ui'
 import type { TraceStep } from './trace'
 
 export interface Frame {
@@ -25,10 +26,10 @@ function subText(f: Frame, values: number[], target: number, revealMid: boolean)
   if (f.step) {
     const s = f.step
     const sym = s.cmp === 'eq' ? '=' : s.cmp === 'lt' ? '<' : '>'
-    const tail = s.cmp === 'eq' ? ' ¡lo encontró!' : s.cmp === 'lt' ? ' → derecha' : ' → izquierda'
+    const tail = s.cmp === 'eq' ? ' **¡lo encontró!**' : s.cmp === 'lt' ? ' → **derecha**' : ' → **izquierda**'
     return `medio = ${s.idx} → ${values[s.idx]} ${sym} ${target}${tail}`
   }
-  if (f.lo > f.hi) return 'inicio > fin → CASO BASE'
+  if (f.lo > f.hi) return '**inicio > fin** → **CASO BASE**'
   const mid = revealMid ? String(Math.floor((f.lo + f.hi) / 2)) : '?'
   return `medio = (${f.lo} + ${f.hi}) / 2 = ${mid}`
 }
@@ -52,7 +53,9 @@ export function CallStack({ frames, target, values, resolved, unwound, retVal, r
               className={`ssg-frame${isTop ? ' is-top' : ''}${returning ? ' is-return' : ''}`}
             >
               <div className="ssg-frame-call">{`binaria(a, ${target}, ${f.lo}, ${f.hi})`}</div>
-              <div className="ssg-frame-sub">{subText(f, values, target, revealMid)}</div>
+              <div className="ssg-frame-sub">
+                <RichText text={subText(f, values, target, revealMid)} />
+              </div>
               {returning && <div className="ssg-ret">{`return ${retVal}`}</div>}
             </div>
           )

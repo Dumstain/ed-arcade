@@ -37,14 +37,14 @@ const day2: Exercise[] = [
     type: 'classify',
     topic: 'Pilas',
     title: '¿ES PILA O NO?',
-    prompt: 'Manda cada ficha a su casillero: ¿funciona como pila (lo último que entra es lo primero que sale) o no?',
-    hint: 'Pregúntate: ¿lo primero que sale es lo ÚLTIMO que entró?',
+    prompt: 'Manda cada ficha a su casillero: ¿funciona como **pila** (**lo último que entra es lo primero que sale**) o no?',
+    hint: 'Pregúntate: ¿lo primero que sale es **lo ÚLTIMO que entró**?',
     explanation:
-      'Pila = LIFO, como los platos de la alacena: solo tomas el de arriba. La fila de las tortillas es al revés (el primero que llega sale primero: eso es una cola, la verás el día 3) y las butacas o los cajones son arreglos: vas directo al lugar.',
+      '**Pila = LIFO**, como los platos de la alacena: solo tomas el de arriba. La fila de las tortillas es al revés (el primero que llega sale primero: eso es una **cola**, la verás el día 3) y las butacas o los cajones son **arreglos**: vas directo al lugar.',
     data: {
       bins: [
-        { id: 'pila', label: 'ES PILA (LIFO)', icon: '🍽️' },
-        { id: 'no', label: 'NO ES PILA', icon: '🚫' },
+        { id: 'pila', label: 'ES PILA (LIFO)', icon: 'plates' },
+        { id: 'no', label: 'NO ES PILA', icon: 'no' },
       ],
       items: [
         { text: 'Ctrl+Z: deshacer lo último', bin: 'pila' },
@@ -65,10 +65,10 @@ const day2: Exercise[] = [
     type: 'stack-sim',
     topic: 'Pilas',
     title: 'PILA DE PLATOS',
-    prompt: 'Cada push pone un plato hasta arriba y pop() quita el de hasta arriba. Arma la pila final de este programa con las fichas.',
-    hint: 'pop() no elige: siempre se lleva el último plato que pusiste.',
+    prompt: 'Cada **push** pone un plato hasta arriba y **pop()** quita el de hasta arriba. Arma la pila final de este programa con las fichas.',
+    hint: 'pop() no elige: siempre se lleva **el último plato que pusiste**.',
     explanation:
-      'Quedan 3, 7 y 9: el pop() se llevó el 5 porque fue el último en entrar. LIFO: como en la alacena, solo puedes tocar el plato de arriba.',
+      'Quedan **3, 7 y 9**: el pop() se llevó el 5 porque **fue el último en entrar**. **LIFO**: como en la alacena, solo puedes tocar el plato de arriba.',
     data: {
       mode: 'build',
       view: 'plates',
@@ -85,10 +85,10 @@ const day2: Exercise[] = [
     topic: 'Recursividad',
     title: 'MUÑECAS RUSAS',
     prompt:
-      'fact(n): si n ≤ 1 regresa 1 (caso base); si no, regresa n * fact(n − 1). Abre las muñecas hasta el caso base y luego ciérralas escribiendo lo que regresa cada una.',
-    hint: 'Al cerrar, usa lo que regresó la muñeca de adentro: fact(2) = 2 * fact(1).',
+      'fact(n): si n ≤ 1 regresa 1 (**caso base**); si no, regresa n * fact(n − 1). Abre las muñecas hasta el caso base y luego **ciérralas escribiendo lo que regresa cada una**.',
+    hint: 'Al cerrar, usa **lo que regresó la muñeca de adentro**: fact(2) = 2 * fact(1).',
     explanation:
-      'fact(3) no puede terminar hasta que terminen fact(2) y fact(1): se apilan como muñecas. fact(1) es la muñeca que ya no se abre (caso base) y al cerrarlas se calcula 1 → 2 → 6.',
+      'fact(3) no puede terminar hasta que terminen fact(2) y fact(1): **se apilan como muñecas**. fact(1) es la muñeca que ya no se abre (**caso base**) y al cerrarlas se calcula **1 → 2 → 6**.',
     data: {
       frames: [
         { call: 'fact(3)', expr: '3 * fact(2)', returns: 6 },
@@ -106,10 +106,10 @@ const day2: Exercise[] = [
     topic: 'Recursividad',
     title: 'ÁRBOL DE FIBONACCI',
     prompt:
-      'fib(n) = fib(n − 1) + fib(n − 2), con fib(1) = 1 y fib(0) = 0. Las hojas ya traen su valor: toca cada nodo vacío y escribe cuánto regresa.',
-    hint: 'Empieza desde abajo: cada nodo es la suma de sus dos hijos.',
+      '**fib(n) = fib(n − 1) + fib(n − 2)**, con **fib(1) = 1 y fib(0) = 0**. Las hojas ya traen su valor: toca cada nodo vacío y escribe cuánto regresa.',
+    hint: 'Empieza desde abajo: cada nodo es **la suma de sus dos hijos**.',
     explanation:
-      'fib(4) = 3. Los valores suben de las hojas (casos base) a la raíz, igual que las muñecas se cierran de adentro hacia afuera. ¿Notaste que fib(2) se calculó dos veces?',
+      '**fib(4) = 3**. Los valores suben de las hojas (**casos base**) a la raíz, igual que las muñecas se cierran de adentro hacia afuera. ¿Notaste que **fib(2) se calculó dos veces**?',
     data: {
       mode: 'fill',
       given: 'leaves',
@@ -123,10 +123,10 @@ const day2: Exercise[] = [
     type: 'hanoi',
     topic: 'Recursividad',
     title: 'TORRES DE HANÓI',
-    prompt: 'Pasa los 3 discos a la torre de la derecha en 7 movimientos. Uno a la vez y nunca un disco grande sobre uno chico.',
-    hint: 'Primero lleva los 2 discos de arriba a la torre del medio. Truco: el disco chico empieza yendo a la DERECHA.',
+    prompt: 'Pasa los 3 discos a la torre de la derecha en **7 movimientos**. Uno a la vez y **nunca un disco grande sobre uno chico**.',
+    hint: 'Primero lleva **los 2 discos de arriba** a la torre del medio. Truco: el disco chico empieza yendo a la DERECHA.',
     explanation:
-      'Mover 3 discos = mover 2 al medio + mover el grande + mover los 2 encima. Es el mismo problema con un disco menos: recursión pura. Total: 2³ − 1 = 7.',
+      'Mover 3 discos = mover 2 al medio + mover el grande + mover los 2 encima. Es **el mismo problema con un disco menos**: **recursión** pura. Total: **2³ − 1 = 7**.',
     data: {
       disks: 3,
       from: 0,
@@ -143,10 +143,10 @@ const day2: Exercise[] = [
     type: 'stack-sim',
     topic: 'Pilas',
     title: '¿QUIÉN SALE PRIMERO?',
-    prompt: 'Lee el programa y toca los números en el ORDEN en que salen con pop().',
-    hint: 'Antes de cada pop(), fíjate quién quedó hasta arriba en ese momento.',
+    prompt: 'Lee el programa y toca los números en el ORDEN en que salen con **pop()**.',
+    hint: 'Antes de cada pop(), fíjate quién quedó **hasta arriba** en ese momento.',
     explanation:
-      'Salen 8, 6, 1 y 4: cada pop() se lleva el último que entró y no ha salido. Así funciona Ctrl+Z: deshace primero lo más reciente.',
+      'Salen **8, 6, 1 y 4**: cada pop() se lleva **el último que entró y no ha salido**. Así funciona **Ctrl+Z**: deshace primero lo más reciente.',
     data: {
       mode: 'popped',
       view: 'plates',
@@ -162,10 +162,10 @@ const day2: Exercise[] = [
     type: 'rec-tree',
     topic: 'Recursividad',
     title: 'TRABAJO REPETIDO',
-    prompt: 'Este es el árbol de llamadas de fib(5). Toca TODOS los fib(2): cada uno es trabajo que se repite.',
-    hint: 'Cada fib(3) esconde un fib(2) adentro… y fib(4) tiene otro más. Revisa ambos lados.',
+    prompt: 'Este es el **árbol de llamadas** de fib(5). Toca TODOS los fib(2): cada uno es **trabajo que se repite**.',
+    hint: 'Cada fib(3) esconde un fib(2) adentro… y fib(4) tiene otro más. Revisa **ambos lados**.',
     explanation:
-      'fib(2) se calcula 3 veces y fib(3) 2 veces: fib(5) hace 15 llamadas para llegar a un 5. Por eso Fibonacci recursivo es lentísimo: fib(30) hace cerca de 2.7 millones de llamadas.',
+      'fib(2) se calcula **3 veces** y fib(3) 2 veces: fib(5) hace **15 llamadas** para llegar a un 5. Por eso **Fibonacci recursivo es lentísimo**: fib(30) hace cerca de 2.7 millones de llamadas.',
     data: {
       mode: 'count',
       root: fib5(),
@@ -180,10 +180,10 @@ const day2: Exercise[] = [
     topic: 'Recursividad',
     title: 'SUMA DE 1 A N',
     prompt:
-      'suma(n) suma de 1 a n: si n == 1 regresa 1; si no, regresa n + suma(n − 1). Baja hasta el caso base y sube escribiendo lo que regresa cada llamada.',
-    hint: 'Al subir, cada llamada suma su n a lo que regresó la llamada de adentro.',
+      'suma(n) suma de 1 a n: si n == 1 regresa 1; si no, regresa **n + suma(n − 1)**. Baja hasta el **caso base** y sube escribiendo lo que regresa cada llamada.',
+    hint: 'Al subir, cada llamada **suma su n** a lo que regresó la llamada de adentro.',
     explanation:
-      'suma(5) = 5 + 4 + 3 + 2 + 1 = 15. Se apilaron 5 marcos (5 muñecas) y se resolvieron de la última a la primera: 1, 3, 6, 10 y 15.',
+      'suma(5) = 5 + 4 + 3 + 2 + 1 = **15**. Se apilaron **5 marcos** (5 muñecas) y se resolvieron **de la última a la primera**: 1, 3, 6, 10 y 15.',
     data: {
       frames: [
         { call: 'suma(5)', expr: '5 + suma(4)', returns: 15 },
@@ -202,10 +202,10 @@ const day2: Exercise[] = [
     type: 'number',
     topic: 'Pilas',
     title: 'FANTASMA EN EL ARREGLO',
-    prompt: 'Pila con arreglo de tamaño fijo. Corre el programa de la nota: al final, ¿qué número queda guardado en datos[2]?',
-    hint: 'Lleva la cuenta de tope (empieza en -1). Fíjate qué hace pop() con el arreglo… ¿lo modifica?',
+    prompt: 'Pila con **arreglo de tamaño fijo**. Corre el programa de la nota: al final, ¿qué número queda guardado en **datos[2]**?',
+    hint: 'Lleva la cuenta de **tope** (empieza en -1). Fíjate qué hace pop() con el arreglo… ¿lo modifica?',
     explanation:
-      'Queda 6: pop() solo baja tope, y el 6 se queda en datos[2] como un fantasma que ya no cuenta; el siguiente push lo pisaría. pop() es O(1) porque solo toca el tope: no recorre ni mueve a los demás datos.',
+      'Queda **6**: **pop() solo baja tope**, y el 6 se queda en datos[2] como un fantasma que ya no cuenta; el siguiente push lo pisaría. pop() es **O(1)** porque solo toca el tope: no recorre ni mueve a los demás datos.',
     data: {
       context: {
         code: [
@@ -219,7 +219,7 @@ const day2: Exercise[] = [
           '}',
         ].join('\n'),
         array: { name: 'datos', values: [0, 0, 0, 0], showIndex: true },
-        note: 'Así empieza datos (Java lo llena con 0). Programa: push(4); push(8); push(1); pop(); push(6); pop();',
+        note: 'Así empieza datos (Java lo llena con 0). Programa: **push(4); push(8); push(1); pop(); push(6); pop();**',
       },
       answer: 6,
     } satisfies NumberData,
@@ -232,10 +232,10 @@ const day2: Exercise[] = [
     topic: 'Pilas',
     title: '¡PILA LLENA!',
     prompt:
-      'Pila con arreglo de 3 lugares. Número = PUSH, * = POP. Si llega un número y ya no cabe, toca ¡ERROR! (desbordamiento).',
-    hint: 'Cuenta cuántos datos hay antes de cada número: con 3, ya no cabe otro.',
+      'Pila con **arreglo de 3 lugares**. Número = PUSH, * = POP. Si llega un número y ya no cabe, toca ¡ERROR! (**desbordamiento**).',
+    hint: 'Cuenta **cuántos datos hay** antes de cada número: con 3, ya no cabe otro.',
     explanation:
-      'Al llegar el 1 ya había 3 datos (4, 2 y 5): el arreglo es de tamaño fijo y no puede crecer, así que truena por desbordamiento. Fíjate que cada * solo bajó tope: el dato viejo se quedó en su celda hasta que el siguiente push lo pisó (el 2 pisó al 8 y el 5 al 6).',
+      'Al llegar el 1 ya había 3 datos (4, 2 y 5): el arreglo es de **tamaño fijo** y no puede crecer, así que truena por **desbordamiento**. Fíjate que cada * **solo bajó tope**: el dato viejo se quedó en su celda hasta que el siguiente push lo pisó (el 2 pisó al 8 y el 5 al 6).',
     data: {
       mode: 'trace',
       view: 'array',
@@ -263,10 +263,10 @@ const day2: Exercise[] = [
     topic: 'Recursividad y pilas',
     title: 'STACK OVERFLOW',
     prompt:
-      'cuenta(n) imprime n y llama a cuenta(n − 1)… pero NADIE le escribió caso base. Aquí la pila de llamadas aguanta 5 marcos: síguela hasta que truene.',
-    hint: 'Que n llegue a 0 no detiene nada: solo un if con return detiene la recursión.',
+      'cuenta(n) imprime n y llama a cuenta(n − 1)… pero **NADIE le escribió caso base**. Aquí la **pila de llamadas** aguanta **5 marcos**: síguela hasta que truene.',
+    hint: 'Que n llegue a 0 no detiene nada: **solo un if con return detiene la recursión**.',
     explanation:
-      'Sin caso base nadie regresa: cada llamada apila un marco más hasta llenar la pila de llamadas y Java lanza StackOverflowError. Es la misma pila llena del arreglo, pero con llamadas en lugar de platos.',
+      '**Sin caso base nadie regresa**: cada llamada apila un marco más hasta llenar la **pila de llamadas** y Java lanza **StackOverflowError**. Es la misma pila llena del arreglo, pero con llamadas en lugar de platos.',
     data: {
       frames: [
         { call: 'cuenta(3)', expr: 'print(3); cuenta(2)', returns: '?' },
@@ -286,10 +286,10 @@ const day2: Exercise[] = [
     type: 'quiz',
     topic: 'Recursividad y Big-O',
     title: 'HANÓI VS BIG-O',
-    prompt: 'Así crecen los movimientos mínimos de Hanói (ojo: aquí n sube de 1 en 1). Como el lunes, cuenta pasos: ¿qué complejidad tiene?',
-    hint: 'Ojo: aquí n crece de 1 en 1, no se duplica como en Tarea1. Si con solo UN disco más los movimientos se duplican, ¿qué tan rápido crece eso?',
+    prompt: 'Así crecen los movimientos mínimos de Hanói (ojo: aquí **n sube de 1 en 1**). Como el lunes, cuenta pasos: ¿qué **complejidad** tiene?',
+    hint: 'Ojo: aquí **n crece de 1 en 1**, no se duplica como en Tarea1. Si con solo UN disco más los movimientos se duplican, ¿qué tan rápido crece eso?',
     explanation:
-      'Con solo UN disco más, los movimientos se duplican (2ⁿ − 1): es O(2ⁿ), exponencial. En O(n) hay que DUPLICAR n para duplicar los pasos; aquí basta sumar 1 disco. Con 64 discos, a un movimiento por segundo, tardarías unos 585 mil millones de años.',
+      'Con solo UN disco más, los movimientos se duplican (**2ⁿ − 1**): es **O(2ⁿ), exponencial**. En **O(n)** hay que DUPLICAR n para duplicar los pasos; aquí basta sumar 1 disco. Con 64 discos, a un movimiento por segundo, tardarías unos 585 mil millones de años.',
     data: {
       context: {
         table: {
@@ -303,7 +303,7 @@ const day2: Exercise[] = [
             [10, '1,023'],
           ],
         },
-        note: 'Big-O cuenta pasos, no segundos.',
+        note: 'Big-O cuenta **pasos**, no segundos.',
       },
       choices: ['O(n)', 'O(n²)', 'O(log n)', 'O(2ⁿ)'],
       answer: 3,
@@ -317,10 +317,10 @@ const day2: Exercise[] = [
     topic: 'Recursividad y búsqueda',
     title: 'BINARIA RECURSIVA',
     prompt:
-      'La binaria del lunes, ahora recursiva: cada mitad es una nueva llamada. Toca el MEDIO en cada paso hasta encontrar el 22 y mira cómo se apilan las llamadas.',
-    hint: 'medio = (inicio + fin) / 2, sin decimales. Si a[medio] es mayor que 22, la siguiente llamada usa fin = medio − 1.',
+      'La **búsqueda binaria** del lunes, ahora **recursiva**: **cada mitad es una nueva llamada**. Toca el MEDIO en cada paso hasta encontrar el 22 y mira cómo se apilan las llamadas.',
+    hint: '**medio = (inicio + fin) / 2**, sin decimales. Si a[medio] es mayor que 22, la siguiente llamada usa **fin = medio − 1**.',
     explanation:
-      '4 llamadas: binaria(0, 11) → (0, 4) → (3, 4) → (4, 4) y ahí está el 22. Cada llamada es la misma búsqueda con la mitad del arreglo, como adivinar un número del 1 al 100 con «más alto / más bajo»; el caso base es encontrarlo (o que inicio > fin).',
+      '**4 llamadas**: binaria(0, 11) → (0, 4) → (3, 4) → (4, 4) y ahí está el 22. Cada llamada es la misma búsqueda con la mitad del arreglo (por eso es **O(log n)**), como adivinar un número del 1 al 100 con «más alto / más bajo»; el **caso base** es encontrarlo (o que inicio > fin).',
     data: {
       algorithm: 'binary',
       mode: 'play',
@@ -337,10 +337,10 @@ const day2: Exercise[] = [
     topic: 'Pilas y nodos',
     title: 'PILA CON NODOS',
     prompt:
-      '¿Te suena? Es la cadena del lunes, pero ahora inicio se llama tope: tope → 3 → 7 → 5 → null (en PROGRAMA se lista al revés, del fondo al tope: 5 7 3). push crea un nodo cuyo sig es el viejo tope y pop() hace tope = tope.sig: arma la pila final.',
-    hint: 'Todo pasa al inicio de la cadena: pop() suelta el primer vagón y push engancha uno nuevo adelante.',
+      '¿Te suena? Es la cadena del lunes, pero ahora inicio se llama **tope**: tope → 3 → 7 → 5 → null (en PROGRAMA se lista al revés, del fondo al tope: 5 7 3). push crea un nodo cuyo **sig es el viejo tope** y pop() hace **tope = tope.sig**: arma la pila final.',
+    hint: 'Todo pasa **al inicio de la cadena**: pop() suelta el primer vagón y push engancha uno nuevo adelante.',
     explanation:
-      'Queda tope → 4 → 9 → 7 → 5 → null. push y pop solo cambian enganches al inicio del tren, sin recorrer nada: por eso son O(1). Y como cada nodo se crea con new, la pila no tiene tamaño fijo como el arreglo.',
+      'Queda **tope → 4 → 9 → 7 → 5 → null**. push y pop solo cambian enganches al inicio del tren, sin recorrer nada: por eso son **O(1)**. Y como cada nodo se crea con new, la pila **no tiene tamaño fijo** como el arreglo.',
     data: {
       mode: 'build',
       view: 'nodes',
@@ -359,10 +359,10 @@ const day2: Exercise[] = [
     type: 'order',
     topic: 'Recursividad y pila de llamadas',
     title: 'IDA Y VUELTA',
-    prompt: '¿Qué imprime f(3) en la consola? Toca los números en el orden en que se imprimen.',
-    hint: 'Lo que está ANTES de la llamada se imprime de ida; lo que está DESPUÉS espera en la pila y sale de regreso.',
+    prompt: '¿Qué imprime **f(3)** en la consola? Toca los números en el **orden en que se imprimen**.',
+    hint: 'Lo que está ANTES de la llamada se imprime **de ida**; lo que está DESPUÉS **espera en la pila** y sale **de regreso**.',
     explanation:
-      'Imprime 3 2 1 10 20 30. De ida, cada muñeca imprime n antes de abrir la siguiente; el segundo print queda pendiente en la pila de llamadas y se ejecuta al cerrar, de la última a la primera (LIFO).',
+      'Imprime **3 2 1 10 20 30**. De ida, cada muñeca imprime n antes de abrir la siguiente; el segundo print **queda pendiente en la pila de llamadas** y se ejecuta al cerrar, de la última a la primera (**LIFO**).',
     data: {
       context: {
         code: [
@@ -385,10 +385,10 @@ const day2: Exercise[] = [
     type: 'number',
     topic: 'Pilas (ArrayDeque)',
     title: 'ARRAYDEQUE PRO',
-    prompt: 'La pila profesional de Java: ArrayDeque, con push, pop e isEmpty. ¿Cuánto vale r al terminar?',
-    hint: 'x % 10 saca el ÚLTIMO dígito: entran 2, luego 7, luego 4. ¿Cuál queda en el tope?',
+    prompt: 'La pila profesional de Java: **ArrayDeque**, con **push, pop e isEmpty**. ¿Cuánto vale r al terminar?',
+    hint: '**x % 10** saca el ÚLTIMO dígito: entran 2, luego 7, luego 4. ¿Cuál queda en el **tope**?',
     explanation:
-      'r = 472. Los dígitos entraron al revés (2, 7, 4) y la pila los volteó otra vez al sacarlos (4, 7, 2): dos inversiones = el número original. ArrayDeque hace push y pop en O(1), igual que tu pila de platos.',
+      '**r = 472**. Los dígitos entraron al revés (2, 7, 4) y la pila los volteó otra vez al sacarlos (4, 7, 2): **dos inversiones = el número original**. ArrayDeque hace push y pop en **O(1)**, igual que tu pila de platos.',
     data: {
       context: {
         code: [
@@ -413,10 +413,10 @@ const day2: Exercise[] = [
     topic: 'Pilas (aplicaciones)',
     title: 'CAZA DE PARÉNTESIS',
     prompt:
-      'Revisa si cierran bien: lo que abre = PUSH, lo que cierra a su pareja del tope = POP, letra = IGNORAR. Si cierra y el tope no es su pareja (o está vacía), ¡ERROR!',
-    hint: 'Un ] solo puede cerrar a un [ que esté hasta arriba de la pila.',
+      'Revisa si cierran bien: lo que abre = **PUSH**, lo que cierra a su pareja del tope = **POP**, letra = IGNORAR. Si cierra y **el tope no es su pareja** (o está vacía), ¡ERROR!',
+    hint: 'Un ] solo puede cerrar a un [ que esté **hasta arriba de la pila**.',
     explanation:
-      'El ] final encontró un ( en el tope: ese paréntesis nunca se cerró, así que la expresión está mal. Los editores y compiladores revisan tu código con una pila igualita.',
+      'El ] final encontró un ( en el tope: **ese paréntesis nunca se cerró**, así que la expresión está mal. Los editores y compiladores revisan tu código con **una pila** igualita.',
     data: {
       mode: 'trace',
       view: 'plates',
@@ -443,10 +443,10 @@ const day2: Exercise[] = [
     type: 'hanoi',
     topic: 'Recursividad',
     title: 'JEFE FINAL: HANÓI',
-    prompt: '4 discos a la torre de la derecha en 15 movimientos, ni uno más. Es Hanói de 3 discos… dos veces, con el disco grande en medio.',
-    hint: 'Con 4 discos el chico empieza yendo a la torre del MEDIO. Plan: 3 discos al medio, el grande a la derecha y los 3 encima.',
+    prompt: '4 discos a la torre de la derecha en **15 movimientos**, ni uno más. Es **Hanói de 3 discos… dos veces**, con el disco grande en medio.',
+    hint: 'Con 4 discos el chico empieza yendo a la torre del MEDIO. Plan: **3 discos al medio, el grande a la derecha y los 3 encima**.',
     explanation:
-      'hanoi(4) = hanoi(3) + 1 + hanoi(3) = 7 + 1 + 7 = 15 = 2⁴ − 1. Resolviste el problema grande con dos copias del chico: eso es recursión.',
+      '**hanoi(4) = hanoi(3) + 1 + hanoi(3)** = 7 + 1 + 7 = 15 = **2⁴ − 1**. Resolviste el problema grande con **dos copias del chico**: eso es recursión.',
     data: {
       disks: 4,
       from: 0,

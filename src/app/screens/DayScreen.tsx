@@ -2,7 +2,7 @@ import { TIERS, TIER_NAMES, dayInfo, type DayNum } from '../../engine/course'
 import { getDay } from '../../engine/content'
 import { dayStats, isDayComplete, isTierComplete, isTierUnlocked, nextPending, tierStats } from '../../engine/progress'
 import type { Exercise, Tier } from '../../engine/types'
-import { Fruit, Ghost, PacMan, Pellets, Stars, sfx, toast } from '../../ui'
+import { Fruit, Ghost, PacMan, Pellets, PixelIcon, Stars, plainText, sfx, toast } from '../../ui'
 import { useGame } from '../game'
 
 interface Props {
@@ -60,8 +60,8 @@ export function DayScreen({ day, onPlay, onContinue, onScores, onBack }: Props) 
         <span>
           {st.finished}/{st.total}
         </span>
-        <span>
-          ★ {st.stars}/{st.maxStars}
+        <span className="px-ico-text">
+          <PixelIcon name="star" size={18} /> {st.stars}/{st.maxStars}
         </span>
         <span>{st.points} PTS</span>
       </div>
@@ -93,7 +93,7 @@ export function DayScreen({ day, onPlay, onContinue, onScores, onBack }: Props) 
           onScores()
         }}
       >
-        🏆 HIGH SCORES
+        <PixelIcon name="trophy" size={18} /> HIGH SCORES
       </button>
 
       <ol className="eda-maze">
@@ -142,8 +142,8 @@ function TierBlock({
         <span className="eda-tier__name">
           NIVEL {tier} · {TIER_NAMES[tier]}
         </span>
-        <span className="eda-tier__stars">
-          ★ {stats.stars}/{stats.maxStars}
+        <span className="eda-tier__stars px-ico-text">
+          <PixelIcon name="star" size={18} /> {stats.stars}/{stats.maxStars}
         </span>
         {tier === 4 && (
           <span className="eda-tier__boss" aria-hidden="true">
@@ -151,7 +151,11 @@ function TierBlock({
           </span>
         )}
       </div>
-      {!unlocked && <p className="eda-tier__lock">🔒 Termina el nivel {tier - 1} para abrirlo</p>}
+      {!unlocked && (
+        <p className="eda-tier__lock">
+          <PixelIcon name="lock" size={18} /> Termina el nivel {tier - 1} para abrirlo
+        </p>
+      )}
       <ul className="eda-nodes">
         {list.map((ex, i) => {
           const p = game.prog[ex.id]
@@ -172,11 +176,11 @@ function TierBlock({
                 type="button"
                 className={`eda-node is-${state}`}
                 aria-disabled={state === 'locked'}
-                aria-label={`Ejercicio ${i + 1}: ${ex.title}. ${stateLabel}`}
+                aria-label={`Ejercicio ${i + 1}: ${plainText(ex.title)}. ${stateLabel}`}
                 onClick={() => {
                   if (state === 'locked') {
                     sfx.wrong()
-                    toast(`Termina el nivel ${tier - 1} primero`, { icon: '🔒' })
+                    toast(`Termina el nivel ${tier - 1} primero`, { icon: 'lock' })
                     return
                   }
                   sfx.click()
@@ -195,7 +199,7 @@ function TierBlock({
                     <span className={`eda-pellet${tier === 4 ? ' is-power' : ''}`} />
                   )}
                 </span>
-                <span className="eda-node__title">{ex.title}</span>
+                <span className="eda-node__title">{plainText(ex.title)}</span>
                 {p?.finished && <span className="eda-node__pts">{p.bestScore} PTS</span>}
               </button>
             </li>

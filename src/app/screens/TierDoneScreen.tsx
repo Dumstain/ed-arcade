@@ -3,7 +3,7 @@ import { TIER_NAMES, type DayNum } from '../../engine/course'
 import { getDay } from '../../engine/content'
 import { tierStats } from '../../engine/progress'
 import type { Tier } from '../../engine/types'
-import { Ghost, Intermission, PacMan, Stars, sfx } from '../../ui'
+import { Ghost, Intermission, PacMan, PixelIcon, Stars, sfx } from '../../ui'
 import { useGame } from '../game'
 
 interface Props {
@@ -52,8 +52,8 @@ export function TierDoneScreen({ day, tier, dayDone, onContinue }: Props) {
         <dl className="eda-celebrate__stats">
           <div>
             <dt>ESTRELLAS</dt>
-            <dd>
-              ★ {st.stars}/{st.maxStars}
+            <dd className="px-ico-text">
+              <PixelIcon name="star" size={18} /> {st.stars}/{st.maxStars}
             </dd>
           </div>
           <div>

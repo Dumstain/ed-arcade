@@ -9,9 +9,9 @@ export const examples: Exercise<RefCardsData>[] = [
     type: 'ref-cards',
     topic: 'Referencias y null',
     title: 'UNA TARJETA EN BLANCO',
-    prompt: 'La variable a es una tarjeta con la dirección de una casa. Ejecuta el programa línea por línea y apunta la tarjeta.',
-    hint: 'Con null la tarjeta queda en blanco: no lleva a ninguna casa.',
-    explanation: 'a no ES el arreglo: es una tarjeta con su dirección. Con a = null la tarjeta queda en blanco y, si intentas ir, truena.',
+    prompt: 'La variable a es una **tarjeta con la dirección** de una casa. Ejecuta el programa línea por línea y apunta la tarjeta.',
+    hint: 'Con **null** la tarjeta queda en blanco: no lleva a ninguna casa.',
+    explanation: 'a no ES el arreglo: es una **tarjeta con su dirección**. Con **a = null** la tarjeta queda en blanco y, si intentas ir, truena.',
     data: {
       vars: ['a'],
       objects: [{ id: 'arr1', label: '[1, 2, 3]' }],
@@ -19,17 +19,17 @@ export const examples: Exercise<RefCardsData>[] = [
         {
           code: 'int[] a = {1, 2, 3};',
           expect: { a: 'arr1' },
-          explain: 'Se construye la casa [1, 2, 3] y a guarda su dirección.',
+          explain: 'Se construye la casa [1, 2, 3] y a guarda su **dirección**.',
         },
         {
           code: 'a = null;',
           expect: { a: null },
-          explain: 'La tarjeta quedó en blanco. La casa sigue ahí, pero a ya no sabe llegar.',
+          explain: 'La tarjeta quedó **en blanco**. La casa sigue ahí, pero a ya no sabe llegar.',
         },
       ],
       finalQuestion: {
         text: '¿Qué pasa si ahora ejecutas a[0]?',
-        choices: ['Truena (NullPointerException)', 'Regresa 1', 'Regresa 0'],
+        choices: ['Truena (**NullPointerException**)', 'Regresa 1', 'Regresa 0'],
         answer: 0,
       },
     },
@@ -41,9 +41,9 @@ export const examples: Exercise<RefCardsData>[] = [
     type: 'ref-cards',
     topic: 'Referencias y null',
     title: 'COPIAR LA TARJETA',
-    prompt: 'Sigue el programa. Ojo: b = a copia la tarjeta, no la casa.',
-    hint: 'Después de int[] b = a; las dos tarjetas llevan a la misma casa.',
-    explanation: 'b = a copia la dirección, no el arreglo. Hay UNA sola casa y dos tarjetas: lo que cambie b se ve desde a.',
+    prompt: 'Sigue el programa. Ojo: b = a **copia la tarjeta, no la casa**.',
+    hint: 'Después de int[] b = a; las **dos tarjetas llevan a la misma casa**.',
+    explanation: 'b = a **copia la dirección, no el arreglo**. Hay **UNA sola casa** y dos tarjetas: lo que cambie b se ve desde a.',
     data: {
       vars: ['a', 'b'],
       objects: [{ id: 'arr1', label: '[1, 2, 3]' }],
@@ -52,13 +52,13 @@ export const examples: Exercise<RefCardsData>[] = [
         {
           code: 'int[] b = a;',
           expect: { a: 'arr1', b: 'arr1' },
-          explain: 'b copió la tarjeta de a: misma dirección, misma casa.',
+          explain: 'b copió la tarjeta de a: **misma dirección, misma casa**.',
         },
         {
           code: 'b[0] = 9;',
           expect: { a: 'arr1', b: 'arr1' },
           labels: { arr1: '[9, 2, 3]' },
-          explain: 'Cambiaste el contenido de la casa. Las dos tarjetas lo ven.',
+          explain: 'Cambiaste el **contenido de la casa**. Las dos tarjetas lo ven.',
         },
       ],
       finalQuestion: { text: '¿Cuánto vale a[0]?', choices: ['1', '9', 'null'], answer: 1 },
@@ -71,8 +71,8 @@ export const examples: Exercise<RefCardsData>[] = [
     type: 'ref-cards',
     topic: 'Referencias y null',
     title: 'DOS CASAS, 2 TARJETAS',
-    prompt: 'new construye una casa nueva. Sigue las tarjetas paso a paso y decide a qué apunta cada una.',
-    explanation: 'new crea otra casa y b se muda a ella; a conserva la dirección vieja. Al poner a en null, nadie más sabe llegar a la primera casa.',
+    prompt: '**new** construye una **casa nueva**. Sigue las tarjetas paso a paso y decide a qué apunta cada una.',
+    explanation: '**new** crea otra casa y b se muda a ella; a conserva la dirección vieja. Al poner a en **null**, nadie más sabe llegar a la primera casa.',
     data: {
       vars: ['a', 'b'],
       objects: [
@@ -81,16 +81,16 @@ export const examples: Exercise<RefCardsData>[] = [
       ],
       steps: [
         { code: 'int[] a = {1, 2, 3};', expect: { a: 'arr1' } },
-        { code: 'int[] b = a;', expect: { a: 'arr1', b: 'arr1' }, explain: 'Dos tarjetas, una sola casa.' },
+        { code: 'int[] b = a;', expect: { a: 'arr1', b: 'arr1' }, explain: '**Dos tarjetas, una sola casa.**' },
         {
           code: 'b = new int[]{7, 8};',
           expect: { a: 'arr1', b: 'arr2' },
-          explain: 'new levantó una casa nueva. Solo b cambió de dirección; a sigue igual.',
+          explain: '**new** levantó una casa nueva. Solo **b** cambió de dirección; a sigue igual.',
         },
         {
           code: 'a = null;',
           expect: { a: null, b: 'arr2' },
-          explain: 'a quedó en blanco. La casa [1, 2, 3] ya no tiene ninguna tarjeta que lleve a ella.',
+          explain: 'a quedó en blanco. La casa [1, 2, 3] **ya no tiene ninguna tarjeta** que lleve a ella.',
         },
       ],
       finalQuestion: {

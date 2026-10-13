@@ -70,6 +70,15 @@
   color: var(--pac);
 }
 .qz-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+/* texto destacado (.hl) sobre el fondo amarillo de la opción elegida / estados: hereda color y se subraya */
+.qz-choice.is-selected .hl,
+.qz-choice.is-wrong .hl,
+.qz-choice.is-correct .hl {
+  color: inherit;
+  background: transparent;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 3px;
+}
 .qz-mark {
   flex: none;
   font-family: var(--font-arcade);

@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, MouseEvent } from 'react'
 import type { ExerciseProps } from '../../engine/types'
 import type { ClassifyData } from '../schemas'
-import { Ghost, PacMan, burst, floatText, sfx } from '../../ui'
+import { Ghost, PacMan, PixelIcon, RichText, burst, floatText, isPixelIcon, plainText, sfx } from '../../ui'
 import { seededPermutation } from './shuffle'
 import './classify.css'
 
@@ -214,7 +214,9 @@ function ClassifyInner({ exercise, onCheck, locked, showSolution, attempt }: Exe
       <div className="cls">
         <div className="px-panel cls-warn" role="alert">
           <Ghost color="orange" size={32} />
-          <p>⚠ Este ejercicio no trae casilleros o fichas para clasificar.</p>
+          <p>
+            <PixelIcon name="warning" size={20} className="cls-warn-icon" /> Este ejercicio no trae casilleros o fichas para clasificar.
+          </p>
         </div>
       </div>
     )
@@ -232,7 +234,7 @@ function ClassifyInner({ exercise, onCheck, locked, showSolution, attempt }: Exe
     msgBad = true
   } else if (hintMsg) msg = hintMsg
   else if (sel !== null) {
-    const t = items[sel].text
+    const t = plainText(items[sel].text)
     msg = `Llevas “${t.length > 24 ? `${t.slice(0, 23)}…` : t}”. ¿A cuál casillero va?`
   } else if (ready) msg = 'Todo repartido. ¡Presiona COMPROBAR!'
 
@@ -262,7 +264,7 @@ function ClassifyInner({ exercise, onCheck, locked, showSolution, attempt }: Exe
                   aria-pressed={sel === idx}
                   onClick={() => tapTray(idx)}
                 >
-                  {items[idx].text}
+                  <RichText text={items[idx].text} />
                 </button>
               ))}
             </div>
@@ -293,7 +295,7 @@ function ClassifyInner({ exercise, onCheck, locked, showSolution, attempt }: Exe
               <div
                 key={bin.id}
                 role="group"
-                aria-label={`Casillero ${bin.label}`}
+                aria-label={`Casillero ${plainText(bin.label)}`}
                 className={`cls-bin${armed ? ' is-armed' : ''}${hasWrong ? ' is-hit' : ''}${showSolution ? ' is-solution' : ''}`}
                 onClick={(e) => tapBin(bin.id, e)}
               >
@@ -301,14 +303,14 @@ function ClassifyInner({ exercise, onCheck, locked, showSolution, attempt }: Exe
                   type="button"
                   className="cls-door"
                   disabled={!interactive}
-                  aria-label={`Mandar la ficha al casillero ${bin.label}`}
+                  aria-label={`Mandar la ficha al casillero ${plainText(bin.label)}`}
                 >
-                  {bin.icon && (
+                  {isPixelIcon(bin.icon) && (
                     <span className="cls-door__icon" aria-hidden="true">
-                      {bin.icon}
+                      <PixelIcon name={bin.icon} size={24} />
                     </span>
                   )}
-                  <span className="cls-door__label">{bin.label}</span>
+                  <span className="cls-door__label"><RichText text={bin.label} /></span>
                   {!showSolution && inBin.length > 0 && (
                     <span className="cls-door__count" aria-hidden="true">
                       x{inBin.length}
@@ -321,20 +323,20 @@ function ClassifyInner({ exercise, onCheck, locked, showSolution, attempt }: Exe
                     return (
                       <li key={idx} style={{ '--i': rank.get(idx) ?? 0 } as CSSProperties}>
                         {showSolution ? (
-                          <span className="cls-token cls-token--solution">{items[idx].text}</span>
+                          <span className="cls-token cls-token--solution"><RichText text={items[idx].text} /></span>
                         ) : (
                           <button
                             type="button"
                             className={`cls-token cls-token--placed anim-pop${isWrong ? ' is-wrong' : ''}`}
                             disabled={!interactive}
-                            aria-label={`${items[idx].text}${isWrong ? ' (incorrecta)' : ''}${interactive ? '. Toca para regresarla a la bandeja.' : ''}`}
+                            aria-label={`${plainText(items[idx].text)}${isWrong ? ' (incorrecta)' : ''}${interactive ? '. Toca para regresarla a la bandeja.' : ''}`}
                             onClick={(e) => {
                               e.stopPropagation()
                               tapPlaced(idx)
                             }}
                           >
                             {isWrong && <Ghost color="red" size={20} float={false} />}
-                            <span>{items[idx].text}</span>
+                            <RichText text={items[idx].text} />
                           </button>
                         )}
                       </li>
@@ -358,7 +360,7 @@ function ClassifyInner({ exercise, onCheck, locked, showSolution, attempt }: Exe
 
       {skipped > 0 && (
         <p className="cls-skip">
-          ⚠ Se omitieron {skipped} {skipped === 1 ? 'ficha' : 'fichas'} con datos incompletos.
+          <PixelIcon name="warning" size={16} className="cls-warn-icon" /> Se omitieron {skipped} {skipped === 1 ? 'ficha' : 'fichas'} con datos incompletos.
         </p>
       )}
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ExerciseProps } from '../../engine/types'
 import type { RefCardsData } from '../schemas'
-import { Ghost, PacMan, burst, floatText, sfx } from '../../ui'
+import { Ghost, PacMan, RichText, burst, floatText, sfx } from '../../ui'
 import { Board, type BoardObj, type Sel } from './Board'
 
 type View = 'steps' | 'final' | 'finished'
@@ -191,11 +191,11 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
   // ── textos ──
   const hint =
     eff?.k === 'card'
-      ? `Toca la casa a la que apunta «${eff.v}» (o la tarjeta en blanco).`
+      ? `Toca la **casa** a la que apunta «${eff.v}» (o la tarjeta en blanco).`
       : eff?.k === 'target'
-        ? 'Ahora toca la tarjeta que apunta ahí.'
+        ? 'Ahora toca la **tarjeta** que apunta ahí.'
         : unassigned.length > 0
-          ? 'Toca una tarjeta y luego la casa a la que apunta.'
+          ? 'Toca una **tarjeta** y luego la **casa** a la que apunta.'
           : wrongVars.length > 0
             ? `${wrongVars.length === 1 ? 'La tarjeta marcada está mal' : 'Las tarjetas marcadas están mal'}: vuelve a apuntarla${wrongVars.length === 1 ? '' : 's'} y comprueba.`
             : '¿A qué apunta cada tarjeta después de esta línea? Corrígelas si hace falta y comprueba.'
@@ -241,7 +241,7 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
 
       {inSteps && !solved && !showSolution && (
         <p className="rc-hint" role="status" aria-live="polite">
-          {hint}
+          <RichText text={hint} />
         </p>
       )}
 
@@ -263,7 +263,7 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
       {showExplain && (
         <div className="rc-explain anim-pop" role="status">
           {solved && <b>¡BIEN! </b>}
-          {exShow!.explain}
+          <RichText text={exShow!.explain} />
         </div>
       )}
 
@@ -280,7 +280,9 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
 
       {finalOpen && fq && (
         <section className="px-panel rc-final" aria-label="Pregunta final">
-          <p className="rc-qtext">{fq.text}</p>
+          <p className="rc-qtext">
+            <RichText text={fq.text} />
+          </p>
           <div className="rc-choices" role="radiogroup" aria-label="Opciones">
             {fq.choices.map((c, i) => {
               const bad = elim.includes(i)
@@ -300,7 +302,9 @@ export function Game({ exercise, onCheck, onStep, locked, showSolution, attempt 
                   }}
                 >
                   <span className="rc-radio" aria-hidden="true" />
-                  <span className="rc-ctext">{c}</span>
+                  <span className="rc-ctext">
+                    <RichText text={c} />
+                  </span>
                   {bad && <Ghost color="red" size={24} float className="rc-ghost-inline" />}
                 </button>
               )

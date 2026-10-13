@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { PacMan } from '../../ui'
+import { PacMan, RichText } from '../../ui'
 
 /** Banquete final: el comecocos se come todos los pellets de la fila. */
 export function Feast({ text }: { text: string }) {
@@ -16,7 +16,7 @@ export function Feast({ text }: { text: string }) {
         </span>
       </div>
       <p className="rt-feast__text" role="status">
-        {text}
+        <RichText text={text} />
       </p>
     </div>
   )

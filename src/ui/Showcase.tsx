@@ -12,6 +12,9 @@ import {
   Modal,
   PacMan,
   Pellets,
+  PIXEL_ICONS,
+  PixelIcon,
+  RichText,
   SoundToggle,
   Stars,
   ThemeToggle,
@@ -176,10 +179,35 @@ export default function Showcase() {
                 setStarKey((k) => k + 1)
               }}
             >
-              {n}★
+              {n} <PixelIcon name="star" size={14} />
             </button>
           ))}
         </div>
+      </Section>
+
+      <Section title="ÍCONOS PIXEL">
+        <div className="px-row ui-sc-sprites">
+          {PIXEL_ICONS.map((n) => (
+            <span key={n} className="ui-sc-lbl">
+              <PixelIcon name={n} size={24} />
+              <small>{n}</small>
+            </span>
+          ))}
+        </div>
+        <div className="px-row">
+          {[12, 16, 18, 24, 36].map((s) => (
+            <PixelIcon key={s} name="trophy" size={s} />
+          ))}
+          <button className="px-btn px-btn--sm">
+            <PixelIcon name="bulb" size={18} /> Pista
+          </button>
+        </div>
+      </Section>
+
+      <Section title="TEXTO DESTACADO">
+        <p className="ui-sc-p">
+          <RichText text="La **búsqueda binaria** descarta la mitad en cada paso: es **O(log n)**." />
+        </p>
       </Section>
 
       <Section title="CELDAS Y FICHAS">
@@ -306,7 +334,7 @@ export default function Showcase() {
             className="px-btn"
             onClick={() => {
               sfx.achievement()
-              toast('¡LOGRO DESBLOQUEADO!', { icon: '🏆' })
+              toast('¡LOGRO DESBLOQUEADO!', { icon: 'trophy' })
             }}
           >
             Toast
@@ -354,7 +382,9 @@ export default function Showcase() {
       <Modal open={modal} title="¡NIVEL COMPLETADO!" onClose={() => setModal(false)}>
         <div className="px-col">
           <Stars value={2} animate />
-          <p className="ui-sc-p">Las pilas funcionan como platos: el último que pones es el primero que sacas (LIFO).</p>
+          <p className="ui-sc-p">
+            <RichText text="Las pilas funcionan como platos: el último que pones es el primero que sacas (**LIFO**)." />
+          </p>
           <div className="px-row">
             <button className="px-btn px-btn--primary" onClick={() => setModal(false)}>Siguiente</button>
             <button className="px-btn px-btn--ghost" onClick={() => setModal(false)}>Repetir</button>

@@ -11,7 +11,7 @@ import { BadData } from '../_shared/BadData'
 import { seededShuffle } from '../_shared/shuffle'
 import { useAttemptFlash } from '../_shared/useAttemptFlash'
 import { cssVar, centerOf } from '../_shared/dom'
-import { Fruit, Ghost, PacMan, burst, sfx, type FruitKind, type GhostColor } from '../../ui'
+import { Fruit, Ghost, PacMan, RichText, burst, plainText, sfx, type FruitKind, type GhostColor } from '../../ui'
 import './quiz.css'
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E']
@@ -134,7 +134,7 @@ function QuizInner({ exercise, onCheck, locked, showSolution, attempt }: Exercis
               className={`qz-choice is-${st}`}
               disabled={disabled}
               aria-pressed={st === 'selected'}
-              aria-label={`Opción ${LETTERS[i]}: ${o.text}${suffix}`}
+              aria-label={`Opción ${LETTERS[i]}: ${plainText(o.text)}${suffix}`}
               onClick={() => select(i)}
             >
               <span className="qz-slot" aria-hidden="true">
@@ -144,7 +144,7 @@ function QuizInner({ exercise, onCheck, locked, showSolution, attempt }: Exercis
                 {st === 'idle' && <i className="qz-pellet" />}
               </span>
               <span className="qz-letter" aria-hidden="true">{LETTERS[i]}</span>
-              <span className="qz-text">{o.text}</span>
+              <span className="qz-text"><RichText text={o.text} /></span>
               {st === 'correct' && <span className="qz-mark" aria-hidden="true">OK</span>}
               {st === 'wrong' && <span className="qz-mark" aria-hidden="true">NO</span>}
             </button>

@@ -390,7 +390,7 @@ button.eda-daycard:active { transform: translate(3px, 3px); box-shadow: 2px 2px 
 .eda-tier.is-locked .eda-tier__name { color: var(--fg-muted); }
 .eda-tier__stars { margin-left: auto; font-size: 22px; color: var(--fg-muted); }
 .eda-tier__boss { display: grid; place-items: center; }
-.eda-tier__lock { margin: 8px 0 0; font-size: 20px; color: var(--fg-muted); }
+.eda-tier__lock { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 20px; color: var(--fg-muted); }
 
 .eda-nodes {
   list-style: none;
@@ -486,7 +486,16 @@ button.eda-daycard:active { transform: translate(3px, 3px); box-shadow: 2px 2px 
   border: 3px dashed var(--info);
   background: color-mix(in srgb, var(--info) 10%, var(--bg-elev));
 }
-.eda-hint__label { font-family: var(--font-arcade); font-size: 10px; color: var(--info); margin-right: 6px; }
+.eda-hint__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  vertical-align: middle;
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  color: var(--info);
+  margin-right: 6px;
+}
 .eda-play { min-width: 0; margin-top: 4px; }
 .eda-modal-text { font-size: 22px; margin: 0 0 14px; }
 
@@ -520,13 +529,24 @@ button.eda-daycard:active { transform: translate(3px, 3px); box-shadow: 2px 2px 
 .eda-breakdown li.is-bad { color: var(--bad); border-color: var(--bad); }
 .eda-breakdown li.is-ok { color: var(--ok); border-color: var(--ok); }
 .eda-explain {
-  padding: 12px 14px;
+  padding: 12px 14px 14px;
   border: var(--px) solid var(--pac);
-  background: color-mix(in srgb, var(--pac) 10%, var(--bg-elev));
+  border-left-width: 12px;
+  background: color-mix(in srgb, var(--pac) 12%, var(--bg-elev));
   box-shadow: 4px 4px 0 0 var(--wall);
+}
+.eda-explain__badge {
+  margin-left: auto;
+  padding: 4px 6px;
+  font-size: 8px;
+  line-height: 1.4;
+  color: var(--pac-ink);
+  background: var(--pac);
+  border: 2px solid var(--pac-ink);
 }
 .eda-explain__title {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin: 0 0 8px;

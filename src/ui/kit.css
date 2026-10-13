@@ -172,7 +172,8 @@
   animation: ui-toast-in 0.28s steps(4, end) both;
 }
 .ui-toast.is-leaving { animation: ui-toast-out 0.28s steps(4, end) both; }
-.ui-toast__icon { font-family: var(--font-body); font-size: 26px; line-height: 1; color: var(--pac); text-shadow: 2px 2px 0 var(--pac-ink); }
+.ui-toast__icon { flex: none; display: inline-flex; align-items: center; justify-content: center; line-height: 0; color: var(--pac); }
+.ui-toast__icon svg { display: block; }
 .ui-toast__text { overflow-wrap: anywhere; }
 @keyframes ui-toast-in { from { transform: translateY(-160%); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes ui-toast-out { from { transform: none; opacity: 1; } to { transform: translateX(120%); opacity: 0; } }

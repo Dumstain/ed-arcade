@@ -10,7 +10,7 @@ import type { CSSProperties, MouseEvent } from 'react'
 import type { ExerciseProps } from '../../engine/types'
 import type { OrderData } from '../schemas'
 import { ContextView } from '../_shared/ContextView'
-import { Fruit, Ghost, PacMan, burst, floatText, sfx } from '../../ui'
+import { Fruit, Ghost, PacMan, PixelIcon, RichText, burst, floatText, plainText, sfx } from '../../ui'
 import type { FruitKind } from '../../ui'
 import { seededPermutation } from './shuffle'
 import './order.css'
@@ -56,7 +56,7 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
   const layout: 'list' | 'row' =
     data?.layout === 'row' || data?.layout === 'list'
       ? data.layout
-      : items.every((t) => t.length <= 6)
+      : items.every((t) => plainText(t).length <= 6)
         ? 'row'
         : 'list'
   const trayOrder = useMemo(() => shuffleItems(items, exercise.id), [items, exercise.id])
@@ -159,7 +159,9 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
       <div className="ord">
         <div className="px-panel ord-warn" role="alert">
           <Ghost color="orange" size={32} />
-          <p>⚠ Este ejercicio no trae fichas para ordenar.</p>
+          <p>
+            <PixelIcon name="warning" size={20} className="ord-warn-icon" /> Este ejercicio no trae fichas para ordenar.
+          </p>
         </div>
       </div>
     )
@@ -225,9 +227,9 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
                       className={`ord-token ord-token--placed${lastIn === i ? ' anim-pop' : ''}`}
                       disabled={!interactive}
                       onClick={() => remove(i)}
-                      aria-label={`Lugar ${i + 1}: ${items[id]}${interactive ? '. Toca para regresarla.' : ''}`}
+                      aria-label={`Lugar ${i + 1}: ${plainText(items[id])}${interactive ? '. Toca para regresarla.' : ''}`}
                     >
-                      {items[id]}
+                      <RichText text={items[id]} />
                     </button>
                   ) : isCursor ? (
                     <PacMan
@@ -277,7 +279,7 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
                 <span className="ord-sol__n" aria-hidden="true">
                   {i + 1}
                 </span>
-                <span className="ord-sol__t">{t}</span>
+                <span className="ord-sol__t"><RichText text={t} /></span>
               </li>
             ))}
           </ol>
@@ -302,7 +304,7 @@ function OrderInner({ exercise, onCheck, locked, showSolution, attempt }: Exerci
                   disabled={!interactive}
                   onClick={(e) => place(id, e)}
                 >
-                  {items[id]}
+                  <RichText text={items[id]} />
                 </button>
               ))}
             </div>

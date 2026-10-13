@@ -3,7 +3,7 @@ import { dayInfo, type DayNum } from '../../engine/course'
 import { getDay } from '../../engine/content'
 import { dayStats, isDayComplete } from '../../engine/progress'
 import { aliasFor, fetchLeaderboard, flushQueue, remoteEnabled, type LeaderRow } from '../../engine/remote'
-import { Fruit, PacMan, Stars, sfx } from '../../ui'
+import { Fruit, PacMan, PixelIcon, Stars, sfx } from '../../ui'
 import { useGame } from '../game'
 import { padScore } from '../hooks'
 
@@ -71,8 +71,8 @@ export function DayDoneScreen({ day, onMap, onDay }: Props) {
         <dl className="eda-celebrate__stats">
           <div>
             <dt>ESTRELLAS</dt>
-            <dd>
-              ★ {st.stars}/{st.maxStars}
+            <dd className="px-ico-text">
+              <PixelIcon name="star" size={18} /> {st.stars}/{st.maxStars}
             </dd>
           </div>
           <div>
@@ -99,7 +99,9 @@ export function DayDoneScreen({ day, onMap, onDay }: Props) {
                 <th scope="col">RANK</th>
                 <th scope="col">JUGADOR</th>
                 <th scope="col">PUNTOS</th>
-                <th scope="col">✓</th>
+                <th scope="col">
+                  <PixelIcon name="check" size={14} title="Resueltos" />
+                </th>
               </tr>
             </thead>
             <tbody>

@@ -107,7 +107,7 @@ export function plural(n: number, uno: string, varios: string): string {
   return `${n} ${n === 1 ? uno : varios}`
 }
 
-/** Texto explicativo del paso recién revisado (order = cuántas comparaciones van). */
+/** Texto explicativo del paso recién revisado (order = cuántas comparaciones van). Usa **marcado** para RichText. */
 export function stepText(
   algorithm: 'sequential' | 'binary',
   s: TraceStep,
@@ -117,13 +117,13 @@ export function stepText(
 ): string {
   const v = values[s.idx]
   if (s.cmp === 'eq') {
-    return `¡ENCONTRADO! a[${s.idx}] = ${v}. Fueron ${plural(order, 'comparación', 'comparaciones')}.`
+    return `¡**ENCONTRADO**! a[${s.idx}] = ${v}. Fueron **${plural(order, 'comparación', 'comparaciones')}**.`
   }
   if (algorithm === 'sequential') {
     return `a[${s.idx}] = ${v} no es ${target}. Sigue con la siguiente.`
   }
   if (s.cmp === 'lt') {
-    return `a[${s.idx}] = ${v} es MENOR que ${target}: está a la DERECHA. inicio = ${s.idx} + 1 = ${s.nlo}.`
+    return `a[${s.idx}] = ${v} es **MENOR** que ${target}: está a la **DERECHA**. **inicio = ${s.idx} + 1 = ${s.nlo}**.`
   }
-  return `a[${s.idx}] = ${v} es MAYOR que ${target}: está a la IZQUIERDA. fin = ${s.idx} - 1 = ${s.nhi}.`
+  return `a[${s.idx}] = ${v} es **MAYOR** que ${target}: está a la **IZQUIERDA**. **fin = ${s.idx} - 1 = ${s.nhi}**.`
 }

@@ -5,9 +5,13 @@
  */
 import type { ReactNode } from 'react'
 import type { ArrayView, ChainView, ContextBlock, StackView, TableView, Val } from '../schemas'
+import { PixelIcon, RichText, plainText } from '../../ui'
 import './contextview.css'
 
-const show = (v: Val | null | undefined): string => (v === null || v === undefined ? '' : String(v))
+/** Valor crudo como texto (puede traer marcado **importante**; usar con <RichText> para mostrarlo). */
+const raw = (v: Val | null | undefined): string => (v === null || v === undefined ? '' : String(v))
+/** Valor sin marcado (celdas de arreglo/pila/cadena y aria-labels). */
+const show = (v: Val | null | undefined): string => plainText(raw(v))
 
 /* ───────────────────────── Código Java con resaltado simple ───────────────────────── */
 const KEYWORDS = new Set([
@@ -77,17 +81,17 @@ function ArrayBlock({ a }: { a: ArrayView }) {
   for (let i = lo; i <= hi; i++) cols.push(i)
 
   const aria =
-    `Arreglo${a.name ? ' ' + a.name : ''}: ` +
+    `Arreglo${a.name ? ' ' + plainText(a.name) : ''}: ` +
     values.map((v, i) => `posición ${i}: ${v === null ? 'vacía' : show(v)}`).join(', ') +
     (ptrs.size
-      ? '. ' + [...ptrs.entries()].map(([i, l]) => `${l.map((x) => x.label).join(' y ')} en ${i}`).join(', ')
+      ? '. ' + [...ptrs.entries()].map(([i, l]) => `${l.map((x) => plainText(x.label)).join(' y ')} en ${i}`).join(', ')
       : '')
 
   if (n === 0 && ptrs.size === 0) return <div className="cv-empty">arreglo vacío</div>
 
   return (
     <div className="cv-arr" role="img" aria-label={aria}>
-      {a.name && <div className="cv-aname">{a.name}</div>}
+      {a.name && <div className="cv-aname"><RichText text={a.name} /></div>}
       {cols.map((i) => {
         const ghost = i < 0 || i >= n
         const v = ghost ? null : values[i]
@@ -113,7 +117,7 @@ function ArrayBlock({ a }: { a: ArrayView }) {
               <div className={`cv-ptr cv-tone-${list[0].tone}`}>
                 <i className="cv-arrow cv-arrow--up" />
                 {list.map((p, j) => (
-                  <span key={j} className={`cv-plabel cv-tone-${p.tone}`}>{p.label}</span>
+                  <span key={j} className={`cv-plabel cv-tone-${p.tone}`}><RichText text={p.label} /></span>
                 ))}
               </div>
             )}
@@ -129,11 +133,11 @@ function StackBlock({ s }: { s: StackView }) {
   const vals: Val[] = Array.isArray(s.values) ? s.values : []
   const rows = [...vals].reverse() // el tope arriba
   const aria =
-    `Pila${s.label ? ' ' + s.label : ''}, de abajo hacia arriba: ` +
+    `Pila${s.label ? ' ' + plainText(s.label) : ''}, de abajo hacia arriba: ` +
     (vals.length ? vals.map(show).join(', ') + '. El tope es ' + show(vals[vals.length - 1]) : 'vacía')
   return (
     <figure className="cv-stack" role="img" aria-label={aria}>
-      {s.label && <figcaption className="cv-cap">{s.label}</figcaption>}
+      {s.label && <figcaption className="cv-cap"><RichText text={s.label} /></figcaption>}
       <div className="cv-stack-body">
         {vals.length === 0 && <div className="cv-plate cv-plate--empty">vacía</div>}
         {rows.map((v, r) => (
@@ -167,12 +171,12 @@ function ChainBlock({ c }: { c: ChainView }) {
   const vals: Val[] = Array.isArray(c.values) ? c.values : []
   const showNull = c.showNull !== false
   const aria =
-    'Lista enlazada: ' + (c.head ? c.head + ', ' : '') + vals.map(show).join(' luego ') + (showNull ? ', luego null' : '')
+    'Lista enlazada: ' + (c.head ? plainText(c.head) + ', ' : '') + vals.map(show).join(' luego ') + (showNull ? ', luego null' : '')
   return (
     <div className="cv-chain" role="img" aria-label={aria}>
       {c.head && (
         <span className="cv-cunit">
-          <span className="cv-head">{c.head}</span>
+          <span className="cv-head"><RichText text={c.head} /></span>
           {(vals.length > 0 || showNull) && <Link />}
         </span>
       )}
@@ -200,16 +204,16 @@ function TableBlock({ t }: { t: TableView }) {
   return (
     <div className="cv-tablewrap">
       <table className="cv-table">
-        {t.caption && <caption className="cv-cap">{t.caption}</caption>}
+        {t.caption && <caption className="cv-cap"><RichText text={t.caption} /></caption>}
         {headers.length > 0 && (
           <thead>
-            <tr>{headers.map((h, i) => <th key={i} scope="col">{show(h)}</th>)}</tr>
+            <tr>{headers.map((h, i) => <th key={i} scope="col"><RichText text={raw(h)} /></th>)}</tr>
           </thead>
         )}
         <tbody>
           {rows.map((r, i) => (
             <tr key={i}>
-              {(Array.isArray(r) ? r : []).map((cell, j) => <td key={j}>{show(cell)}</td>)}
+              {(Array.isArray(r) ? r : []).map((cell, j) => <td key={j}><RichText text={raw(cell)} /></td>)}
             </tr>
           ))}
         </tbody>
@@ -233,8 +237,8 @@ export function ContextView({ context }: { context?: ContextBlock }) {
       {table ? <TableBlock t={table} /> : null}
       {note ? (
         <p className="cv-note">
-          <span className="cv-note-icon" aria-hidden="true">!</span>
-          <span>{note}</span>
+          <span className="cv-note-icon" aria-hidden="true"><PixelIcon name="bulb" size={18} /></span>
+          <RichText text={note} className="cv-note-text" />
         </p>
       ) : null}
     </div>

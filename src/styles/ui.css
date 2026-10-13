@@ -22,6 +22,7 @@
   --ui-scrim: color-mix(in srgb, var(--bg) 82%, transparent);
   --ui-bevel-lo: color-mix(in srgb, var(--wall) 45%, transparent);
   --ui-bevel-hi: color-mix(in srgb, var(--fg) 10%, transparent);
+  --ui-paper: var(--fg);          /* blanco "papel" de los íconos pixel */
 }
 :root[data-theme='light'] {
   --ui-hi: var(--wall);
@@ -33,6 +34,7 @@
   --ui-scrim: color-mix(in srgb, var(--fg) 55%, transparent);
   --ui-bevel-lo: color-mix(in srgb, var(--wall) 25%, transparent);
   --ui-bevel-hi: color-mix(in srgb, var(--bg-elev) 80%, transparent);
+  --ui-paper: var(--bg-elev);
 }
 
 /* ───────────── Botón ───────────── */
@@ -351,4 +353,19 @@ button.px-cell:active:not(:disabled) { transform: translateY(2px); }
   .anim-float { animation: none; }
   .anim-pop { animation-duration: 0.12s; }
   .px-btn, .px-chip, .px-cell { transition: none; }
+}
+
+/* ───────────── Íconos pixel (src/ui/PixelIcon.tsx) ───────────── */
+.px-icon {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+  overflow: visible;
+}
+/* ícono + texto alineados (botones, etiquetas, encabezados) */
+.px-ico-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  vertical-align: middle;
 }

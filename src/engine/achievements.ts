@@ -3,22 +3,24 @@
  */
 import type { Exercise } from './types'
 import type { DayContent } from './content'
+import type { PixelIconName } from '../ui/PixelIcon'
 import { isDayComplete, isTierComplete, type ProgMap } from './progress'
 
 export interface Achievement {
   id: string
   title: string
   desc: string
-  icon: string
+  /** ícono pixel (src/ui/PixelIcon.tsx), nunca emoji */
+  icon: PixelIconName
 }
 
 export const ACHIEVEMENTS: readonly Achievement[] = [
-  { id: 'first-bite', title: '¡PRIMER BOCADO!', desc: 'Tu primer acierto.', icon: '🍒' },
-  { id: 'flawless', title: 'SIN UN RASGUÑO', desc: 'Un nivel completo con 3 estrellas en todo.', icon: '🛡️' },
-  { id: 'combo5', title: 'COMBO x5', desc: '5 aciertos seguidos al primer intento.', icon: '⚡' },
-  { id: 'boss', title: 'JEFE DERROTADO', desc: 'Resuelve todo el Nivel 4 de un día.', icon: '👻' },
-  { id: 'day-done', title: 'DÍA COMPLETADO', desc: 'Termina todos los ejercicios de un día.', icon: '🏁' },
-  { id: 'hanoi', title: 'MAESTRO DE HANÓI', desc: 'Resuelve unas torres de Hanói sin errores.', icon: '🗼' },
+  { id: 'first-bite', title: '¡PRIMER BOCADO!', desc: 'Tu primer acierto.', icon: 'cherry' },
+  { id: 'flawless', title: 'SIN UN RASGUÑO', desc: 'Un nivel completo con 3 estrellas en todo.', icon: 'shield' },
+  { id: 'combo5', title: 'COMBO x5', desc: '5 aciertos seguidos al primer intento.', icon: 'bolt' },
+  { id: 'boss', title: 'JEFE DERROTADO', desc: 'Resuelve todo el Nivel 4 de un día.', icon: 'ghost' },
+  { id: 'day-done', title: 'DÍA COMPLETADO', desc: 'Termina todos los ejercicios de un día.', icon: 'flag' },
+  { id: 'hanoi', title: 'MAESTRO DE HANÓI', desc: 'Resuelve unas torres de Hanói sin errores.', icon: 'tower' },
 ]
 
 export function achievementById(id: string): Achievement | undefined {

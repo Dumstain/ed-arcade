@@ -12,11 +12,11 @@ export const examples: Exercise<NumberData>[] = [
     title: 'CUENTA COMPARACIONES',
     prompt: 'Búsqueda secuencial del 7. ¿Cuántas comparaciones hace hasta encontrarlo?',
     hint: 'Cada elemento que se revisa cuenta como una comparación.',
-    explanation: 'Revisa 4, 9, 2 y 7: cuatro elementos revisados = 4 comparaciones.',
+    explanation: 'Revisa 4, 9, 2 y 7: cuatro elementos revisados = **4 comparaciones**.',
     data: {
       context: {
         array: { name: 'a', values: [4, 9, 2, 7, 5], highlight: [3] },
-        note: 'Se revisa de izquierda a derecha, empezando en el índice 0.',
+        note: 'Se revisa de **izquierda a derecha**, empezando en el índice 0.',
       },
       answer: 4,
       unit: 'comparaciones',
@@ -32,7 +32,7 @@ export const examples: Exercise<NumberData>[] = [
     prompt: 'Sigue las operaciones sobre la pila. ¿Cuánto vale x al final?',
     hint: 'Anota cómo queda la pila después de cada línea.',
     explanation:
-      '[2,5] → push(8): [2,5,8] → pop() saca 8 → push(3): [2,5,3] → pop() saca 3 → x = pop() saca 5.',
+      '[2,5] → push(8): [2,5,8] → pop() saca 8 → push(3): [2,5,3] → pop() saca 3 → x = pop() saca **5**.',
     data: {
       context: {
         stack: { values: [2, 5], label: 'pila inicial' },
@@ -48,10 +48,10 @@ export const examples: Exercise<NumberData>[] = [
     type: 'number',
     topic: 'Búsqueda binaria',
     title: 'NO ESTÁ EL 5',
-    prompt: 'Búsqueda binaria del 5 en este arreglo ordenado. ¿Qué número devuelve el método al terminar?',
+    prompt: '**Búsqueda binaria** del 5 en este arreglo ordenado. ¿Qué número devuelve el método al terminar?',
     hint: 'Si el valor no existe, el método devuelve -1. Usa +/- para escribirlo.',
     explanation:
-      'medio = 1 (vale 4) → el 5 está a la derecha, inicio = 2. medio = 2 (vale 6) → está a la izquierda, fin = 1. Como inicio > fin, no está: devuelve -1.',
+      'medio = 1 (vale 4) → el 5 está a la derecha, inicio = 2. medio = 2 (vale 6) → está a la izquierda, fin = 1. Como **inicio > fin**, no está: devuelve **-1**.',
     data: {
       context: {
         array: {
@@ -62,7 +62,7 @@ export const examples: Exercise<NumberData>[] = [
             { label: 'fin', index: 3 },
           ],
         },
-        note: 'Si el valor no está, se devuelve -1.',
+        note: 'Si el valor no está, se devuelve **-1**.',
       },
       answer: -1,
     },

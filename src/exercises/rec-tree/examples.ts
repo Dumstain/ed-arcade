@@ -42,10 +42,10 @@ export const examples: Exercise<RecTreeData>[] = [
     type: 'rec-tree',
     topic: 'Recursividad',
     title: 'ÁRBOL DE FIBONACCI',
-    prompt: 'Las hojas ya saben su valor. Sube por el árbol: cada fib(n) es la suma de sus dos hijas.',
-    hint: 'fib(3) = fib(2) + fib(1). Empieza por los nodos de más abajo.',
+    prompt: 'Las **hojas** ya saben su valor. Sube por el árbol: cada fib(n) es **la suma de sus dos hijas**.',
+    hint: '**fib(3) = fib(2) + fib(1)**. Empieza por los nodos de más abajo.',
     explanation:
-      'Cada llamada se divide en dos más pequeñas, como muñecas que se abren en dos. Los valores suben de las hojas (casos base) hacia la raíz.',
+      'Cada llamada se divide en dos más pequeñas, como muñecas que se abren en dos. Los valores suben de las hojas (**casos base**) hacia la raíz.',
     data: { mode: 'fill', root: fibTree(4), given: 'leaves' },
   },
   {
@@ -55,10 +55,10 @@ export const examples: Exercise<RecTreeData>[] = [
     type: 'rec-tree',
     topic: 'Recursividad',
     title: 'TRABAJO REPETIDO',
-    prompt: 'Atrapa con un fantasma todas las llamadas fib(2) del árbol. ¡Mira cuánto trabajo se repite!',
-    hint: 'Busca cajitas con el mismo letrero: fib(2).',
+    prompt: 'Atrapa con un fantasma todas las llamadas **fib(2)** del árbol. ¡Mira cuánto **trabajo se repite**!',
+    hint: 'Busca cajitas con el mismo letrero: **fib(2)**.',
     explanation:
-      'fib(2) se calcula tres veces desde cero. La recursión sin memoria repite trabajo: por eso fib(40) tarda tanto.',
+      'fib(2) se calcula **tres veces** desde cero. La recursión sin memoria **repite trabajo**: por eso fib(40) tarda tanto.',
     data: { mode: 'count', root: fibTree(5), target: 'fib(2)' },
   },
   {
@@ -68,10 +68,10 @@ export const examples: Exercise<RecTreeData>[] = [
     type: 'rec-tree',
     topic: 'Recursividad',
     title: 'SUMA POR MITADES',
-    prompt: 'Para a = [3, 1, 4, 2], suma(ini,fin) parte el arreglo a la mitad. Calcula el valor de TODAS las llamadas.',
-    hint: 'suma(0,0) es a[0] = 3. Cada padre suma lo que regresan sus dos hijas.',
+    prompt: 'Para a = [3, 1, 4, 2], suma(ini,fin) **parte el arreglo a la mitad**. Calcula el valor de **TODAS** las llamadas.',
+    hint: 'suma(0,0) es **a[0] = 3**. Cada padre suma lo que regresan sus dos hijas.',
     explanation:
-      'Divide y vencerás: la llamada se parte en mitades hasta tener un solo elemento (caso base) y luego los resultados se suman al subir.',
+      '**Divide y vencerás**: la llamada se parte en mitades hasta tener un solo elemento (**caso base**) y luego los resultados se suman al subir.',
     data: { mode: 'fill', root: sumaMitades, given: 'none' },
   },
 ]

@@ -1,5 +1,5 @@
 import { useId, useRef, useState, type FormEvent } from 'react'
-import { Ghost, PacMan, sfx } from '../../ui'
+import { Ghost, PacMan, PixelIcon, RichText, sfx } from '../../ui'
 import { normalizeControl } from '../../engine/storage'
 
 interface Props {
@@ -113,10 +113,14 @@ export function StartScreen({ remembered, onPlay, onForget }: Props) {
 
       <ul className="eda-howto" aria-label="Cómo se juega">
         <li>
-          <PacMan size={18} dir="right" /> 3 vidas por ejercicio
+          <PacMan size={18} dir="right" /> <RichText text="**3 vidas** por ejercicio" />
         </li>
-        <li>★ Sin errores = 3 estrellas</li>
-        <li>⚡ Aciertos seguidos = COMBO</li>
+        <li>
+          <PixelIcon name="star" size={18} /> <RichText text="Sin errores = **3 estrellas**" />
+        </li>
+        <li>
+          <PixelIcon name="bolt" size={18} /> <RichText text="Aciertos seguidos = **COMBO**" />
+        </li>
       </ul>
     </div>
   )

@@ -34,10 +34,10 @@ const day1: Exercise[] = [
     topic: 'Memoria y arreglos',
     title: 'BUTACAS JUNTAS',
     prompt:
-      'La memoria es una calle de casas con número. El arreglo a apartó 6 casas juntas, como butacas en el cine. Toca la casa donde vive a[4].',
-    hint: 'Cuenta desde a[0], no desde la primera casa de la calle.',
+      'La memoria es una calle de casas con número. El **arreglo** a apartó 6 **casas juntas**, como butacas en el cine. Toca la casa donde vive a[4].',
+    hint: 'Cuenta desde **a[0]**, no desde la primera casa de la calle.',
     explanation:
-      'a[4] vive 4 casas después de a[0]: la casa 6, dirección 108 + 4 × 4 = 124. Como las butacas están juntas y son del mismo tamaño, llegas directo sin tocar las demás puertas.',
+      'a[4] vive 4 casas después de a[0]: la casa 6, dirección **108 + 4 × 4 = 124**. Como las butacas están **juntas y son del mismo tamaño**, llegas directo sin tocar las demás puertas.',
     data: {
       mode: 'address',
       houses: 10,
@@ -55,10 +55,10 @@ const day1: Exercise[] = [
     topic: 'Búsqueda secuencial',
     title: 'BOLSILLO POR BOLSILLO',
     prompt:
-      'Busca el 47 como buscas tus llaves: bolsillo por bolsillo. Toca las celdas en orden, desde la 0, hasta encontrarlo.',
-    hint: 'Sin brincarte ninguna: 0, 1, 2… Cada celda que revisas es una comparación.',
+      'Busca el 47 como buscas tus llaves: **bolsillo por bolsillo**. Toca las celdas en orden, desde la 0, hasta encontrarlo.',
+    hint: 'Sin brincarte ninguna: 0, 1, 2… Cada celda que revisas es **una comparación**.',
     explanation:
-      'El 47 está en el índice 9: revisaste 10 celdas, 10 comparaciones. La secuencial funciona aunque los datos estén revueltos, pero en el peor caso (llaves en el último bolsillo) revisa las n: O(n).',
+      'El 47 está en el índice 9: revisaste 10 celdas, **10 comparaciones**. La **búsqueda secuencial** funciona aunque los datos estén revueltos, pero en el peor caso (llaves en el último bolsillo) revisa las n: **O(n)**.',
     data: {
       algorithm: 'sequential',
       mode: 'play',
@@ -74,16 +74,16 @@ const day1: Exercise[] = [
     topic: 'Big-O',
     title: '¿CUÁNTOS PASOS?',
     prompt:
-      'Big-O cuenta pasos, no segundos. Manda cada situación al casillero que dice cómo crecen sus pasos cuando hay más datos.',
-    hint: 'Si llegan el doble de datos, ¿los pasos no cambian, suben poquito, se duplican o se multiplican por 4?',
+      'Big-O cuenta **pasos, no segundos**. Manda cada situación al casillero que dice **cómo crecen sus pasos** cuando hay más datos.',
+    hint: 'Si llegan **el doble de datos**, ¿los pasos no cambian, suben poquito, se duplican o se multiplican por 4?',
     explanation:
-      'Abrir el cajón 5 o leer a[4] es ir directo: O(1). El diccionario y el «más alto / más bajo» parten a la mitad: O(log n). Pasar lista y las llaves van uno por uno: O(n), y saludar a todos es cada quien con cada quien: O(n²).',
+      'Abrir el cajón 5 o leer a[4] es ir directo: **O(1)**. El diccionario y el «más alto / más bajo» parten a la mitad: **O(log n)**. Pasar lista y las llaves van uno por uno: **O(n)**, y saludar a todos es cada quien con cada quien: **O(n²)**.',
     data: {
       bins: [
-        { id: 'o1', label: 'O(1)', icon: '🗄️' },
-        { id: 'ologn', label: 'O(log n)', icon: '📖' },
-        { id: 'on', label: 'O(n)', icon: '📋' },
-        { id: 'on2', label: 'O(n²)', icon: '🤝' },
+        { id: 'o1', label: 'O(1)', icon: 'drawer' },
+        { id: 'ologn', label: 'O(log n)', icon: 'book' },
+        { id: 'on', label: 'O(n)', icon: 'clipboard' },
+        { id: 'on2', label: 'O(n²)', icon: 'people' },
       ],
       items: [
         { text: 'Abrir el cajón 5 de la cajonera', bin: 'o1' },
@@ -105,10 +105,10 @@ const day1: Exercise[] = [
     topic: 'Referencias',
     title: 'COPIA LA TARJETA',
     prompt:
-      'Una variable de arreglo es una tarjeta con la dirección de la casa, no la casa. Ejecuta línea por línea: toca cada tarjeta y luego la casa a la que lleva.',
-    hint: 'b = a no construye otra casa: solo copia la dirección escrita en la tarjeta.',
+      'Una variable de arreglo es una **tarjeta con la dirección** de la casa, no la casa. Ejecuta línea por línea: toca cada tarjeta y luego la casa a la que lleva.',
+    hint: 'b = a no construye otra casa: solo **copia la dirección** escrita en la tarjeta.',
     explanation:
-      'a[0] vale 9: a y b son dos tarjetas con la MISMA dirección. Si pintas la puerta usando b, a también la ve pintada.',
+      '**a[0] vale 9**: a y b son dos tarjetas con la **MISMA dirección**. Si pintas la puerta usando b, a también la ve pintada.',
     data: {
       vars: ['a', 'b'],
       objects: [{ id: 'arr', label: '[1, 2, 3]' }],
@@ -120,17 +120,17 @@ const day1: Exercise[] = [
         {
           code: 'int[] b = a;',
           expect: { a: 'arr', b: 'arr' },
-          explain: 'b = a copió la tarjeta, no la casa: dos tarjetas, una sola casa.',
+          explain: 'b = a copió **la tarjeta, no la casa**: dos tarjetas, **una sola casa**.',
         },
         {
           code: 'b[0] = 9;',
           expect: { a: 'arr', b: 'arr' },
           labels: { arr: '[9, 2, 3]' },
-          explain: 'Pintaste la puerta usando b… y es la misma casa a la que lleva a.',
+          explain: 'Pintaste la puerta usando b… y es **la misma casa** a la que lleva a.',
         },
       ],
       finalQuestion: {
-        text: '¿Cuánto vale a[0] ahora?',
+        text: '¿Cuánto vale **a[0]** ahora?',
         choices: ['1', '9', '0', 'Truena (error)'],
         answer: 1,
       },
@@ -146,10 +146,10 @@ const day1: Exercise[] = [
     topic: 'Memoria y arreglos',
     title: 'CALCULA LA DIRECCIÓN',
     prompt:
-      'Ahora sin contar casas: los letreros del arreglo están tapados, menos el de a[0]. Cada int mide 4 bytes. Escribe la dirección de a[5].',
-    hint: 'Lee la dirección de a[0] en su letrero y usa la fórmula de la pantalla. Ojo: i es el índice, no el dato que guarda la casa.',
+      'Ahora sin contar casas: los letreros del arreglo están tapados, menos el de **a[0]**. Cada int mide **4 bytes**. Escribe la dirección de a[5].',
+    hint: 'Lee la dirección de a[0] en su letrero y usa **la fórmula** de la pantalla. Ojo: **i es el índice**, no el dato que guarda la casa.',
     explanation:
-      'dir(a[5]) = 212 + 5 × 4 = 232. Es una suma y una multiplicación, tenga el arreglo 7 casillas o un millón: por eso a[i] es O(1), como ir directo a la butaca 5.',
+      'dir(a[5]) = **212 + 5 × 4 = 232**. Es una suma y una multiplicación, tenga el arreglo 7 casillas o un millón: por eso **a[i] es O(1)**, como ir directo a la butaca 5.',
     data: {
       mode: 'address',
       houses: 10,
@@ -167,10 +167,10 @@ const day1: Exercise[] = [
     topic: 'Búsqueda binaria',
     title: 'MÁS ALTO, MÁS BAJO',
     prompt:
-      'Mismo arreglo, mismo 47, pero con búsqueda binaria. En cada paso toca la celda del MEDIO: el comecocos se la come y la mitad que ya no sirve se apaga.',
-    hint: 'medio = (inicio + fin) / 2, sin decimales. Al principio: (0 + 11) / 2 = 5.',
+      'Mismo arreglo, mismo 47, pero con **búsqueda binaria**. En cada paso toca la celda del **MEDIO**: el comecocos se la come y la mitad que ya no sirve se apaga.',
+    hint: '**medio = (inicio + fin) / 2**, sin decimales. Al principio: (0 + 11) / 2 = 5.',
     explanation:
-      'Revisaste 27, 42, 53 y 47: 4 comparaciones contra las 10 de la secuencial. Es el juego de adivinar el número: cada «más alto / más bajo» descarta la mitad, O(log n), y solo funciona porque los datos están ordenados.',
+      'Revisaste 27, 42, 53 y 47: **4 comparaciones** contra las 10 de la secuencial. Es el juego de adivinar el número: cada «más alto / más bajo» descarta la mitad, **O(log n)**, y solo funciona porque los **datos están ordenados**.',
     data: {
       algorithm: 'binary',
       mode: 'play',
@@ -186,10 +186,10 @@ const day1: Exercise[] = [
     topic: 'Referencias y nodos',
     title: 'DOS TARJETAS, UN NODO',
     prompt:
-      'El ejercicio 1 de Dia1.java, ahora con nodos. Cada casa muestra [dato | sig]. Sigue las tarjetas n1 y n2 línea por línea. ¡Ojo con new!',
-    hint: 'new siempre construye una casa nueva. «n2 = …» mueve la tarjeta n2; «n2.dato = …» cambia lo que hay DENTRO de su casa.',
+      'El ejercicio 1 de Dia1.java, ahora con **nodos**. Cada casa muestra [dato | sig]. Sigue las tarjetas n1 y n2 línea por línea. ¡Ojo con **new**!',
+    hint: 'new siempre construye **una casa nueva**. «n2 = …» **mueve la tarjeta** n2; «n2.dato = …» cambia lo que hay **DENTRO** de su casa.',
     explanation:
-      'n1.dato vale 7: n2.dato = 7 se hizo cuando las dos tarjetas llevaban a la misma casa. Después new Nodo(10) construyó otra casa y solo n2 se mudó; la casa de n1 conserva su 7.',
+      '**n1.dato vale 7**: n2.dato = 7 se hizo cuando las dos tarjetas llevaban a **la misma casa**. Después new Nodo(10) construyó otra casa y **solo n2 se mudó**; la casa de n1 conserva su 7.',
     data: {
       vars: ['n1', 'n2'],
       objects: [
@@ -204,22 +204,22 @@ const day1: Exercise[] = [
         {
           code: 'Nodo n2 = n1;',
           expect: { n1: 'nA', n2: 'nA' },
-          explain: 'Igual que con el arreglo: n2 copió la tarjeta. Sigue habiendo un solo nodo.',
+          explain: 'Igual que con el arreglo: n2 **copió la tarjeta**. Sigue habiendo **un solo nodo**.',
         },
         {
           code: 'n2.dato = 7;',
           expect: { n1: 'nA', n2: 'nA' },
           labels: { nA: '[7 | null]' },
-          explain: 'Cambiaste el dato DENTRO de la casa; las tarjetas no se movieron.',
+          explain: 'Cambiaste el dato **DENTRO de la casa**; las tarjetas no se movieron.',
         },
         {
           code: 'n2 = new Nodo(10);',
           expect: { n1: 'nA', n2: 'nB' },
-          explain: 'new levantó OTRA casa y solo n2 se mudó a ella; n1 se quedó donde estaba.',
+          explain: '**new** levantó **OTRA casa** y solo n2 se mudó a ella; n1 se quedó donde estaba.',
         },
       ],
       finalQuestion: {
-        text: '¿Cuánto vale n1.dato al final?',
+        text: '¿Cuánto vale **n1.dato** al final?',
         choices: ['3', '7', '10', 'null'],
         answer: 1,
       },
@@ -233,10 +233,10 @@ const day1: Exercise[] = [
     topic: 'Big-O',
     title: 'DETECTIVE DE PASOS',
     prompt:
-      'Como en Tarea1.java: cada ficha son los pasos medidos con n = 8, 16, 32 y 64. Fíjate cómo crecen cada vez que n se duplica y mándala a su complejidad.',
-    hint: 'Compara cada número con el anterior: ¿se queda igual, suma poquito, se duplica o se multiplica por 4?',
+      'Como en Tarea1.java: cada ficha son los pasos medidos con n = 8, 16, 32 y 64. Fíjate **cómo crecen** cada vez que **n se duplica** y mándala a su complejidad.',
+    hint: 'Compara cada número **con el anterior**: ¿se queda igual, suma poquito, se duplica o se multiplica por 4?',
     explanation:
-      'Importa cómo crecen, no el número exacto: 16 → 32 → 64 → 128 se duplica igual que 8 → 16 → 32 → 64, así que también es O(n) (las constantes se quitan). Con el doble de alumnos, pasar lista cuesta el doble; que todos se saluden cuesta 4 veces más. Y si al duplicar n solo se suma un poquito (3 → 4 → 5 → 6, o 6 → 8 → 10 → 12), es O(log n): como partir el diccionario a la mitad, el doble de datos solo agrega uno o dos pasos.',
+      'Importa **cómo crecen, no el número exacto**: 16 → 32 → 64 → 128 se duplica igual que 8 → 16 → 32 → 64, así que también es **O(n)** (las constantes se quitan). Con el doble de alumnos, pasar lista cuesta el doble; que todos se saluden cuesta 4 veces más. Y si al duplicar n solo se suma un poquito (3 → 4 → 5 → 6, o 6 → 8 → 10 → 12), es **O(log n)**: como partir el diccionario a la mitad, el doble de datos solo agrega uno o dos pasos.',
     data: {
       bins: [
         { id: 'o1', label: 'O(1)' },
@@ -266,10 +266,10 @@ const day1: Exercise[] = [
     topic: 'Nodos y referencias',
     title: 'BÚSQUEDA DEL TESORO',
     prompt:
-      'Cada nodo guarda su dato y la dirección del siguiente, como una pista. Sigue la cadena desde INICIO tocando las casas en orden y termina en el letrero NULL.',
-    hint: 'No avances a la casa de al lado: lee la pista (→ dirección) de la casa donde estás y busca ese letrero.',
+      'Cada **nodo** guarda su dato y **la dirección del siguiente**, como una pista. Sigue la cadena desde INICIO tocando las casas en orden y termina en el letrero **NULL**.',
+    hint: 'No avances a la casa de al lado: **lee la pista** (→ dirección) de la casa donde estás y busca ese letrero.',
     explanation:
-      'Recorriste 3 → 7 → 5 → 9 → null siguiendo direcciones, igual que actual = actual.sig. Los vagones no están en orden en la calle: para llegar al cuarto hay que pasar por los tres primeros, O(n).',
+      'Recorriste 3 → 7 → 5 → 9 → null siguiendo direcciones, igual que **actual = actual.sig**. Los vagones no están en orden en la calle: para llegar al cuarto hay que **pasar por los tres primeros**, **O(n)**.',
     data: {
       mode: 'chain',
       houses: 12,
@@ -296,10 +296,10 @@ const day1: Exercise[] = [
     topic: 'Secuencial vs binaria',
     title: 'EL EXPERIMENTO',
     prompt:
-      'El profe corrió Experimento.java: busca un dato que NO está (el peor caso) en arreglos de 10, 1,000 y 1,000,000. ¿Cuántas comparaciones hace la binaria con 1,000,000 de datos?',
-    hint: 'La binaria revisa tantas veces como puedes partir los datos a la mitad: con 1,000 (1,000 → 500 → 250 → …) fueron 10. Y 1,000,000 es 1,000 × 1,000.',
+      'El profe corrió Experimento.java: busca un dato que NO está (el **peor caso**) en arreglos de 10, 1,000 y 1,000,000. ¿Cuántas comparaciones hace la **búsqueda binaria** con 1,000,000 de datos?',
+    hint: 'La binaria revisa tantas veces como puedes **partir los datos a la mitad**: con 1,000 (1,000 → 500 → 250 → …) fueron 10. Y 1,000,000 es 1,000 × 1,000.',
     explanation:
-      'Con 1,000,000 la binaria hace 20. De 1,000 a 1,000,000 los datos se multiplicaron por 1,000: la secuencial también se multiplicó por 1,000, pero la binaria solo sumó 10, porque 10 mitades dividen entre 1,024 ≈ 1,000. Así se ve O(n) contra O(log n): pasar lista contra partir el diccionario a la mitad.',
+      'Con 1,000,000 la binaria hace **20**. De 1,000 a 1,000,000 los datos se multiplicaron por 1,000: la secuencial también se multiplicó por 1,000, pero la binaria **solo sumó 10**, porque 10 mitades dividen entre 1,024 ≈ 1,000. Así se ve **O(n) contra O(log n)**: pasar lista contra partir el diccionario a la mitad.',
     data: {
       context: {
         table: {
@@ -311,7 +311,7 @@ const day1: Exercise[] = [
             ['1,000,000', '1,000,000', '?'],
           ],
         },
-        note: 'Binaria = adivinar el número con «más alto / más bajo»: cada pregunta parte los datos a la mitad.',
+        note: 'Binaria = adivinar el número con «más alto / más bajo»: cada pregunta **parte los datos a la mitad**.',
       },
       answer: 20,
       unit: 'comparaciones',
@@ -325,14 +325,14 @@ const day1: Exercise[] = [
     topic: 'Nodos: insertar en medio',
     title: 'ENGANCHA EL VAGÓN',
     prompt:
-      'b ya apunta al vagón 7. Ordena las 3 líneas para meter un vagón con 9 entre el 7 y el 5 sin perder el resto del tren.',
-    hint: 'Antes de soltar el enganche del 7, alguien tiene que agarrar la dirección del 5.',
+      'b ya apunta al vagón 7. Ordena las 3 líneas para meter un vagón con 9 entre el 7 y el 5 **sin perder el resto del tren**.',
+    hint: 'Antes de soltar el enganche del 7, alguien tiene que **agarrar la dirección del 5**.',
     explanation:
-      'Primero x se engancha al 5 (x.sig = b.sig) y luego el 7 se engancha a x. Si haces b.sig = x primero, pierdes la dirección del 5 y el resto del tren. Solo cambian dos enganches, haya 4 vagones o mil; en la fila del cine todos se tendrían que recorrer.',
+      'Primero **x se engancha al 5** (x.sig = b.sig) y luego el 7 se engancha a x. Si haces b.sig = x primero, **pierdes la dirección del 5** y el resto del tren. Solo cambian **dos enganches**, haya 4 vagones o mil; en la fila del cine todos se tendrían que recorrer.',
     data: {
       context: {
         chain: { values: [3, 7, 5], head: 'inicio', showNull: true },
-        note: 'Meta: inicio → 3 → 7 → 9 → 5 → null. La tarjeta b lleva al vagón 7.',
+        note: 'Meta: **inicio → 3 → 7 → 9 → 5 → null**. La tarjeta b lleva al vagón 7.',
       },
       items: ['Nodo x = new Nodo(9);', 'x.sig = b.sig;', 'b.sig = x;'],
       layout: 'list',
@@ -348,15 +348,15 @@ const day1: Exercise[] = [
     topic: 'Arreglos vs nodos',
     title: 'BUTACAS VS VAGONES',
     prompt:
-      '¿Quién lo hace en menos pasos: el arreglo (butacas juntas) o los nodos (vagones enganchados)? Si los dos tienen que revisar uno por uno, es EMPATE.',
-    hint: 'Para cada ficha pregúntate: ¿el arreglo tiene que recorrer a todos? ¿Los nodos tienen que seguir flechas desde el inicio?',
+      '¿Quién lo hace en menos pasos: el **arreglo** (butacas juntas) o los **nodos** (vagones enganchados)? Si los dos tienen que revisar uno por uno, es **EMPATE**.',
+    hint: 'Para cada ficha pregúntate: ¿el arreglo tiene que **recorrer a todos**? ¿Los nodos tienen que **seguir flechas desde el inicio**?',
     explanation:
-      'El arreglo gana cuando hay que ir directo a una posición (dirección = a[0] + i × tamaño); por eso la binaria necesita arreglo. Los nodos ganan al meter vagones o crecer: dos enganches y listo, mientras en el arreglo todos se recorren o se mudan a uno más grande. Para revisar todos, los dos dan n pasos.',
+      'El arreglo gana cuando hay que ir directo a una posición (dirección = **a[0] + i × tamaño**); por eso la binaria necesita arreglo. Los nodos ganan al **meter vagones o crecer**: dos enganches y listo, mientras en el arreglo todos se recorren o se mudan a uno más grande. Para revisar todos, los dos dan **n pasos**.',
     data: {
       bins: [
-        { id: 'arr', label: 'GANA EL ARREGLO', icon: '💺' },
-        { id: 'nod', label: 'GANAN LOS NODOS', icon: '🚂' },
-        { id: 'emp', label: 'EMPATE', icon: '⚖️' },
+        { id: 'arr', label: 'GANA EL ARREGLO', icon: 'seat' },
+        { id: 'nod', label: 'GANAN LOS NODOS', icon: 'train' },
+        { id: 'emp', label: 'EMPATE', icon: 'scale' },
       ],
       items: [
         { text: 'Leer el elemento 500', bin: 'arr' },
@@ -378,10 +378,10 @@ const day1: Exercise[] = [
     topic: 'Referencias y null',
     title: 'TARJETA EN BLANCO',
     prompt:
-      'Sigue las tarjetas a y b por el tren. Cada casa muestra [dato | sig]. Si una tarjeta ya no lleva a ninguna casa, apúntala a la tarjeta en blanco (null).',
-    hint: 'a.sig = … no mueve la tarjeta a: cambia lo escrito DENTRO de su casa. Y el sig del último vagón es null.',
+      'Sigue las tarjetas a y b por el tren. Cada casa muestra [dato | sig]. Si una tarjeta ya no lleva a ninguna casa, apúntala a la **tarjeta en blanco (null)**.',
+    hint: 'a.sig = … **no mueve la tarjeta a**: cambia lo escrito **DENTRO de su casa**. Y el sig del último vagón es null.',
     explanation:
-      'b quedó en blanco porque el sig del último vagón es null, y ir a la casa de una tarjeta en blanco truena: NullPointerException. Por eso al recorrer se pregunta actual != null antes de usar actual.dato.',
+      'b quedó en blanco porque el sig del último vagón es **null**, y ir a la casa de una tarjeta en blanco truena: **NullPointerException**. Por eso al recorrer se pregunta **actual != null** antes de usar actual.dato.',
     data: {
       vars: ['a', 'b'],
       objects: [
@@ -397,21 +397,21 @@ const day1: Exercise[] = [
           code: 'a.sig = new Nodo(7);',
           expect: { a: 'n3' },
           labels: { n3: '[3 | #112]' },
-          explain: 'a no se movió: se llenó el sig DENTRO de la casa del 3 con la dirección del 7 (#112).',
+          explain: 'a no se movió: se llenó el **sig** DENTRO de la casa del 3 con **la dirección del 7** (#112).',
         },
         {
           code: 'Nodo b = a.sig;',
           expect: { a: 'n3', b: 'n7' },
-          explain: 'b copió la dirección que estaba en el sig del 3: ahora lleva al vagón 7.',
+          explain: 'b **copió la dirección** que estaba en el sig del 3: ahora lleva al vagón 7.',
         },
         {
           code: 'b = b.sig;',
           expect: { a: 'n3', b: null },
-          explain: 'El sig del 7 es null: b quedó en blanco, como actual al final de la cadena.',
+          explain: 'El sig del 7 es **null**: b **quedó en blanco**, como actual al final de la cadena.',
         },
       ],
       finalQuestion: {
-        text: 'Ahora se ejecuta b.dato = 5; ¿qué pasa?',
+        text: 'Ahora se ejecuta **b.dato = 5;** ¿qué pasa?',
         choices: ['El 7 cambia a 5', 'Se crea un nodo nuevo con 5', 'Truena: NullPointerException', 'a.dato cambia a 5'],
         answer: 2,
       },
@@ -425,14 +425,14 @@ const day1: Exercise[] = [
     topic: 'Binaria y direcciones',
     title: 'JEFE: LA ÚLTIMA PUERTA',
     prompt:
-      'La binaria busca el 50, que NO está. a[0] vive en la dirección 200 y cada int mide 4. ¿En qué dirección vive la ÚLTIMA casilla que revisa antes de rendirse?',
-    hint: 'Juega la binaria: el primer medio es (0 + 11) / 2 = 5. Cuando inicio > fin se rinde; aplica la fórmula al último medio.',
+      'La **búsqueda binaria** busca el 50, que **NO está**. a[0] vive en la dirección 200 y cada int mide 4. ¿En qué dirección vive la **ÚLTIMA casilla** que revisa antes de rendirse?',
+    hint: 'Juega la binaria: el primer medio es (0 + 11) / 2 = 5. Cuando **inicio > fin** se rinde; aplica **la fórmula** al último medio.',
     explanation:
-      'Revisa a[5] = 27, a[8] = 42, a[10] = 53 y a[9] = 47; luego inicio (10) > fin (9) y devuelve -1. La última fue a[9]: 200 + 9 × 4 = 236. La binaria puede saltar así porque en el arreglo cada dirección se calcula en un paso.',
+      'Revisa a[5] = 27, a[8] = 42, a[10] = 53 y a[9] = 47; luego **inicio (10) > fin (9)** y devuelve -1. La última fue a[9]: **200 + 9 × 4 = 236**. La binaria puede saltar así porque en el arreglo **cada dirección se calcula en un paso**.',
     data: {
       context: {
         array: { name: 'a', values: D },
-        note: 'medio = (inicio + fin) / 2 · dir(a[i]) = 200 + i × 4',
+        note: '**medio = (inicio + fin) / 2** · **dir(a[i]) = 200 + i × 4**',
       },
       answer: 236,
     } satisfies NumberData,

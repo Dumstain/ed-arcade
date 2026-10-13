@@ -3,7 +3,7 @@ import { getDay } from '../../engine/content'
 import { dayStats, isDayComplete } from '../../engine/progress'
 import { rankFor } from '../../engine/scoring'
 import { ACHIEVEMENTS } from '../../engine/achievements'
-import { Fruit, Ghost, PacMan, Pellets, sfx, toast } from '../../ui'
+import { Fruit, Ghost, PacMan, Pellets, PixelIcon, sfx, toast } from '../../ui'
 import { useGame } from '../game'
 import { padScore, useCountUp } from '../hooks'
 
@@ -63,10 +63,10 @@ export function DaysScreen({ onOpenDay }: Props) {
                   title={`${a.title} — ${a.desc}`}
                   onClick={() => {
                     sfx.click()
-                    toast(`${a.title}: ${a.desc}`, { icon: ok ? a.icon : '🔒' })
+                    toast(`${a.title}: ${a.desc}`, { icon: ok ? a.icon : 'lock' })
                   }}
                 >
-                  <span aria-hidden="true">{ok ? a.icon : '?'}</span>
+                  <span aria-hidden="true">{ok ? <PixelIcon name={a.icon} size={28} /> : '?'}</span>
                 </button>
               </li>
             )
@@ -98,7 +98,11 @@ export function DaysScreen({ onOpenDay }: Props) {
                   <span className="eda-daycard__title">{d.title}</span>
                 </div>
                 {today && <span className="eda-tag eda-tag--pac">HOY</span>}
-                {done && <span className="eda-tag eda-tag--ok">✓</span>}
+                {done && (
+                  <span className="eda-tag eda-tag--ok">
+                    <PixelIcon name="check" size={14} />
+                  </span>
+                )}
               </div>
               {playable ? (
                 <div className="eda-daycard__stats">
@@ -107,8 +111,8 @@ export function DaysScreen({ onOpenDay }: Props) {
                     <span>
                       {st.finished}/{st.total}
                     </span>
-                    <span>
-                      ★ {st.stars}/{st.maxStars}
+                    <span className="px-ico-text">
+                      <PixelIcon name="star" size={18} /> {st.stars}/{st.maxStars}
                     </span>
                     <span>{st.points} PTS</span>
                   </span>

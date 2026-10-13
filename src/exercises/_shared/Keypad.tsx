@@ -12,7 +12,7 @@
  * - El botón de enviar solo existe si se pasa onSubmit; queda deshabilitado mientras no haya dígitos.
  */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { sfx } from '../../ui'
+import { RichText, sfx } from '../../ui'
 import './keypad.css'
 
 export interface KeypadProps {
@@ -161,7 +161,7 @@ export function Keypad({
           {value}
           {!disabled && <span className="kp-cursor">_</span>}
         </span>
-        {unit && <span className="kp-unit">{unit}</span>}
+        {unit && <span className="kp-unit"><RichText text={unit} /></span>}
       </div>
 
       <div className="kp-grid">

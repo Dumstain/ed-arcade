@@ -224,8 +224,9 @@
   background: repeating-linear-gradient(0deg, var(--wall) 0 3px, transparent 3px 6px);
 }
 .cls-door__icon {
-  font-size: 30px;
-  line-height: 1;
+  display: inline-flex;
+  line-height: 0;
+  color: var(--fg);
 }
 .cls-bin.is-armed .cls-door__icon { animation: cls-bob 0.8s steps(2) infinite; }
 @keyframes cls-bob {
@@ -346,6 +347,17 @@
   gap: 12px;
 }
 .cls-warn p { margin: 0; font-size: 22px; }
+.cls-warn-icon { vertical-align: -3px; margin-right: 4px; color: var(--ghost-orange); }
+
+/* texto destacado (.hl) sobre fondos amarillos / de estado: hereda el color de la ficha y queda subrayado */
+.cls-token--placed .hl,
+.cls-token.is-selected .hl,
+.cls-token--solution .hl {
+  color: inherit;
+  background: transparent;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 3px;
+}
 
 /* ───────── movimiento reducido ───────── */
 @media (prefers-reduced-motion: reduce) {

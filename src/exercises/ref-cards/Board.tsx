@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
-import { Ghost } from '../../ui'
+import { Ghost, RichText, plainText } from '../../ui'
 
 export type Sel = { k: 'card'; v: string } | { k: 'target'; t: string | null }
 
@@ -127,7 +127,7 @@ export function Board({ boardRef, vars, colorOf, objs, shown, sel, wrong, intera
             .filter(Boolean)
             .join(' ')
           const said =
-            t === undefined ? 'sin asignar' : t === null ? 'en blanco (null)' : `apunta a la casa ${obj?.label ?? t}`
+            t === undefined ? 'sin asignar' : t === null ? 'en blanco (null)' : `apunta a la casa ${plainText(obj?.label) || t}`
           return (
             <button
               key={v}
@@ -163,13 +163,13 @@ export function Board({ boardRef, vars, colorOf, objs, shown, sel, wrong, intera
               }}
               className={cls}
               disabled={!interactive}
-              aria-label={`Casa ${o.label}, dirección ${o.addr}`}
+              aria-label={`Casa ${plainText(o.label)}, dirección ${o.addr}`}
               onClick={() => onTarget(o.id)}
             >
               <span className="rc-roof" aria-hidden="true" />
               <span className="rc-hbody">
                 <span key={o.label} className={`rc-hlabel${o.label !== o.base ? ' is-changed' : ''}`}>
-                  {o.label}
+                  <RichText text={o.label} />
                 </span>
               </span>
               <span className="rc-hsign">#{o.addr}</span>

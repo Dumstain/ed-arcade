@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { Ghost, PacMan } from '../../ui'
+import { Ghost, PacMan, RichText } from '../../ui'
 
 /** Banquete final: el comecocos se come todos los pellets (ok) o el fantasma celebra (bad). */
 export function Feast({ text, tone = 'ok' }: { text: string; tone?: 'ok' | 'bad' }) {
@@ -24,7 +24,7 @@ export function Feast({ text, tone = 'ok' }: { text: string; tone?: 'ok' | 'bad'
         </div>
       )}
       <p className="cs-feast__text" role="status">
-        {text}
+        <RichText text={text} />
       </p>
     </div>
   )

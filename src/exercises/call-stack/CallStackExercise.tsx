@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ExerciseProps } from '../../engine/types'
 import type { CallStackData, Val } from '../schemas'
 import { Keypad } from '../_shared/Keypad'
-import { Ghost, PacMan, Pellets, sfx } from '../../ui'
+import { Ghost, PacMan, Pellets, RichText, sfx } from '../../ui'
 import { Feast } from './Feast'
 import { FrameView } from './FrameView'
 import { fxAt } from './fx'
@@ -19,6 +19,12 @@ interface Msg {
   tone: 'ok' | 'bad' | 'info'
 }
 type GameProps = ExerciseProps<CallStackData> & { cfg: Cfg }
+
+/** Resalta (marcado **) un dato dinámico, salvo que ya traiga asteriscos. */
+const em = (x: unknown): string => {
+  const t = String(x)
+  return t === '' || t.includes('*') ? t : `**${t}**`
+}
 
 export function CallStackExercise(props: ExerciseProps<CallStackData>) {
   const cfg = useMemo(() => normalize(props.exercise.data), [props.exercise.data])
@@ -106,7 +112,7 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
       setPhase('done')
       latest.current.onCheck(true)
     } else {
-      setMsg({ text: `${frames[k].call} regresa ${String(value)}. Sube a la muñeca de abajo.`, tone: 'ok' })
+      setMsg({ text: `${frames[k].call} regresa ${em(value)}. Sube a la muñeca de abajo.`, tone: 'ok' })
       if (!auto) latest.current.onStep?.()
     }
   }
@@ -140,7 +146,7 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
           setPhase('done')
           onCheck(true)
         } else {
-          failOnce('Todavía cabe otra muñeca en la pila. ¡Sigue llamando!')
+          failOnce('Todavía cabe **otra muñeca** en la pila. ¡Sigue llamando!')
         }
       } else if (kind === 'call') {
         if (!full) {
@@ -148,12 +154,12 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
           setDepth((d) => d + 1)
           setMsg(
             depth + 1 >= n
-              ? { text: '¡La pila llegó al techo! ¿Qué va a pasar ahora?', tone: 'bad' }
-              : { text: 'Otra llamada… y nunca se detiene.', tone: 'info' },
+              ? { text: '¡La pila llegó al **techo**! ¿Qué va a pasar ahora?', tone: 'bad' }
+              : { text: 'Otra llamada… y **nunca se detiene**.', tone: 'info' },
           )
           onStep?.()
         } else {
-          failOnce('¡La pila ya no aguanta más! Eso es un desbordamiento.')
+          failOnce('¡La pila ya no aguanta más! Eso es un **desbordamiento**.')
         }
       }
       return
@@ -162,10 +168,10 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
       if (isBaseTop) {
         advanced()
         onStep?.()
-        setMsg({ text: '¡La muñeca más chiquita! Ya no se abre. Ahora a regresar.', tone: 'ok' })
+        setMsg({ text: '¡La muñeca más chiquita! Ya no se abre: es el **caso base**. Ahora a **regresar**.', tone: 'ok' })
         setPhase(askReturns ? 'up' : 'auto')
       } else {
-        failOnce('Esa todavía llama a otra función. ¡Sigue abriendo muñecas!')
+        failOnce('Esa todavía **llama a otra función**. ¡Sigue abriendo muñecas!')
       }
     } else if (kind === 'call') {
       if (!isBaseTop) {
@@ -174,7 +180,7 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
         setMsg({ text: '¡Se abre otra muñeca más chica!', tone: 'ok' })
         onStep?.()
       } else {
-        failOnce('Esa muñeca ya no se abre: ¡es el caso base!')
+        failOnce('Esa muñeca ya no se abre: ¡es el **caso base**!')
       }
     }
   }
@@ -189,8 +195,8 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
       setInput('')
       fail(
         topIdx === baseIdx
-          ? 'El caso base regresa un valor fijo. Léelo en la muñeca.'
-          : 'Casi. Cambia la llamada por el valor que subió y calcula.',
+          ? 'El **caso base** regresa un **valor fijo**. Léelo en la muñeca.'
+          : 'Casi. **Cambia la llamada por el valor** que subió y calcula.',
       )
     }
   }
@@ -216,13 +222,13 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
     ? 'Así se resolvía.'
     : solved
       ? overflow
-        ? 'La pila se llenó.'
+        ? 'La pila se **llenó**.'
         : 'Todas las muñecas regresaron.'
       : phase === 'down'
         ? overflow
-          ? '¿Esta función se detiene alguna vez?'
-          : 'Cada llamada abre una muñeca más chica. ¿Ya es la más chiquita?'
-        : 'Cada muñeca regresa su valor a la de abajo.'
+          ? '¿Esta función se detiene alguna vez? ¿Tiene **caso base**?'
+          : 'Cada llamada abre una muñeca más chica. ¿Ya es la más chiquita (el **caso base**)?'
+        : 'Cada muñeca **regresa su valor** a la de abajo.'
 
   const numericAnswer = topFrame ? isNumericVal(topFrame.returns) : true
 
@@ -247,7 +253,9 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
         <PacMan size={30} dir={phase === 'down' ? 'down' : 'up'} chomp={!solved && !showSolution} />
         <div className="cs-hud__text">
           <div className="cs-hud__title">{title}</div>
-          <div className="cs-hud__sub">{sub}</div>
+          <div className="cs-hud__sub">
+            <RichText text={sub} />
+          </div>
         </div>
         <div className="cs-hud__pellets">
           <Pellets total={progressTotal} done={Math.max(0, Math.min(progressTotal, showSolution ? progressTotal : solved ? progressTotal : progressDone))} />
@@ -311,7 +319,7 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
       </div>
 
       <p className={cx('cs-msg', msg && `cs-msg--${msg.tone}`)} role="status" aria-live="polite">
-        {!showSolution && msg ? msg.text : ''}
+        {!showSolution && msg ? <RichText text={msg.text} /> : ''}
       </p>
 
       {showSolution && (
@@ -319,7 +327,9 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
           <div className="px-title cs-solution__title">RESPUESTA</div>
           {overflow ? (
             <>
-              <p>Esta función nunca llega a un caso base: sigue abriendo muñecas hasta llenar la pila.</p>
+              <p>
+                <RichText text="Esta función nunca llega a un **caso base**: sigue abriendo muñecas hasta llenar la pila." />
+              </p>
               <span className="px-btn cs-btn cs-btn--boom cs-solution__boom">¡STACK OVERFLOW!</span>
             </>
           ) : (
@@ -386,9 +396,9 @@ function Game({ exercise, onCheck, onStep, locked, showSolution, attempt, cfg }:
 
       {!showSolution && solved && (
         overflow ? (
-          <Feast tone="bad" text="¡STACK OVERFLOW! Sin caso base la pila se llena y el programa se cae." />
+          <Feast tone="bad" text="**¡STACK OVERFLOW!** Sin **caso base** la pila se llena y el programa se cae." />
         ) : (
-          <Feast text={`${frames[0].call} = ${String(frames[0].returns)}`} />
+          <Feast text={`${frames[0].call} = ${em(frames[0].returns)}`} />
         )
       )}
     </section>

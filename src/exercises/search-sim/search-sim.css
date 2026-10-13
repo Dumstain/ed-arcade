@@ -158,6 +158,7 @@ div.ssg-cell { cursor: default; }
 .ssg-predict { display: flex; flex-direction: column; gap: 10px; }
 .ssg-ask { color: var(--focus); font-size: 12px; }
 .ssg-skip { align-self: flex-start; }
+.ssg-skip svg { vertical-align: -2px; margin-left: 2px; }
 .ssg-answer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .ssg-answer-val { font-family: var(--font-arcade); font-size: 32px; color: var(--ok); }
 

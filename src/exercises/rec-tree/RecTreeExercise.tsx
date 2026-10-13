@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperti
 import type { ExerciseProps } from '../../engine/types'
 import type { RecTreeData } from '../schemas'
 import { Keypad } from '../_shared/Keypad'
-import { Ghost, PacMan, Pellets, sfx, type GhostColor } from '../../ui'
+import { Ghost, PacMan, Pellets, RichText, sfx, type GhostColor } from '../../ui'
 import { Feast } from './Feast'
 import { fxAt } from './fx'
 import { NODE_H, buildLayout, type LNode, type Layout } from './layout'
@@ -16,6 +16,12 @@ interface Msg {
 type GameProps = ExerciseProps<RecTreeData> & { layout: Layout }
 
 const GHOST_COLORS: GhostColor[] = ['red', 'pink', 'cyan', 'orange']
+
+/** Resalta (marcado **) un dato dinámico, salvo que ya traiga asteriscos. */
+const em = (x: unknown): string => {
+  const t = String(x)
+  return t === '' || t.includes('*') ? t : `**${t}**`
+}
 
 export function RecTreeExercise(props: ExerciseProps<RecTreeData>) {
   const root = props.exercise.data?.root
@@ -168,8 +174,8 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
       setMsg({
         text:
           wrong.length === 1
-            ? 'Ese nodo rojo está mal. Tócalo y corrígelo.'
-            : `${wrong.length} nodos rojos están mal. Tócalos y corrígelos.`,
+            ? 'Ese **nodo rojo** está mal. Tócalo y corrígelo.'
+            : `**${wrong.length} nodos rojos** están mal. Tócalos y corrígelos.`,
         tone: 'bad',
       })
       onCheck(false)
@@ -217,12 +223,12 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
       setMsg({
         text:
           wrongMarks.length > 0 && missed.length > 0
-            ? 'Hay fantasmas mal puestos (rojos) y todavía faltan otros.'
+            ? 'Hay **fantasmas mal puestos** (rojos) y todavía **faltan otros**.'
             : wrongMarks.length > 0
-              ? 'Hay fantasmas mal puestos (rojos). Quítalos.'
+              ? 'Hay **fantasmas mal puestos** (rojos). Quítalos.'
               : needsScroll
-                ? 'Vas bien, pero faltan fantasmas. Desliza el árbol: hay llamadas fuera de la vista.'
-                : 'Vas bien, pero todavía faltan fantasmas por atrapar.',
+                ? 'Vas bien, pero **faltan fantasmas**. Desliza el árbol: hay llamadas fuera de la vista.'
+                : 'Vas bien, pero todavía **faltan fantasmas** por atrapar.',
         tone: 'bad',
       })
       onCheck(false)
@@ -346,29 +352,29 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
         : 'Atrapaste todas las repetidas.'
       : mode === 'fill'
         ? data.given === 'none'
-          ? 'Calcula cada llamada, de abajo hacia arriba.'
-          : 'Las hojas ya saben su valor. Sube por el árbol.'
-        : 'Cada fantasma es una llamada repetida.'
+          ? 'Calcula cada llamada, **de abajo hacia arriba**.'
+          : 'Las **hojas** ya saben su valor. Sube por el árbol.'
+        : 'Cada fantasma es una **llamada repetida**.'
   const canCheckFill = remaining === 0 && badSet.size === 0
   const canCheckCount = marks.size > 0 && badSet.size === 0 && marksSig !== failedSig
   const checkHint =
     mode === 'fill'
       ? badSet.size > 0
-        ? 'Corrige los nodos rojos para comprobar.'
+        ? 'Corrige los **nodos rojos** para comprobar.'
         : remaining > 0
-          ? `Faltan ${remaining} ${remaining === 1 ? 'nodo' : 'nodos'} por llenar.`
+          ? `Faltan **${remaining} ${remaining === 1 ? 'nodo' : 'nodos'}** por llenar.`
           : ''
       : badSet.size > 0
-        ? 'Quita los fantasmas rojos para comprobar.'
+        ? 'Quita los **fantasmas rojos** para comprobar.'
         : marks.size === 0
-          ? 'Toca las llamadas repetidas para ponerles un fantasma.'
+          ? 'Toca las **llamadas repetidas** para ponerles un fantasma.'
           : marksSig === failedSig
           ? 'Cambia algo antes de comprobar otra vez.'
           : ''
   const winText =
     mode === 'fill'
-      ? '¡Árbol completo! Cada llamada espera a que sus hijas regresen.'
-      : `¡Atrapados! ${target} se calculó ${targetIds.length} ${targetIds.length === 1 ? 'vez' : 'veces'}: trabajo repetido.`
+      ? '¡Árbol completo! Cada llamada **espera a que sus hijas regresen**.'
+      : `¡Atrapados! ${em(target)} se calculó **${targetIds.length} ${targetIds.length === 1 ? 'vez' : 'veces'}**: **trabajo repetido**.`
 
   return (
     <section className={cx('rt-root', flash && 'rt-flash')} aria-label="Árbol de llamadas recursivas">
@@ -376,7 +382,9 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
         <PacMan size={30} dir="right" chomp={!win && !showSolution} />
         <div className="rt-hud__text">
           <div className="rt-hud__title">{title}</div>
-          <div className="rt-hud__sub">{sub}</div>
+          <div className="rt-hud__sub">
+            <RichText text={sub} />
+          </div>
         </div>
         {mode === 'fill' && fillIds.length > 0 && (
           <div className="rt-hud__pellets">
@@ -435,7 +443,7 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
       </div>
 
       <p className={cx('rt-msg', msg && `rt-msg--${msg.tone}`)} role="status" aria-live="polite">
-        {!showSolution && msg ? msg.text : ''}
+        {!showSolution && msg ? <RichText text={msg.text} /> : ''}
       </p>
 
       {mode === 'fill' && interactive && selNode && (
@@ -481,7 +489,11 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
           <button type="button" className="px-btn px-btn--primary px-btn--block" disabled={!interactive || !canCheckFill} onClick={checkFill}>
             COMPROBAR
           </button>
-          {checkHint && <p className="rt-check__hint">{checkHint}</p>}
+          {checkHint && (
+            <p className="rt-check__hint">
+              <RichText text={checkHint} />
+            </p>
+          )}
         </div>
       )}
       {mode === 'count' && !win && !showSolution && (
@@ -489,7 +501,11 @@ function Game({ exercise, onCheck, locked, showSolution, attempt, layout }: Game
           <button type="button" className="px-btn px-btn--primary px-btn--block" disabled={!interactive || !canCheckCount} onClick={checkCount}>
             COMPROBAR
           </button>
-          {checkHint && <p className="rt-check__hint">{checkHint}</p>}
+          {checkHint && (
+            <p className="rt-check__hint">
+              <RichText text={checkHint} />
+            </p>
+          )}
         </div>
       )}
 

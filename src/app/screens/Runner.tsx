@@ -9,7 +9,7 @@ import { getDay, getModule } from '../../engine/content'
 import { comboMultiplier, computeScore, starsFor, HINT_FACTOR, type ScoreBreakdown } from '../../engine/scoring'
 import { tierStats } from '../../engine/progress'
 import { useGame, type RecordOutcome } from '../game'
-import { Banner, Fruit, Ghost, Lives, Modal, PacMan, Pellets, Stars, burst, floatText, sfx, shake, toast } from '../../ui'
+import { Banner, Fruit, Ghost, Lives, Modal, PacMan, Pellets, PixelIcon, RichText, Stars, burst, floatText, plainText, sfx, shake, toast } from '../../ui'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { readJSON, writeJSON } from '../../engine/storage'
 import { padScore, prefersReducedMotion, useCountUp } from '../hooks'
@@ -110,7 +110,7 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
     if (resume.m <= 0 || resumeToast.current) return
     resumeToast.current = true
     const left = MAX_LIVES - resume.m
-    toast(`Sigues donde te quedaste: ${left} ${left === 1 ? 'vida' : 'vidas'}`, { icon: '👻' })
+    toast(`Sigues donde te quedaste: ${left} ${left === 1 ? 'vida' : 'vidas'}`, { icon: 'ghost' })
   }, [resume.m])
 
   // respaldo por si el Banner no llama onDone
@@ -178,7 +178,7 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
       if (c >= 3) {
         window.setTimeout(() => {
           sfx.powerUp()
-          toast(`¡COMBO x${c}!`, { icon: '⚡' })
+          toast(`¡COMBO x${c}!`, { icon: 'bolt' })
         }, 520)
         later(() => setPowerRun((n) => n + 1), 520)
       }
@@ -196,7 +196,7 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
       const name = outcome.rankUp
       window.setTimeout(() => {
         sfx.achievement()
-        toast(`NUEVO RANGO: ${name}`, { icon: '👑' })
+        toast(`NUEVO RANGO: ${name}`, { icon: 'crown' })
       }, delay)
     }
     later(() => {
@@ -291,7 +291,7 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
 
       <article ref={cardRef} className={`eda-card px-panel${exercise.tier === 4 ? ' eda-card--boss' : ''}`}>
         <header className="eda-card__head">
-          <span className="eda-tag">{exercise.topic}</span>
+          <span className="eda-tag">{plainText(exercise.topic)}</span>
           <span className="eda-tag eda-tag--tier">
             NIVEL {exercise.tier} · {TIER_NAMES[exercise.tier]}
           </span>
@@ -302,13 +302,18 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
             </span>
           )}
         </header>
-        <h1 className="px-title eda-card__title">{exercise.title}</h1>
-        <p className="eda-card__prompt">{exercise.prompt}</p>
+        <h1 className="px-title eda-card__title">{plainText(exercise.title)}</h1>
+        <p className="eda-card__prompt">
+          <RichText text={exercise.prompt} />
+        </p>
 
         {exercise.hint &&
           (usedHint ? (
             <div className="eda-hint" role="note">
-              <span className="eda-hint__label">PISTA</span> {exercise.hint}
+              <span className="eda-hint__label">
+                <PixelIcon name="bulb" size={18} /> PISTA
+              </span>{' '}
+              <RichText text={exercise.hint} />
             </div>
           ) : (
             <button
@@ -320,7 +325,7 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
                 setAskHint(true)
               }}
             >
-              💡 PISTA
+              <PixelIcon name="bulb" size={18} /> PISTA
             </button>
           ))}
 
@@ -400,11 +405,15 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
           {!finish.correct && <p className="eda-result__note">La respuesta correcta quedó marcada arriba. ¡Revísala con calma!</p>}
 
           {exercise.explanation && (
-            <div className="eda-explain">
+            <div className="eda-explain" role="note">
               <h3 className="eda-explain__title">
-                <PacMan size={18} dir="right" /> ¿POR QUÉ?
+                <PixelIcon name="bulb" size={24} />
+                <span>¿POR QUÉ?</span>
+                <span className="eda-explain__badge">DATO CLAVE</span>
               </h3>
-              <p className="eda-explain__text">{exercise.explanation}</p>
+              <p className="eda-explain__text">
+                <RichText text={exercise.explanation} />
+              </p>
             </div>
           )}
 
@@ -429,7 +438,7 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
                   onRetry()
                 }}
               >
-                ↻ REINTENTAR
+                <PixelIcon name="replay" size={16} /> REINTENTAR
               </button>
               <button type="button" className="px-btn px-btn--sm px-btn--ghost" onClick={onExit}>
                 MAPA
@@ -440,7 +449,9 @@ export function Runner({ day, exercise, onNext, onRetry, onExit }: Props) {
       )}
 
       <Modal open={askHint} title="¿USAR PISTA?" onClose={() => setAskHint(false)}>
-        <p className="eda-modal-text">Ver la pista cuesta el 30% de los puntos de este ejercicio.</p>
+        <p className="eda-modal-text">
+          <RichText text="Ver la pista cuesta el **30% de los puntos** de este ejercicio." />
+        </p>
         <div className="px-row">
           <button type="button" className="px-btn px-btn--primary" onClick={confirmHint}>
             SÍ, VER PISTA

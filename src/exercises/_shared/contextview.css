@@ -296,7 +296,8 @@
   font-family: var(--font-arcade);
   font-size: 12px;
   line-height: 1;
-  background: var(--pac);
+  /* el foco pixel ya es amarillo: sin fondo amarillo para que se distinga */
+  background: transparent;
   color: var(--pac-ink);
 }
 

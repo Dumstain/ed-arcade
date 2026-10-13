@@ -14,6 +14,7 @@ import { onQueueChange, pendingCount, remoteEnabled } from '../engine/remote'
 import { GameProvider, useGame, type RecordOutcome } from './game'
 import { Header } from './Header'
 import { ErrorBoundary } from './ErrorBoundary'
+import { PixelIcon } from '../ui'
 import { StartScreen } from './screens/StartScreen'
 import { DaysScreen } from './screens/DaysScreen'
 import { DayScreen } from './screens/DayScreen'
@@ -232,7 +233,7 @@ function Shell() {
         {!remoteEnabled && <span className="eda-tag eda-tag--mode">MODO LOCAL</span>}
         {remoteEnabled && pending > 0 && (
           <span className="eda-tag eda-tag--mode" title="Intentos por sincronizar">
-            ⏳ {pending} POR SUBIR
+            <PixelIcon name="clock" size={14} /> {pending} POR SUBIR
           </span>
         )}
         {DEMO_MODE && <span className="eda-tag eda-tag--info">DEMO</span>}
