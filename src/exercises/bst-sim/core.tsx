@@ -80,8 +80,8 @@ export function useCore({ onCheck, onStep, locked, showSolution, attempt }: Game
 
   const canAct = () =>
     !locked && !showSolution && !wonRef.current && !busyRef.current && performance.now() >= guardUntil.current
-  const advanced = () => {
-    guardUntil.current = performance.now() + GUARD_MS
+  const advanced = (ms: number = GUARD_MS) => {
+    guardUntil.current = performance.now() + ms
   }
   const miss = (sig: string, text: string, answer?: unknown) => {
     if (tried.current.has(sig)) {

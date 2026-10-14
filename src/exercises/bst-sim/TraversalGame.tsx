@@ -60,7 +60,10 @@ function hintFor(kind: TraversalKind, tree: Tree, tapped: number, expected: numb
     case 'niveles': {
       const dt = depthOf(tree, tapped)
       const de = depthOf(tree, expected)
-      if (dt > de) return `**Por niveles**: termina primero el piso **${de}** (el de más arriba que falta).`
+      if (dt > de) {
+        if (de === 0) return '**Por niveles**: termina primero el piso de la **raíz** (el de hasta arriba).'
+        return `**Por niveles**: termina primero el piso **${de + 1}** contando desde arriba (la raíz es el piso 1).`
+      }
       return 'En el mismo piso se va de **izquierda a derecha**.'
     }
   }
@@ -91,7 +94,8 @@ export function TraversalGame(props: GameProps) {
     if (v === seq[k]) {
       const nk = k + 1
       setK(nk)
-      core.advanced()
+      // antirrebote corto: el tablero no se mueve tras un acierto y tocar de nuevo el mismo nodo es gratis
+      core.advanced(150)
       core.fx(el, String(nk), nk === n ? '--ok' : '--pac', nk === n ? 16 : 8)
       if (nk === n) {
         core.setMsg({ tone: 'ok', text: WIN[kind] })

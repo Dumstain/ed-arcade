@@ -3,6 +3,7 @@
  * líneas en SVG, huecos punteados tocables (insert), clave viajera, números de orden,
  * signos de comparación y animaciones de reacomodo (los nodos se deslizan a su nueva posición).
  * Escala para caber a 360 px (mín. MIN_SCALE) y, si aun así no cabe, scroll horizontal interno.
+ * Con huecos (insert) nunca se escala: los huecos conservan 44 px y se usa el scroll interno.
  */
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, MutableRefObject, ReactNode } from 'react'
@@ -36,6 +37,8 @@ export interface ChipSpec {
 }
 
 export const MIN_SCALE = 0.66
+/** columna mínima con huecos: dos huecos del mismo nivel quedan a ≥ 2 columnas (56 - 44 = 12 px libres) */
+const HOLE_MIN_COL = 28
 const CHIP_W = 44
 const CHIP_H = 34
 const STUB_W = 40
@@ -130,9 +133,13 @@ export function Board({
   }, [])
 
   const cols = columnsFor(tree, holes)
-  const col = Math.min(maxCol ?? GEO.MAX_COL, columnWidth(cw, cols))
+  // con huecos NO se achica el tablero: columnas de ≥ HOLE_MIN_COL (huecos de 44 px con ≥ 12 px
+  // de separación); si no cabe, se usa el scroll horizontal interno
+  const fitCol = columnWidth(cw, cols)
+  const col = Math.min(maxCol ?? GEO.MAX_COL, holes ? Math.max(HOLE_MIN_COL, fitCol) : fitCol)
   const layout = useMemo(() => layoutTree(tree, { holes, col }), [tree, holes, col])
-  const scale = layout.width > cw ? Math.max(MIN_SCALE, cw / layout.width) : 1
+  const minScale = holes ? 1 : MIN_SCALE
+  const scale = layout.width > cw ? Math.max(minScale, cw / layout.width) : 1
   const needsScroll = layout.width * scale > cw + 1
   const root = layout.nodes.find((n) => n.parent === null)
   const rootX = root ? root.x : (layout.holes[0]?.x ?? layout.width / 2)
