@@ -44,8 +44,8 @@ export const TIER_NAMES: Record<Tier, string> = {
 export const MAX_LIVES = 3
 
 const params = typeof location !== 'undefined' ? new URLSearchParams(location.search) : new URLSearchParams()
-/** ?demo=1 → Sala de pruebas (QA) */
-export const DEMO_MODE = params.get('demo') === '1'
+/** ?demo=1 → Sala de pruebas (QA). Solo en desarrollo y en builds `--mode qa`, nunca en el sitio publicado. */
+export const DEMO_MODE = params.get('demo') === '1' && (import.meta.env.DEV || import.meta.env.MODE === 'qa')
 
 export function parseLocalDate(s: string): Date {
   const [y, m, d] = s.split('-').map(Number)
