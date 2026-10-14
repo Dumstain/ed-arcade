@@ -42,9 +42,9 @@
   --pac: #ffcc00;
   --pac-ink: #14143a;
   --pellet: #d9644f;
-  --ok: #128a3a;
+  --ok: #0f7031;          /* 5.0:1 sobre --bg-sunken, 5.6:1 sobre --bg */
   --bad: #c81e1e;
-  --info: #0077a8;
+  --info: #006a96;        /* 4.8:1 sobre --bg-sunken, 5.4:1 sobre --bg */
   --focus: #9a5200;
   --shadow: rgba(28, 63, 209, 0.35);
   --ghost-red: #e01e1e;
