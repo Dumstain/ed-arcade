@@ -317,7 +317,10 @@ export function normalize(raw: unknown): { cfg: Cfg } | { error: string } {
         }
       }
     } else {
-      palette = uniq([...(given.length ? given : [...initial, ...fromOps]), ...expected])
+      // Se agregan los esperados que hay que ENCOLAR (vienen del programa o no estaban al inicio), pero no los
+      // que se conservan de la cola inicial: si no, se podría vaciar la cola y rearmarla con otro frente.
+      const needed = expected.filter((v) => !initial.some((i) => same(i, v)) || fromOps.some((o) => same(o, v)))
+      palette = uniq([...(given.length ? given : [...initial, ...fromOps]), ...needed])
     }
     if (palette.length === 0 && !(mode === 'build' && expected.length === 0)) {
       return { error: 'Este ejercicio no trae fichas (palette).' }

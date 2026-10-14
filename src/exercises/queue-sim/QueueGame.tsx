@@ -189,8 +189,13 @@ export function QueueGame({ cfg, onCheck, locked, showSolution, attempt }: Props
   }
 
   // ───────── modo BUILD ─────────
+  // Anti doble toque: la MISMA ficha tocada dos veces en < 300 ms entra una sola vez
+  const lastChip = useRef<{ v: string; t: number }>({ v: '', t: 0 })
   const onChip = (v: Val, e: BtnEvent) => {
     if (locked || solvedRef.current) return
+    const t = performance.now()
+    if (lastChip.current.v === String(v) && t - lastChip.current.t < 300) return
+    lastChip.current = { v: String(v), t }
     sfx.click()
     const side: End = deque ? door : 'rear'
     const r = doEnqueue(v, side)
@@ -223,6 +228,13 @@ export function QueueGame({ cfg, onCheck, locked, showSolution, attempt }: Props
   const sigOf = (vals: Val[]) => JSON.stringify(vals.map(String))
   const onCheckBuild = () => {
     if (locked || solvedRef.current) return
+    // cola vacía: no hay nada que comprobar, no cuesta vida
+    const vals0 = valuesOf(modelRef.current)
+    if (vals0.length === 0 && cfg.expected.length > 0) {
+      sfx.wrong()
+      say('warn', '¡LA COLA ESTÁ VACÍA!', 'Primero arma la cola con las **fichas** y luego toca **COMPROBAR**.')
+      return
+    }
     if (!guardCheck()) return
     sfx.click()
     const vals = valuesOf(modelRef.current)
@@ -303,7 +315,7 @@ export function QueueGame({ cfg, onCheck, locked, showSolution, attempt }: Props
     clearNote()
     fx(el, which === 'front' ? 'FRENTE' : 'FINAL', COLOR[which])
     const other: End = which === 'front' ? 'rear' : 'front'
-    if (picks[other] === null) setActive(other)
+    if (picks[other] === null || wrongPtr[other]) setActive(other)
   }
   const onSelect = (which: End) => {
     if (locked || solvedRef.current) return
@@ -327,6 +339,8 @@ export function QueueGame({ cfg, onCheck, locked, showSolution, attempt }: Props
       return
     }
     setWrongPtr({ front: !okF, rear: !okR })
+    // el siguiente toque corrige el puntero equivocado (no el que ya estaba bien)
+    setActive(!okF ? 'front' : 'rear')
     const sig = `${f}:${r}`
     if (wrongSigs.current.has(sig)) {
       say('warn', '¡ESA YA LA PROBASTE!', 'Cambia el **FRENTE** o el **FINAL** antes de comprobar.')

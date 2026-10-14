@@ -246,6 +246,7 @@ button.qs-acell:disabled { cursor: default; }
   cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
 }
 .qs-pbtn--r { --pcol: var(--qs-r); --pcolt: var(--qs-rt); }
+.qs-pbtn--r .qs-pstep { color: var(--pac-ink); } /* tinta oscura sobre naranja: legible en claro (5.9:1) */
 .qs-pbtn.is-active { border-style: solid; background: color-mix(in srgb, var(--pcol) 16%, var(--bg-sunken)); box-shadow: 0 0 0 3px var(--qs-hl), 3px 3px 0 3px var(--shadow); }
 .qs-pbtn.is-set { border-style: solid; }
 .qs-pbtn.is-wrong { border-color: var(--bad); animation: qs-shake .3s steps(4) 2; }
@@ -364,4 +365,6 @@ button.qs-slot:disabled { cursor: not-allowed; opacity: .6; }
   .qs-lane { padding-left: 2px; padding-right: 2px; }
   .qs-gate { width: 36px; }
   .qs-pname { font-size: 10px; }
+  /* 6 casillas x 44 px = 264 px: caben dentro del escenario a 360 px */
+  .qs-array { padding: 0; --qs-cell: 40px; grid-template-columns: repeat(var(--cols), calc(var(--qs-cell) + 4px)); }
 }
