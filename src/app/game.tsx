@@ -4,7 +4,7 @@
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { Exercise } from '../engine/types'
-import type { DayNum } from '../engine/course'
+import { DEMO_MODE, type DayNum } from '../engine/course'
 import { getDay } from '../engine/content'
 import { isDayComplete, isTierComplete, type ProgMap } from '../engine/progress'
 import { applyResult, computeTotal, loadPlayer, mergeRemote, savePlayer, type ExProgress, type PlayerData } from '../engine/storage'
@@ -52,6 +52,12 @@ interface GameCtx {
   getCombo: () => number
   setCombo: (n: number) => void
   remoteUnlocked: number
+  /**
+   * Vuelve a leer ed_config.unlocked_day. Si falla o el remoto está deshabilitado,
+   * conserva el valor anterior. Con `minGapMs` no consulta si la última consulta
+   * empezó hace menos de ese tiempo.
+   */
+  refreshUnlocked: (minGapMs?: number) => void
   login: (control: string) => void
   logout: () => void
   recordResult: (r: RecordInput) => RecordOutcome
@@ -88,17 +94,22 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setComboState(n)
   }, [])
 
+  // desbloqueo remoto (candado manual del profe): null = sin red / sin remoto → se conserva el valor anterior
+  const lastUnlockFetch = useRef(0)
+  const refreshUnlocked = useCallback((minGapMs = 0) => {
+    const t = Date.now()
+    if (minGapMs > 0 && t - lastUnlockFetch.current < minGapMs) return
+    lastUnlockFetch.current = t
+    void fetchUnlockedDay().then((n) => {
+      if (n != null) setRemoteUnlocked(n)
+    })
+  }, [])
+
   // desbloqueo remoto + cola de reintentos
   useEffect(() => {
     startSyncLoop()
-    let alive = true
-    fetchUnlockedDay().then((n) => {
-      if (alive && n != null) setRemoteUnlocked(n)
-    })
-    return () => {
-      alive = false
-    }
-  }, [])
+    refreshUnlocked()
+  }, [refreshUnlocked])
 
   const login = useCallback(
     (control: string) => {
@@ -113,11 +124,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
         const merged = mergeRemote(cur, rows)
         if (merged !== cur) commitPlayer(merged)
       })
-      fetchUnlockedDay().then((n) => {
-        if (n != null) setRemoteUnlocked(n)
-      })
+      refreshUnlocked()
     },
-    [commitPlayer, setCombo],
+    [commitPlayer, setCombo, refreshUnlocked],
   )
 
   const logout = useCallback(() => {
@@ -174,7 +183,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
           achievements: [...p.achievements, ...achievements.map((a) => a.id)],
           updatedAt: Date.now(),
         })
-        if (!r.skipped) {
+        // ?demo=1 (QA / fecha simulada): progreso local sí, ranking real no
+        if (!r.skipped && !DEMO_MODE) {
           sendAttempt({
             control: p.control,
             day: r.day,
@@ -220,11 +230,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
       getCombo,
       setCombo,
       remoteUnlocked,
+      refreshUnlocked,
       login,
       logout,
       recordResult,
     }),
-    [player, prog, getProg, combo, getCombo, setCombo, remoteUnlocked, login, logout, recordResult],
+    [player, prog, getProg, combo, getCombo, setCombo, remoteUnlocked, refreshUnlocked, login, logout, recordResult],
   )
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

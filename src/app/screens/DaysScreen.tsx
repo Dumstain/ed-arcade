@@ -12,6 +12,8 @@ interface Props {
   onOpenDay: (day: DayNum) => void
 }
 
+const UNLOCK_POLL_MS = 30_000
+
 export function DaysScreen({ onOpenDay }: Props) {
   const game = useGame()
   const total = useCountUp(game.total, 900)
@@ -20,12 +22,19 @@ export function DaysScreen({ onOpenDay }: Props) {
 
   const days: CourseDay[] = DEMO_MODE ? [DEMO_DAY, ...COURSE_DAYS] : [...COURSE_DAYS]
 
-  // Reevalúa aperturas cada 30 s (p.ej. el día 3 abre a las 12:59 sin recargar)
+  // Reevalúa aperturas cada 30 s (p.ej. el día 3 abre a las 12:59 sin recargar) y vuelve a leer
+  // el candado manual del profe (ed_config.unlocked_day). Al montar solo consulta si la última
+  // consulta fue hace 30 s o más, para no exceder una consulta cada 30 s al ir y volver.
+  const { refreshUnlocked } = game
   const [, setTick] = useState(0)
   useEffect(() => {
-    const t = window.setInterval(() => setTick((x) => x + 1), 30_000)
+    refreshUnlocked(UNLOCK_POLL_MS)
+    const t = window.setInterval(() => {
+      setTick((x) => x + 1)
+      refreshUnlocked()
+    }, UNLOCK_POLL_MS)
     return () => window.clearInterval(t)
-  }, [])
+  }, [refreshUnlocked])
 
   return (
     <div className="eda-days">
