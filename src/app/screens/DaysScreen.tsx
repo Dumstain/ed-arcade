@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { COURSE_DAYS, DEMO_DAY, DEMO_MODE, isDayOpen, isToday, opensLabel, type CourseDay, type DayNum } from '../../engine/course'
 import { getDay } from '../../engine/content'
 import { dayStats, isDayComplete } from '../../engine/progress'
@@ -18,6 +19,13 @@ export function DaysScreen({ onOpenDay }: Props) {
   const have = new Set(game.player?.achievements ?? [])
 
   const days: CourseDay[] = DEMO_MODE ? [DEMO_DAY, ...COURSE_DAYS] : [...COURSE_DAYS]
+
+  // Reevalúa aperturas cada 30 s (p.ej. el día 3 abre a las 12:59 sin recargar)
+  const [, setTick] = useState(0)
+  useEffect(() => {
+    const t = window.setInterval(() => setTick((x) => x + 1), 30_000)
+    return () => window.clearInterval(t)
+  }, [])
 
   return (
     <div className="eda-days">

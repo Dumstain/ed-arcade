@@ -12,15 +12,22 @@ export interface CourseDay {
   day: DayNum
   title: string
   fruit: FruitKind
-  /** YYYY-MM-DD (hora local) */
+  /** YYYY-MM-DD (hora local) — día del calendario */
   date: string
+  /** Instante exacto de apertura (ISO con zona horaria). Si falta, abre a las 00:00 locales de `date`. */
+  opensAt?: string
+  /** Hora de apertura para la etiqueta, p.ej. "12:59" (hora de Morelia) */
+  opensTime?: string
+  /** Candado manual del profesor: solo abre con ed_config.unlocked_day >= day */
+  manual?: boolean
 }
 
 export const COURSE_DAYS: readonly CourseDay[] = [
   { day: 1, title: 'Memoria y eficiencia', fruit: 'cherry', date: '2026-10-12' },
   { day: 2, title: 'Recursividad y pilas', fruit: 'strawberry', date: '2026-10-13' },
-  { day: 3, title: 'Colas, listas y hash', fruit: 'orange', date: '2026-10-14' },
-  { day: 4, title: 'Árboles y grafos', fruit: 'apple', date: '2026-10-15' },
+  // Morelia (America/Mexico_City) es UTC−6 todo el año desde 2022
+  { day: 3, title: 'Colas, listas y hash', fruit: 'orange', date: '2026-10-14', opensAt: '2026-10-14T12:59:00-06:00', opensTime: '12:59' },
+  { day: 4, title: 'Árboles y grafos', fruit: 'apple', date: '2026-10-15', manual: true },
   { day: 5, title: 'Ordenamiento', fruit: 'melon', date: '2026-10-16' },
 ]
 
@@ -61,11 +68,22 @@ export function dayInfo(day: DayNum): CourseDay {
   return COURSE_DAYS.find((d) => d.day === day) ?? DEMO_DAY
 }
 
-/** Abierto si hoy >= fecha de apertura O si el día <= unlocked_day remoto. Los días pasados siguen abiertos. */
+/** Milisegundos del instante de apertura del día */
+export function opensAtMs(day: DayNum): number {
+  const info = dayInfo(day)
+  return info.opensAt ? Date.parse(info.opensAt) : parseLocalDate(info.date).getTime()
+}
+
+/**
+ * Abierto si el día <= unlocked_day remoto, o si ya llegó su instante de apertura.
+ * Los días con candado manual solo abren con unlocked_day (en ?demo=1 abren por fecha, para QA).
+ * Los días pasados siguen abiertos.
+ */
 export function isDayOpen(day: DayNum, remoteUnlocked = 0, at: Date = now()): boolean {
   if (day === 0) return DEMO_MODE
   if (day <= remoteUnlocked) return true
-  return at.getTime() >= parseLocalDate(dayInfo(day).date).getTime()
+  if (dayInfo(day).manual && !DEMO_MODE) return false
+  return at.getTime() >= opensAtMs(day)
 }
 
 /** ¿Es el día de hoy según el calendario? */
@@ -77,8 +95,10 @@ export function isToday(day: DayNum, at: Date = now()): boolean {
 
 const WEEKDAYS = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB']
 
-/** "SE ABRE EL MIÉ 14" */
+/** "SE ABRE EL MIÉ 14 · 12:59" | "CANDADO DEL PROFE" */
 export function opensLabel(day: DayNum): string {
-  const d = parseLocalDate(dayInfo(day).date)
-  return `SE ABRE EL ${WEEKDAYS[d.getDay()]} ${d.getDate()}`
+  const info = dayInfo(day)
+  if (info.manual) return 'CANDADO DEL PROFE'
+  const d = parseLocalDate(info.date)
+  return `SE ABRE EL ${WEEKDAYS[d.getDay()]} ${d.getDate()}${info.opensTime ? ' · ' + info.opensTime : ''}`
 }
