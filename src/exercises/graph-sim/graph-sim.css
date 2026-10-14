@@ -1,0 +1,419 @@
+/* graph-sim — prefijo gs-. Solo colores de tokens.css / ui.css; 8-bit: bordes rectos, steps(), sombras duras. */
+
+.gs-root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--fg);
+  /* acento legible en ambos temas (amarillo en oscuro, azul/café en claro) */
+  --gs-acc: var(--ui-title, var(--pac));
+  --gs-sel: var(--ui-sel, var(--pac));
+}
+.gs-root > * { min-width: 0; }
+.gs-root.is-bad .gs-side { border-color: var(--bad); }
+
+.gs-h {
+  margin: 0;
+  font-family: var(--font-arcade);
+  font-size: 10px;
+  line-height: 1.6;
+  font-weight: normal;
+  color: var(--gs-acc);
+  letter-spacing: 0;
+}
+.gs-ico-t { display: inline-flex; align-items: center; gap: 6px; }
+.gs-cap { margin: 6px 0 0; font-size: 20px; line-height: 1.15; color: var(--fg-muted); overflow-wrap: anywhere; }
+.gs-cap b { font-weight: normal; }
+.gs-sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; border: 0;
+}
+
+/* flecha pixel → (los glifos de flecha no existen en la fuente arcade) */
+.gs-arrow-r {
+  position: relative; display: inline-block; flex: none;
+  width: 14px; height: 4px; margin: 0 6px 0 2px; background: currentColor; vertical-align: middle;
+}
+.gs-arrow-r::after {
+  content: ''; position: absolute; right: -6px; top: -4px;
+  border-left: 6px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+}
+
+/* ───────── HUD ───────── */
+.gs-hud { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
+.gs-hud-text { flex: 1 1 170px; min-width: 0; }
+.gs-hud-title { font-family: var(--font-arcade); font-size: 12px; line-height: 1.5; color: var(--gs-acc); }
+.gs-hud-sub { font-size: 20px; line-height: 1.1; color: var(--fg-muted); overflow-wrap: anywhere; }
+.gs-hud-right { flex: 0 1 auto; max-width: 100%; margin-left: auto; display: flex; justify-content: flex-end; }
+.gs-hud-right.is-progress { flex: 0 0 auto; width: clamp(120px, 34%, 240px); padding: 0 12px; }
+.gs-counts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.gs-count {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1;
+  padding: 6px 8px; border: 3px solid var(--gs-acc); color: var(--gs-acc); background: var(--bg-sunken);
+  white-space: nowrap;
+}
+.gs-count b { font-weight: normal; font-size: 14px; color: var(--fg); }
+.gs-count.is-km { border-color: var(--fg-muted); color: var(--fg-muted); }
+
+/* ───────── aviso ───────── */
+.gs-note {
+  min-height: 64px; display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px; border: var(--px) solid var(--wall); background: var(--bg-sunken);
+}
+.gs-note.is-bad { border-color: var(--bad); }
+.gs-note.is-warn { border-color: var(--ghost-orange); }
+.gs-note.is-ok { border-color: var(--ok); }
+.gs-note.is-info { border-color: var(--info); }
+.gs-note-ico { flex: none; display: inline-flex; animation: gs-slide .3s steps(5) both; }
+.gs-note-txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.gs-note-t { font-family: var(--font-arcade); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.gs-note.is-bad .gs-note-t { color: var(--bad); }
+.gs-note.is-warn .gs-note-t { color: var(--gs-acc); }
+.gs-note.is-ok .gs-note-t { color: var(--ok); }
+.gs-note.is-info .gs-note-t { color: var(--info); }
+.gs-note-s { font-size: 21px; line-height: 1.15; overflow-wrap: anywhere; }
+.gs-note-s.is-idle { color: var(--fg-muted); }
+
+/* ───────── disposición ───────── */
+.gs-board { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+.gs-mapcol { flex: 3 1 330px; min-width: 0; }
+.gs-sidecol { flex: 2 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.gs-side { padding: 14px; }
+.gs-side .gs-h { margin-bottom: 8px; }
+
+/* ───────── mapa ───────── */
+.px-panel.gs-mappanel { padding: 10px; }
+.gs-mappanel.is-bad { border-color: var(--bad); }
+.gs-mappanel.is-solved .gs-map { border-color: var(--ok); }
+.gs-maphead { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 2px 2px 8px; }
+.gs-maphead .gs-h { margin-right: auto; }
+.gs-chip {
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1;
+  padding: 5px 6px; border: 2px solid var(--wall); background: var(--bg-sunken); color: var(--fg);
+  white-space: nowrap;
+}
+
+.gs-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  min-height: 280px;
+  max-height: 520px;
+  overflow: hidden;
+  border: 3px solid var(--wall);
+  background-color: var(--bg-sunken);
+  /* cuadrícula de laberinto */
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--wall) 20%, transparent) 2px, transparent 2px),
+    linear-gradient(90deg, color-mix(in srgb, var(--wall) 20%, transparent) 2px, transparent 2px),
+    linear-gradient(color-mix(in srgb, var(--wall) 9%, transparent) 2px, transparent 2px),
+    linear-gradient(90deg, color-mix(in srgb, var(--wall) 9%, transparent) 2px, transparent 2px);
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px;
+  background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.gs-roads { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+
+/* carretera = pasillo de laberinto (doble pared) con pellets */
+.gs-road-wall { stroke: var(--wall); stroke-width: 14; stroke-linecap: square; }
+.gs-road-in { stroke: var(--bg-sunken); stroke-width: 6; stroke-linecap: square; }
+.gs-pel { fill: var(--pellet); }
+.gs-arrow { fill: var(--fg); stroke: var(--bg-sunken); stroke-width: 2; }
+.gs-road.is-eaten .gs-road-wall { stroke: var(--gs-sel); }
+.gs-road.is-eaten .gs-arrow { fill: var(--gs-sel); }
+.gs-road.is-eaten .gs-pel { animation: gs-eat 60ms steps(1, end) forwards; }
+.gs-road.is-sol .gs-road-wall { stroke: var(--ok); stroke-dasharray: 10 6; }
+.gs-road.is-old .gs-road-wall { stroke: color-mix(in srgb, var(--gs-sel) 40%, var(--bg-sunken)); }
+.gs-road.is-old .gs-pel { opacity: 0; }
+.gs-road.is-sol .gs-arrow { fill: var(--ok); }
+
+.gs-w {
+  position: absolute; z-index: 1; transform: translate(-50%, -50%);
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1;
+  padding: 3px 4px; background: var(--bg-elev); color: var(--fg);
+  border: 2px solid var(--wall); pointer-events: none; white-space: nowrap;
+}
+.gs-w.is-eaten { border-color: var(--gs-sel); }
+.gs-w.is-sol { border-color: var(--ok); }
+
+/* ciudad */
+.gs-city { position: absolute; z-index: 2; transform: translate(-50%, -50%); }
+.gs-node {
+  position: relative;
+  display: grid; place-items: center;
+  min-width: 44px; height: 44px; padding: 0 3px; margin: 0;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1;
+  color: var(--fg); background: var(--bg-elev);
+  border: 4px solid var(--gs-ring);
+  box-shadow: 3px 3px 0 0 var(--shadow), inset -3px -3px 0 0 var(--ui-bevel-lo);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.gs-city { --gs-ring: var(--wall); }
+button.gs-node { cursor: pointer; }
+button.gs-node:hover:not(:disabled) { border-color: var(--gs-sel); }
+button.gs-node:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 0 var(--shadow); }
+button.gs-node:disabled { cursor: default; }
+.gs-node:focus-visible { outline: 3px dashed var(--focus); outline-offset: 4px; }
+.gs-code { pointer-events: none; }
+
+.gs-node.is-visited {
+  background: var(--pac); color: var(--pac-ink);
+  border-color: var(--gs-ring, var(--pac-ink));
+  animation: gs-pop .3s steps(4) both;
+}
+.gs-root[data-mode='dfs'] .gs-node.is-visited,
+.gs-root[data-mode='path'] .gs-node.is-visited { border-color: var(--pac-ink); }
+.gs-node.is-finished { background: color-mix(in srgb, var(--pac) 38%, var(--bg-elev)); color: var(--fg); border-color: var(--wall); }
+.gs-node.is-onstack { box-shadow: 3px 3px 0 0 var(--shadow), 0 0 0 3px var(--info); }
+.gs-node.is-queued { border-style: dashed; border-color: var(--gs-ring); animation: gs-blinkb 1s steps(1) infinite; }
+.gs-node.is-current { outline: 3px solid var(--gs-sel); outline-offset: 3px; }
+.gs-node.is-sol { border-style: dashed; border-color: var(--ok); color: var(--ok); }
+.gs-node.is-unreach { opacity: .45; border-style: dashed; }
+.gs-node.is-faded { animation: none; opacity: .45; }
+.gs-node.is-focus { background: var(--info); color: var(--bg); border-color: var(--fg); animation: gs-pop .2s steps(3) both; }
+.gs-node.is-option:not(:disabled) { border-color: var(--gs-sel); border-style: dashed; }
+.gs-node.is-wrong { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 22%, var(--bg-elev)); animation: gs-shake .3s steps(4) 2; }
+
+.gs-badge {
+  position: absolute; top: -12px; right: -12px; z-index: 1;
+  min-width: 22px; height: 22px; padding: 0 3px;
+  display: grid; place-items: center;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1;
+  background: var(--pac-ink); color: var(--pac);
+  border: 2px solid var(--pac);
+  animation: gs-pop .25s steps(4) both;
+}
+:root[data-theme='light'] .gs-badge { background: var(--fg); color: var(--bg-elev); border-color: var(--fg); }
+.gs-badge.is-sol { background: var(--bg-elev); color: var(--ok); border-color: var(--ok); }
+.gs-mark {
+  position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); z-index: 1;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1; white-space: nowrap;
+  padding: 2px 3px; background: var(--fg); color: var(--bg);
+}
+.gs-tag { position: absolute; top: -14px; left: -14px; z-index: 1; display: grid; place-items: center; pointer-events: none; }
+.gs-here { position: absolute; bottom: -14px; left: -16px; z-index: 1; display: grid; pointer-events: none; color: var(--pac); }
+.gs-ghost { position: absolute; left: 50%; top: -30px; transform: translateX(-50%); z-index: 3; pointer-events: none; animation: gs-boo .9s steps(6) both; }
+.gs-ripple {
+  position: absolute; inset: -4px; pointer-events: none;
+  border: 3px solid var(--gs-ring);
+  animation: gs-ripple .9s steps(6) both;
+}
+.gs-label {
+  position: absolute; left: 50%; top: calc(100% + 4px); transform: translateX(-50%);
+  font-size: 20px; line-height: 1; white-space: nowrap; pointer-events: none;
+  padding: 0 4px; color: var(--fg);
+  background: color-mix(in srgb, var(--bg-sunken) 85%, transparent);
+}
+
+.gs-walker {
+  position: absolute; left: 0; top: 0; z-index: 4;
+  width: 26px; height: 26px; opacity: 0; pointer-events: none;
+  transform: translate(-50%, -50%);
+  color: var(--pac);
+}
+
+.gs-names { margin: 8px 2px 0; display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 20px; line-height: 1.1; color: var(--fg-muted); }
+.gs-name b { font-family: var(--font-arcade); font-size: 10px; font-weight: normal; color: var(--fg); }
+.gs-analogy { margin: 8px 2px 0; }
+
+/* ───────── lista de adyacencia ───────── */
+.gs-adj-list { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.gs-adj-row {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+  padding: 4px 6px; border-left: 4px solid var(--wall); background: var(--bg-sunken);
+  color: var(--fg-muted);
+}
+.gs-adj-row.is-current { border-left-color: var(--gs-sel); outline: 2px solid var(--gs-sel); }
+.gs-adj-src, .gs-adj-n {
+  display: inline-flex; align-items: baseline; gap: 3px;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1;
+  padding: 5px 5px; border: 2px solid var(--wall); background: var(--bg-elev); color: var(--fg);
+}
+.gs-adj-src { border-color: var(--gs-acc); color: var(--gs-acc); }
+.gs-adj-src.is-visited, .gs-adj-n.is-visited { background: var(--pac); color: var(--pac-ink); border-color: var(--pac-ink); }
+.gs-adj-n.is-visited { opacity: .7; }
+.gs-adj-n.is-queued { border-style: dashed; border-color: var(--gs-sel); }
+.gs-adj-n small { font-family: var(--font-body); font-size: 18px; color: var(--fg-muted); }
+.gs-adj-n.is-visited small { color: var(--pac-ink); }
+.gs-adj-ns { display: inline-flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.gs-adj-none { font-size: 20px; color: var(--fg-muted); }
+
+/* ───────── cola (BFS) ───────── */
+.gs-q-row { position: relative; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px 6px; min-height: 66px; padding-top: 2px; }
+.gs-q-cell { display: flex; flex-direction: column; align-items: center; gap: 3px; animation: gs-pop .3s steps(4) both; }
+.gs-q-chip {
+  --gs-ring: var(--wall);
+  min-width: 44px; height: 40px; padding: 0 4px;
+  display: grid; place-items: center;
+  font-family: var(--font-arcade); font-size: 10px;
+  background: var(--bg-elev); color: var(--fg);
+  border: 4px solid var(--gs-ring);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+.gs-q-cell.is-front .gs-q-chip { background: var(--pac); color: var(--pac-ink); }
+.gs-q-ptr {
+  min-height: 20px; display: flex; flex-direction: column; align-items: center;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1.1; color: var(--gs-acc);
+}
+.gs-q-empty {
+  align-self: center; font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted);
+  animation: gs-blink 1.2s steps(1) infinite;
+}
+.gs-q-out {
+  position: absolute; left: 0; top: 2px; z-index: 2; display: flex; align-items: center; pointer-events: none;
+  animation: gs-qout .7s steps(6) both;
+}
+.gs-q-out .gs-q-chip { background: var(--pac); color: var(--pac-ink); }
+.gs-q-eater { margin-left: -6px; display: grid; color: var(--pac); }
+
+/* ───────── pila de llamadas (DFS) ───────── */
+.gs-st { display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 2px 6px 0; }
+.gs-frame {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  min-height: 36px; padding: 4px 10px;
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1.2;
+  background: var(--bg-elev); color: var(--fg);
+  border: 4px solid var(--wall);
+  box-shadow: 0 4px 0 0 var(--wall);
+  margin-bottom: 4px;
+  animation: gs-drop .3s steps(5) both;
+}
+.gs-frame.is-top { border-color: var(--gs-sel); box-shadow: 0 4px 0 0 var(--gs-sel); }
+.gs-frame-top { color: var(--gs-acc); animation: gs-blink 1s steps(1) infinite; }
+.gs-st-floor { height: 6px; margin: 0 -10px; background: var(--wall); }
+.gs-st-empty {
+  text-align: center; padding: 8px 0; font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted);
+}
+.gs-st-ret {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-bottom: 8px;
+  padding: 4px 6px; border: 2px dashed var(--info);
+}
+.gs-st-ret-t { font-family: var(--font-arcade); font-size: 10px; color: var(--info); }
+.gs-st-ret-chip {
+  font-family: var(--font-arcade); font-size: 10px; line-height: 1.4; color: var(--fg-muted);
+  text-decoration: line-through; text-decoration-thickness: 2px;
+  animation: gs-up .5s steps(5) both; animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* ───────── matriz ───────── */
+.gs-mx-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; padding: 2px 0 6px; }
+.gs-mx { border-collapse: separate; border-spacing: 2px; margin: 0 auto; }
+.gs-mx th, .gs-mx td { padding: 0; }
+.gs-mx-h {
+  min-width: 34px; height: 30px; padding: 0 2px;
+  font-family: var(--font-arcade); font-size: 10px; font-weight: normal; color: var(--gs-acc);
+  text-align: center; white-space: nowrap;
+}
+/* encabezado de fila fijo al deslizar la matriz (la sombra tapa el hueco entre celdas) */
+.gs-mx-rh { position: sticky; left: 0; z-index: 2; background: var(--bg-elev); box-shadow: 3px 0 0 0 var(--bg-elev); }
+.gs-mx-h.is-focus { background: var(--info); color: var(--bg); }
+.gs-mx-corner { position: sticky; left: 0; z-index: 2; background: var(--bg-elev); box-shadow: 3px 0 0 0 var(--bg-elev); font-weight: normal; }
+.gs-mx-dir { display: inline-flex; align-items: center; font-family: var(--font-arcade); font-size: 10px; color: var(--fg-muted); }
+.gs-mx-dir .gs-arrow-r { width: 8px; margin: 0 6px 0 2px; }
+.gs-mx-cell {
+  display: grid; place-items: center;
+  width: 44px; height: 44px; margin: 0; padding: 0;
+  font-family: var(--font-arcade); font-size: 14px; line-height: 1;
+  background: var(--bg-sunken); color: var(--fg-muted);
+  border: 3px solid var(--wall);
+  box-shadow: inset -3px -3px 0 0 var(--ui-bevel-lo);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button.gs-mx-cell { cursor: pointer; }
+button.gs-mx-cell:hover:not(:disabled) { border-color: var(--gs-sel); }
+button.gs-mx-cell:active:not(:disabled) { transform: translateY(2px); }
+button.gs-mx-cell:disabled { cursor: default; }
+.gs-mx-cell.is-diag { background-image: repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in srgb, var(--wall) 18%, transparent) 6px 8px); }
+.gs-mx-cell.is-on { background: var(--pac); color: var(--pac-ink); border-color: var(--pac-ink); animation: gs-pop .2s steps(3) both; }
+.gs-mx-cell.is-focus { outline: 3px solid var(--info); outline-offset: 1px; }
+.gs-mx-h.is-wrong { background: var(--bad); color: var(--bg); animation: gs-shake .3s steps(4) 2; }
+.is-badrow .gs-mx-cell:not(.is-on) { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, var(--bg-sunken)); }
+.is-badrow .gs-mx-cell.is-on { border-color: var(--bad); }
+.gs-mx-cell.is-diff { box-shadow: 0 0 0 3px var(--bad); }
+.gs-mxpanel { display: flex; flex-direction: column; }
+.gs-readout { min-height: 46px; }
+
+/* botones */
+.gs-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.gs-btns .px-btn { flex: 1 1 120px; min-height: 48px; }
+.gs-route .px-btn--block { margin-top: 10px; }
+
+/* ───────── ruta ───────── */
+.gs-route-list { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 0; color: var(--fg); }
+.gs-route-stop { display: inline-flex; align-items: center; animation: gs-pop .25s steps(4) both; }
+.gs-route-chip {
+  min-width: 44px; height: 40px; padding: 0 4px; display: grid; place-items: center;
+  font-family: var(--font-arcade); font-size: 10px;
+  background: var(--pac); color: var(--pac-ink); border: 4px solid var(--pac-ink);
+}
+.gs-route-chip.is-empty { background: transparent; color: var(--fg-muted); border: 3px dashed var(--fg-muted); }
+.gs-route-chip.is-sol { background: var(--bg-elev); color: var(--ok); border-color: var(--ok); }
+.gs-route-stop.is-goal .gs-route-chip { box-shadow: 0 0 0 3px var(--ok); }
+.gs-route-stop.is-next { animation: gs-blink 1.2s steps(1) infinite; }
+
+/* ───────── solución / victoria ───────── */
+.gs-solution { border-color: var(--ok); }
+.gs-solution .gs-h { margin-bottom: 8px; color: var(--ok); }
+.gs-sol-order { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.gs-sol-order li {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-arcade); font-size: 11px;
+  padding: 6px 8px; border: 3px solid var(--ok); background: var(--bg-sunken); color: var(--fg);
+}
+.gs-sol-order li.is-done { opacity: .6; }
+.gs-sol-n { min-width: 20px; padding: 2px 3px; text-align: center; background: var(--ok); color: var(--bg); }
+.gs-win { border-color: var(--ok); display: flex; flex-direction: column; gap: 8px; }
+.gs-win-t { margin: 0; font-size: 22px; line-height: 1.2; overflow-wrap: anywhere; }
+
+/* ───────── animaciones (steps = 8-bit) ───────── */
+@keyframes gs-eat { to { opacity: 0; } }
+@keyframes gs-pop { from { transform: scale(.55); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes gs-drop { from { transform: translateY(-24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes gs-up { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes gs-slide { from { transform: translateX(-24px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes gs-blink { 50% { opacity: 0; } }
+@keyframes gs-blinkb { 50% { border-color: transparent; } }
+@keyframes gs-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@keyframes gs-ripple {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes gs-boo {
+  0% { transform: translate(-50%, 14px); opacity: 0; }
+  25% { transform: translate(-50%, 0); opacity: 1; }
+  80% { transform: translate(-50%, -4px); opacity: 1; }
+  100% { transform: translate(-50%, -14px); opacity: 0; }
+}
+@keyframes gs-qout {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-40px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-note-ico, .gs-node.is-visited, .gs-node.is-queued, .gs-node.is-focus, .gs-node.is-wrong, .gs-badge,
+  .gs-q-cell, .gs-q-empty, .gs-frame, .gs-mx-h.is-wrong, .gs-frame-top, .gs-st-ret-chip, .gs-mx-cell.is-on,
+  .gs-route-stop, .gs-route-stop.is-next, .gs-mappanel.anim-shake { animation: none; }
+  .gs-road.is-eaten .gs-pel { animation: none; opacity: 0; }
+  .gs-ripple, .gs-q-out, .gs-walker { display: none; }
+  .gs-ghost { animation: none; }
+}
+
+/* móvil estrecho */
+@media (max-width: 420px) {
+  .px-panel.gs-mappanel { padding: 8px; }
+  .gs-side { padding: 12px 10px; }
+  .gs-map { min-height: 300px; aspect-ratio: 1 / 1; }
+  .gs-hud-title { font-size: 11px; }
+  .gs-mx-h { min-width: 32px; padding: 0 1px; }
+  .gs-side.gs-mxpanel { padding: 12px 6px; }
+}
