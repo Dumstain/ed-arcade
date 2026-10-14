@@ -87,7 +87,7 @@ export function Traverse({ cfg, onCheck, onStep, locked, showSolution, attempt }
 
     // tocar un vagón ya visitado no cuesta (salvo terminar la vuelta antes de tiempo en la circular)
     const vi = isNull ? -1 : cfg.path.indexOf(key)
-    const premature = cfg.endsAt === 'start' && key === cfg.startNode && s > 0 && s < total
+    const premature = cfg.endsAt === 'start' && key === cfg.startNode && s > 1 && s < total
     if (vi >= 0 && vi < s && !premature) {
       flashAt(key, 'warn')
       say('warn', 'YA PASASTE POR AHÍ', s > 0 ? `Sigue la flecha **${cfg.dir}** desde el **${val(cfg.path[s - 1])}**.` : 'Busca el vagón donde empieza el recorrido.')
