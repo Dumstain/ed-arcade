@@ -341,6 +341,13 @@ button.gs-mx-cell:disabled { cursor: default; }
 .is-badrow .gs-mx-cell.is-on { border-color: var(--bad); }
 .gs-mx-cell.is-diff { box-shadow: 0 0 0 3px var(--bad); }
 .gs-mxpanel { display: flex; flex-direction: column; }
+/* La matriz se compacta según el ancho de SU panel, no de la pantalla: en escritorio el panel
+   lateral mide ~296 px y la 6x6 completa pide 314 (34 + 6 x 44 + 16). Compacta: 264 px. */
+.gs-mx-scroll { container-type: inline-size; }
+@container (max-width: 315px) {
+  .gs-mx-h { min-width: 32px; padding: 0 1px; }
+  .gs-mx.is-big .gs-mx-cell { width: 36px; height: 40px; }
+}
 .gs-readout { min-height: 46px; }
 
 /* botones */
@@ -416,4 +423,8 @@ button.gs-mx-cell:disabled { cursor: default; }
   .gs-hud-title { font-size: 11px; }
   .gs-mx-h { min-width: 32px; padding: 0 1px; }
   .gs-side.gs-mxpanel { padding: 12px 6px; }
+  /* matriz 6x6: 32 + 6 x 36 + 16 de border-spacing = 264 px. A 360 px el panel de juego deja 276 px
+     y el de solución 260 (padding 14): ahí la matriz usa 8 px del padding para quedar igual (276). */
+  .gs-mx.is-big .gs-mx-cell { width: 36px; height: 40px; }
+  .gs-solution .gs-mx-scroll { margin: 0 -8px; max-width: none; }
 }
