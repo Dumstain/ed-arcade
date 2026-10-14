@@ -133,7 +133,7 @@ const day3: Exercise[] = [
       'Cada paquete va al casillero **h(k) = k % 7**. Toca dónde queda cada clave; si el casillero ya tiene paquetes, la nueva se **encadena al final** de su lista.',
     hint: 'k % 7 es el **residuo** de dividir entre 7. Por ejemplo, 20 % 7 = 6 porque 20 = 2 × 7 + 6.',
     explanation:
-      '15, 8 y 29 dan residuo 1: hubo **colisión** y se formaron en la **lista del casillero 1**. Para encontrar un paquete no revisas los 7 casilleros: la fórmula te manda **directo** al tuyo.',
+      '15, 8 y 29 dan residuo 1: hubo **colisión** y se formaron en la **lista del casillero 1**. Para encontrar un paquete no revisas los 7 casilleros: la fórmula te manda **directo** al tuyo y solo revisas su lista. Si las claves se reparten bien, buscar es **O(1) en promedio**; en el **peor caso** (todas al mismo casillero) queda una sola lista: **O(n)**.',
     data: {
       mode: 'insert',
       size: 7,
@@ -215,7 +215,7 @@ const day3: Exercise[] = [
     topic: 'Colas circulares',
     title: 'FRENTE Y FINAL',
     prompt:
-      'Cola circular en un **arreglo de 6** (0 a 5). Corre el programa y toca la casilla donde termina **FRENTE** y después la de **FINAL**.',
+      'Cola circular en un **arreglo de 6** (0 a 5). **FRENTE** = casilla del **primero** de la fila y **FINAL** = casilla del **último** (no la siguiente libre). Corre el programa y toca dónde termina **FRENTE** y después **FINAL**.',
     hint: 'enqueue: **final = (final + 1) % 6**. dequeue: frente = (frente + 1) % 6. Después de la casilla 5 sigue la 0.',
     explanation:
       'FRENTE = **5** y FINAL = **2**: el final dio la vuelta (5 → 0 → 1 → 2) gracias a **% capacidad**. En el arreglo parece que el final quedó «antes» del frente, pero en el carrusel solo siguió girando: del frente al final van 2, 7, 1, 6.',
@@ -475,7 +475,7 @@ const day3: Exercise[] = [
       'Tabla con **prueba lineal**. Busca el **33**: toca en orden cada clave que revisas; si llegas a un casillero **vacío**, toca NO ESTÁ.',
     hint: 'Empieza en h(33) = 33 % 7 y avanza de uno en uno (después del 6 sigue el 0). Mientras el casillero esté **ocupado**, el 33 todavía podría estar más adelante.',
     explanation:
-      'h(33) = **5**: revisaste 12, 20, 14, 26 y 5 (**5 comparaciones**) hasta topar con el casillero 3 vacío; si el 33 existiera, la prueba lineal lo habría dejado antes de ese hueco. Con la tabla casi llena la búsqueda se acerca a **O(n)**: por eso una tabla hash se agranda antes de llenarse (el HashMap de Java duplica su arreglo al llenarse al 75 % de su capacidad).',
+      'h(33) = **5**: revisaste 12, 20, 14, 26 y 5 (**5 comparaciones**) hasta topar con el casillero 3 vacío; si el 33 existiera, la prueba lineal lo habría dejado antes de ese hueco. La tabla está casi llena (**factor de carga** = 5 claves entre 7 casilleros, unos **0.71**) y la búsqueda ya se acerca a **O(n)**: por eso una tabla hash se agranda antes de llenarse (el HashMap de Java duplica su arreglo cuando el factor de carga pasa de **0.75**).',
     data: {
       mode: 'search',
       size: 7,
