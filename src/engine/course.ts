@@ -28,7 +28,7 @@ export const COURSE_DAYS: readonly CourseDay[] = [
   // Morelia (America/Mexico_City) es UTC−6 todo el año desde 2022
   { day: 3, title: 'Colas, listas y hash', fruit: 'orange', date: '2026-10-14', opensAt: '2026-10-14T12:59:00-06:00', opensTime: '12:59' },
   { day: 4, title: 'Árboles y grafos', fruit: 'apple', date: '2026-10-15', manual: true },
-  { day: 5, title: 'Ordenamiento', fruit: 'melon', date: '2026-10-16' },
+  { day: 5, title: 'Ordenamiento', fruit: 'melon', date: '2026-10-16', opensAt: '2026-10-16T12:59:00-06:00', opensTime: '12:59' },
 ]
 
 export const DEMO_DAY: CourseDay = { day: 0, title: 'Sala de pruebas', fruit: 'cherry', date: '2000-01-01' }
