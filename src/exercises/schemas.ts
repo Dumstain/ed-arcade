@@ -314,6 +314,35 @@ export interface GraphSimData {
   showWeights?: boolean
 }
 
+// ───────────── sort-sim — ordenamiento (Día 5) ─────────────
+// Valores como fichas/barras pixel (altura proporcional al número) en una fila; sin repetidos.
+// mode 'bubble' (burbuja): un marco señala el par vecino [j, j+1] de la pasada actual (j = 0 … n−2−pasada).
+//   El alumno elige INTERCAMBIAR (si el de la izquierda es mayor) o DEJAR. Acierto → se aplica y onStep();
+//   error → onCheck(false). Al terminar cada pasada el mayor queda fijo al final ("burbujeó", marcado).
+//   Se juegan `passes` pasadas (default: hasta que quede ordenado). Contadores de comparaciones e intercambios.
+//   Al completar → onCheck(true).
+// mode 'partition' (quicksort): el PIVOTE es el último elemento (pivot 'last', default) o el primero ('first').
+//   Un cursor recorre los demás de izquierda a derecha; para cada uno el alumno elige MENOR o MAYOR que el
+//   pivote; la ficha cae al grupo izquierdo o derecho conservando su orden. Al final el pivote baja al centro:
+//   queda en su lugar definitivo (índice = cuántos son menores). Acierto onStep; error onCheck(false); fin onCheck(true).
+// mode 'merge' (intercalar / mezclar, el corazón de merge sort): dos filas YA ORDENADAS `left` y `right`; el
+//   alumno toca la cabeza (el primero) de la fila que debe pasar a la salida: la MENOR; en empate, la de la
+//   izquierda. Cuando una fila se vacía, el resto de la otra pasa sola. Acierto onStep; error onCheck(false); fin onCheck(true).
+// mode 'radix' (el cartero con casilleros): 10 casilleros 0–9; por cada número (en orden) el alumno toca el
+//   casillero de su dígito (`digit`: 'units' = unidades, 'tens' = decenas). Luego RECOGER los junta del casillero
+//   0 al 9 conservando el orden de llegada. `rounds` 1 = solo un dígito; 2 = unidades y luego decenas (queda
+//   ordenado). Acierto onStep; error onCheck(false); fin onCheck(true).
+export interface SortSimData {
+  mode: 'bubble' | 'partition' | 'merge' | 'radix'
+  values?: number[]               // bubble / partition / radix (2..10 valores, sin repetidos)
+  passes?: number                 // bubble
+  pivot?: 'last' | 'first'        // partition
+  left?: number[]                 // merge (ordenada)
+  right?: number[]                // merge (ordenada)
+  digit?: 'units' | 'tens'        // radix con rounds 1 (default 'units')
+  rounds?: 1 | 2                  // radix
+}
+
 /** Catálogo de tipos válidos (el contenido solo puede usar estos) */
 export type ExerciseType =
   | 'quiz' | 'number' | 'order' | 'classify'
@@ -321,3 +350,4 @@ export type ExerciseType =
   | 'stack-sim' | 'call-stack' | 'rec-tree' | 'hanoi'
   | 'queue-sim' | 'list-sim' | 'hash-sim'
   | 'bst-sim' | 'graph-sim'
+  | 'sort-sim'
